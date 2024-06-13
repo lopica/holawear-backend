@@ -8,6 +8,8 @@ import NotFoundPage from "./pages/error/NotFoundPage";
 import ProductDetail from "./pages/main/ProductDetail";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
+import UserProfile from "./pages/main/UserProfile";
+
 import Dashboard from "./pages/admin/Dashboard";
 import AddProduct from "./pages/admin/AddProduct";
 import ProductList from "./pages/main/ProductList";
@@ -51,6 +53,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/admin" element={<PrivateRoute />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
