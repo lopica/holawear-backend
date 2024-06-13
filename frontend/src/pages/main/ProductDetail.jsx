@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import instance from "../axios/index";
+import instance from "../../axios/index";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
 
