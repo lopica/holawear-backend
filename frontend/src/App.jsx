@@ -7,7 +7,7 @@ import AboutPage from "./pages/main/AboutPage";
 import NotFoundPage from "./pages/error/NotFoundPage";
 import ProductDetail from "./pages/main/ProductDetail";
 import LoginPage from "./pages/auth/LoginPage";
-import Register from "./pages/auth/Register";
+import RegisterPage from "./pages/auth/RegisterPage";
 import Dashboard from "./pages/admin/Dashboard";
 import AddProduct from "./pages/admin/AddProduct";
 import ProductList from "./pages/main/ProductList";
@@ -50,7 +50,7 @@ function App() {
           <Route path="/women" element={<ProductList products={products} category="women" />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/admin" element={<PrivateRoute />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
