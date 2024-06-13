@@ -4,7 +4,7 @@ import banner1 from "../../assets/banner.png";
 
 const LoginPage = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center pb-44">
       <div className="w-full max-w-4xl p-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow-lg">
           <div>
