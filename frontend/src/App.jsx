@@ -1,19 +1,20 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import "./App.scss";
-import HomePage from "./pages/HomePage";
-import AboutPage from "./pages/AboutPage";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import NotFoundPage from "./pages/NotFoundPage";
-import ProductDetail from "./pages/ProductDetail";
+
+import HomePage from "./pages/main/HomePage";
+import AboutPage from "./pages/main/AboutPage";
+import NotFoundPage from "./pages/error/NotFoundPage";
+import ProductDetail from "./pages/main/ProductDetail";
 import LoginPage from "./pages/auth/LoginPage";
 import Register from "./pages/auth/Register";
-import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./pages/admin/Dashboard";
 import AddProduct from "./pages/admin/AddProduct";
-import ProductForm from "./pages/admin/ProductForm";
-import ProductList from "./pages/ProductList";
+import ProductList from "./pages/main/ProductList";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import PrivateRoute from "./components/PrivateRoute";
 import instance from "./axios/index";
 
 function App() {

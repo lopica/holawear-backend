@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import ProductCard from "../components/ProductCard";
-import Sidebar from "../components/SideBar";
+import ProductCard from "../../components/ProductCard";
+import Sidebar from "../../components/SideBar";
 
 const ProductList = ({ products, category }) => {
   const [selectedColor, setSelectedColor] = useState(null);
