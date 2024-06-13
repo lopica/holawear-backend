@@ -8,7 +8,6 @@ const ProductList = ({ products, category }) => {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [showSidebar, setShowSidebar] = useState(true);
   const [sortOption, setSortOption] = useState("featured");
-  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -32,13 +31,13 @@ const ProductList = ({ products, category }) => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = product.category.toLowerCase() === category.toLowerCase();
-    const matchesColor = !selectedColor || Object.keys(product.stockDetails).includes(selectedColor);
-    const matchesPrice = product.price >= selectedPrice[0] && product.price <= selectedPrice[1];
-    const matchesBrand = !selectedBrand || product.brand === selectedBrand;
-    const matchesSearchQuery = product.title.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesCategory && matchesColor && matchesPrice && matchesBrand && matchesSearchQuery;
+    return (
+      product.category.toLowerCase() === category.toLowerCase() &&
+      (!selectedColor || Object.keys(product.stockDetails).includes(selectedColor)) &&
+      product.price >= selectedPrice[0] &&
+      product.price <= selectedPrice[1] &&
+      (!selectedBrand || product.brand === selectedBrand)
+    );
   });
 
   const sortedProducts = sortProducts(filteredProducts);
@@ -62,14 +61,7 @@ const ProductList = ({ products, category }) => {
           <button onClick={toggleSidebar} className="bg-gray-200 p-2 rounded">
             {showSidebar ? "Hide Filters" : "Show Filters"}
           </button>
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Search products"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="p-2 border rounded"
-            />
+          <div className="relative">
             <select value={sortOption} onChange={handleSortChange} className="bg-gray-200 p-2 rounded">
               <option value="newest">Newest</option>
               <option value="price-high-low">Price: High-Low</option>
