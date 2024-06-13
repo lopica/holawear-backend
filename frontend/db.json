@@ -46,8 +46,11 @@
         "barcode": "1234567890123",
         "qrCode": ""
       },
-      "images": [""],
-      "thumbnail": "",
+      "images": [
+        "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmkceq521",
+        "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmk3zbhf4"
+      ],
+      "thumbnail": "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmkceq521",
       "stockDetails": {
         "#ff0000": {
           "L": 3,
