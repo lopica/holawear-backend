@@ -3,9 +3,10 @@ import ProductCard from "../../components/ProductCard";
 import Sidebar from "../../components/SideBar";
 
 const ProductList = ({ products, category }) => {
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedPrice, setSelectedPrice] = useState([0, 1000000]);
-  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedPrices, setSelectedPrices] = useState([0, 1000000]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
   const [showSidebar, setShowSidebar] = useState(true);
   const [sortOption, setSortOption] = useState("featured");
 
@@ -33,10 +34,12 @@ const ProductList = ({ products, category }) => {
   const filteredProducts = products.filter((product) => {
     return (
       product.category.toLowerCase() === category.toLowerCase() &&
-      (!selectedColor || Object.keys(product.stockDetails).includes(selectedColor)) &&
-      product.price >= selectedPrice[0] &&
-      product.price <= selectedPrice[1] &&
-      (!selectedBrand || product.brand === selectedBrand)
+      (selectedColors.length === 0 ||
+        selectedColors.some((color) => Object.keys(product.stockDetails).includes(color))) &&
+      product.price >= selectedPrices[0] &&
+      product.price <= selectedPrices[1] &&
+      (selectedSizes.length === 0 || selectedSizes.some((size) => product.stockDetails[size] > 0)) &&
+      (selectedBrands.length === 0 || selectedBrands.includes(product.brand))
     );
   });
 
@@ -46,14 +49,16 @@ const ProductList = ({ products, category }) => {
     <div className="container mx-auto p-6 flex">
       <div className={`transition-transform duration-300 ease-in-out ${showSidebar ? "w-64" : "w-0"} overflow-hidden`}>
         <Sidebar
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          selectedPrice={selectedPrice}
-          setSelectedPrice={setSelectedPrice}
-          selectedBrand={selectedBrand}
-          setSelectedBrand={setSelectedBrand}
-          priceRange={selectedPrice}
-          setPriceRange={setSelectedPrice}
+          selectedColors={selectedColors}
+          setSelectedColors={setSelectedColors}
+          selectedPrices={selectedPrices}
+          setSelectedPrices={setSelectedPrices}
+          selectedSizes={selectedSizes}
+          setSelectedSizes={setSelectedSizes}
+          selectedBrands={selectedBrands}
+          setSelectedBrands={setSelectedBrands}
+          priceRange={selectedPrices}
+          setPriceRange={setSelectedPrices}
         />
       </div>
       <div className="flex-1 ml-4">

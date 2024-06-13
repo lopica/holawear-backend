@@ -2,14 +2,14 @@ import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const SideBar = ({
-  selectedColor,
-  setSelectedColor,
-  selectedPrice,
-  setSelectedPrice,
-  selectedSize,
-  setSelectedSize,
-  selectedBrand,
-  setSelectedBrand,
+  selectedColors,
+  setSelectedColors,
+  selectedPrices,
+  setSelectedPrices,
+  selectedSizes,
+  setSelectedSizes,
+  selectedBrands,
+  setSelectedBrands,
   priceRange,
   setPriceRange,
 }) => {
@@ -30,6 +30,14 @@ const SideBar = ({
   const sizes = ["S", "M", "L", "XL", "2XL"];
   const brands = ["Adidas", "Nike", "Puma", "Gucci", "Dior", "Fila", "Vans", "Uniqlo", "Lacoste"];
 
+  const toggleSelection = (item, setSelectedItems, selectedItems) => {
+    if (selectedItems.includes(item)) {
+      setSelectedItems(selectedItems.filter((i) => i !== item));
+    } else {
+      setSelectedItems([...selectedItems, item]);
+    }
+  };
+
   return (
     <div className="w-64 p-4">
       <Accordion type="single" collapsible className="w-full">
@@ -40,9 +48,11 @@ const SideBar = ({
               {colors.map((color) => (
                 <div
                   key={color}
-                  className={`w-8 h-8 rounded-full mr-2 mb-2 cursor-pointer`}
+                  className={`w-8 h-8 rounded-full mr-2 mb-2 cursor-pointer ${
+                    selectedColors.includes(color) ? "border-2 border-black" : ""
+                  }`}
                   style={{ backgroundColor: color }}
-                  onClick={() => setSelectedColor(color)}
+                  onClick={() => toggleSelection(color, setSelectedColors, selectedColors)}
                 ></div>
               ))}
             </div>
@@ -78,8 +88,10 @@ const SideBar = ({
               {sizes.map((size) => (
                 <button
                   key={size}
-                  className={`w-10 h-10 m-1 rounded-full border ${selectedSize === size ? "bg-gray-400" : "bg-white"}`}
-                  onClick={() => setSelectedSize(size)}
+                  className={`w-10 h-10 m-1 rounded-full border ${
+                    selectedSizes.includes(size) ? "bg-gray-400" : "bg-white"
+                  }`}
+                  onClick={() => toggleSelection(size, setSelectedSizes, selectedSizes)}
                 >
                   {size}
                 </button>
@@ -95,8 +107,10 @@ const SideBar = ({
               {brands.map((brand) => (
                 <button
                   key={brand}
-                  className={`m-1 px-2 py-1 border rounded ${selectedBrand === brand ? "bg-gray-400" : "bg-white"}`}
-                  onClick={() => setSelectedBrand(brand)}
+                  className={`m-1 px-2 py-1 border rounded ${
+                    selectedBrands.includes(brand) ? "bg-gray-400" : "bg-white"
+                  }`}
+                  onClick={() => toggleSelection(brand, setSelectedBrands, selectedBrands)}
                 >
                   {brand}
                 </button>
