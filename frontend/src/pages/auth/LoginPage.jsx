@@ -1,6 +1,6 @@
 import React from "react";
 import { FaGoogle } from "react-icons/fa";
-import banner from "../assets/banner.png";
+import banner from "../../assets/banner.png";
 
 const LoginPage = () => {
   return (
