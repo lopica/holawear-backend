@@ -26,7 +26,9 @@ function App() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [userData, setUserData] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [loginTypes, setLoginTypes] = useState([]);
 
   const navigate = useNavigate();
 
@@ -37,10 +39,15 @@ function App() {
         const categoriesData = (await instance.get("/categories")).data;
         const brandsData = (await instance.get("/brands")).data;
         const userData = (await instance.get("/users")).data;
+        const roleData = (await instance.get("/roles")).data;
+        const loginTypeData = (await instance.get("/loginTypes")).data;
         setProducts(productsData);
         setCategories(categoriesData);
         setBrands(brandsData);
-        setUserData(userData);
+        setUsers(userData);
+        setRoles(roleData);
+        setLoginTypes(loginTypeData);
+        // console.log(roles);
       } catch (error) {
         console.log(error);
       }
@@ -67,7 +74,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="/admin1/dashboard" element={<Dashboard />} />
             <Route path="/admin1/add-product" element={<AddProduct />} />
-            <Route path="/admin1/users" element={<ManageUser users={userData} />} />
+            <Route path="/admin1/users" element={<ManageUser users={users} roles={roles} loginTypes={loginTypes} />} />
           </Route>
         </Routes>
       </main>

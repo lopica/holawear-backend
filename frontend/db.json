@@ -306,26 +306,6 @@
       "image": ""
     }
   ],
-  "users": [
-    {
-      "email": "teacher@gmail.com",
-      "password": "$2a$10$UY4fxakOtR0zjFzMfUsHROPEzwwtNXTsgoTwSKNl38VtBmnfJuuOm",
-      "username": "chungdt3",
-      "confirmPassword": "111111",
-      "id": 1,
-      "role": "admin",
-      "phone": "0123456789"
-    },
-    {
-      "email": "admin@fpt.edu.vn",
-      "password": "$2a$10$Ov.4O5NCiJ2lxF0jUX81zekROkGViwZbVVkIq3sDwrGNiqEblTfNu",
-      "username": "chungdt",
-      "confirmPassword": "111111",
-      "id": 2,
-      "role": "customer",
-      "phone": "0123456798"
-    }
-  ],
   "types": [
     {
       "id": 1,
@@ -1861,5 +1841,209 @@
       ]
     }
   ],
-  "order": []
+  "order": [],
+  "users": [
+    {
+      "email": "teacher@gmail.com",
+      "password": "$2a$10$UY4fxakOtR0zjFzMfUsHROPEzwwtNXTsgoTwSKNl38VtBmnfJuuOm",
+      "username": "chungdt3",
+      "confirmPassword": "111111",
+      "id": 1,
+      "role": "admin",
+      "phone": "0123456789",
+      "address": "Ha Noi",
+      "gender": "men",
+      "createdAt": "2024-05-28T07:30:50.451+00:00",
+      "updatedAt": "2024-05-28T07:31:50.451+00:00",
+      "loginType": "system"
+    },
+    {
+      "email": "admin@fpt.edu.vn",
+      "password": "$2a$10$Ov.4O5NCiJ2lxF0jUX81zekROkGViwZbVVkIq3sDwrGNiqEblTfNu",
+      "username": "chungdt",
+      "confirmPassword": "111111",
+      "id": 2,
+      "role": "customer",
+      "phone": "0123456798",
+      "address": "Ha Noi",
+      "gender": "women",
+      "createdAt": "2024-05-28T07:32:04.900+00:00",
+      "updatedAt": "2024-05-28T07:31:50.451+00:00",
+      "loginType": "facebook"
+    },
+    {
+      "email": "user1@example.com",
+      "password": "$2a$10$K3skldf32kdf2",
+      "username": "user1",
+      "confirmPassword": "111111",
+      "id": 3,
+      "role": "customer",
+      "phone": "0987654321",
+      "address": "Ho Chi Minh",
+      "gender": "men",
+      "createdAt": "2024-05-28T08:00:00.000+00:00",
+      "updatedAt": "2024-05-28T08:00:00.000+00:00",
+      "loginType": "system"
+    },
+    {
+      "email": "user2@example.com",
+      "password": "$2a$10$K4skldf32kdf2",
+      "username": "user2",
+      "confirmPassword": "111111",
+      "id": 4,
+      "role": "admin",
+      "phone": "0987654322",
+      "address": "Da Nang",
+      "gender": "women",
+      "createdAt": "2024-05-28T08:10:00.000+00:00",
+      "updatedAt": "2024-05-28T08:10:00.000+00:00",
+      "loginType": "google"
+    },
+    {
+      "email": "user3@example.com",
+      "password": "$2a$10$K5skldf32kdf2",
+      "username": "user3",
+      "confirmPassword": "111111",
+      "id": 5,
+      "role": "customer",
+      "phone": "0987654323",
+      "address": "Ha Noi",
+      "gender": "men",
+      "createdAt": "2024-05-28T08:20:00.000+00:00",
+      "updatedAt": "2024-05-28T08:20:00.000+00:00",
+      "loginType": "system"
+    },
+    {
+      "email": "user4@example.com",
+      "password": "$2a$10$K6skldf32kdf2",
+      "username": "user4",
+      "confirmPassword": "111111",
+      "id": 6,
+      "role": "admin",
+      "phone": "0987654324",
+      "address": "Hai Phong",
+      "gender": "women",
+      "createdAt": "2024-05-28T08:30:00.000+00:00",
+      "updatedAt": "2024-05-28T08:30:00.000+00:00",
+      "loginType": "facebook"
+    },
+    {
+      "email": "user5@example.com",
+      "password": "$2a$10$K7skldf32kdf2",
+      "username": "user5",
+      "confirmPassword": "111111",
+      "id": 7,
+      "role": "customer",
+      "phone": "0987654325",
+      "address": "Ha Noi",
+      "gender": "men",
+      "createdAt": "2024-05-28T08:40:00.000+00:00",
+      "updatedAt": "2024-05-28T08:40:00.000+00:00",
+      "loginType": "google"
+    },
+    {
+      "email": "user6@example.com",
+      "password": "$2a$10$K8skldf32kdf2",
+      "username": "user6",
+      "confirmPassword": "111111",
+      "id": 8,
+      "role": "admin",
+      "phone": "0987654326",
+      "address": "Da Nang",
+      "gender": "women",
+      "createdAt": "2024-05-28T08:50:00.000+00:00",
+      "updatedAt": "2024-05-28T08:50:00.000+00:00",
+      "loginType": "system"
+    },
+    {
+      "email": "user7@example.com",
+      "password": "$2a$10$K9skldf32kdf2",
+      "username": "user7",
+      "confirmPassword": "111111",
+      "id": 9,
+      "role": "customer",
+      "phone": "0987654327",
+      "address": "Ha Noi",
+      "gender": "men",
+      "createdAt": "2024-05-28T09:00:00.000+00:00",
+      "updatedAt": "2024-05-28T09:00:00.000+00:00",
+      "loginType": "facebook"
+    },
+    {
+      "email": "user8@example.com",
+      "password": "$2a$10$L1skldf32kdf2",
+      "username": "user8",
+      "confirmPassword": "111111",
+      "id": 10,
+      "role": "admin",
+      "phone": "0987654328",
+      "address": "Ho Chi Minh",
+      "gender": "women",
+      "createdAt": "2024-05-28T09:10:00.000+00:00",
+      "updatedAt": "2024-05-28T09:10:00.000+00:00",
+      "loginType": "google"
+    },
+    {
+      "email": "user9@example.com",
+      "password": "$2a$10$L2skldf32kdf2",
+      "username": "user9",
+      "confirmPassword": "111111",
+      "id": 11,
+      "role": "customer",
+      "phone": "0987654329",
+      "address": "Ha Noi",
+      "gender": "men",
+      "createdAt": "2024-05-28T09:20:00.000+00:00",
+      "updatedAt": "2024-05-28T09:20:00.000+00:00",
+      "loginType": "system"
+    },
+    {
+      "email": "user10@example.com",
+      "password": "$2a$10$L3skldf32kdf2",
+      "username": "user10",
+      "confirmPassword": "111111",
+      "id": 12,
+      "role": "admin",
+      "phone": "0987654330",
+      "address": "Hai Phong",
+      "gender": "women",
+      "createdAt": "2024-05-28T09:30:00.000+00:00",
+      "updatedAt": "2024-05-28T09:30:00.000+00:00",
+      "loginType": "facebook"
+    },
+    {
+      "email": "user11@example.com",
+      "password": "$2a$10$L4skldf32kdf2",
+      "username": "user11",
+      "confirmPassword": "111111",
+      "id": 13,
+      "role": "customer",
+      "phone": "0987654331",
+      "address": "Ha Noi",
+      "gender": "men",
+      "createdAt": "2024-05-28T09:40:00.000+00:00",
+      "updatedAt": "2024-05-28T09:40:00.000+00:00",
+      "loginType": "google"
+    }
+  ],
+  "roles": [
+    {
+      "id": 1,
+      "name": "admin"
+    },
+    {
+      "id": 2,
+      "name": "customer"
+    }
+  ],
+  "loginTypes": [
+    {
+      "id": 1,
+      "name": "system"
+    },
+    {
+      "id": 2,
+      "name": "facebook"
+    }
+  ]
 }
