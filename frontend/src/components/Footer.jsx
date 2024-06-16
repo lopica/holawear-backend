@@ -6,17 +6,24 @@ const Footer = () => {
   return (
     <footer className="bg-white py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+          <div className="flex justify-center md:justify-start items-center mb-4 md:mb-0">
+            <img src={logo} alt="HolaWear Logo" className="h-32" />
+          </div>
+          <div className="flex space-x-4">
+            <FaTwitter className="text-gray-600 hover:text-gray-900" />
+            <FaLinkedin className="text-gray-600 hover:text-gray-900" />
+            <FaFacebook className="text-gray-600 hover:text-gray-900" />
+            <FaInstagram className="text-gray-600 hover:text-gray-900" />
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
           <div className="text-center md:text-left">
-            <div className="flex justify-center md:justify-start items-center mb-4">
-              <img src={logo} alt="HolaWear Logo" className="h-32" />
-            </div>
             <p className="text-gray-600">
-              Success or failure in business depends more on attitude in
-              thinking than in ability to think.
+              Success or failure in business depends more on attitude in thinking than in ability to think.
             </p>
           </div>
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left ">
             <h3 className="font-bold text-gray-900 mb-2">About us</h3>
             <ul className="text-gray-600">
               <li>Customers rate</li>
@@ -24,17 +31,15 @@ const Footer = () => {
               <li>Q&A</li>
             </ul>
           </div>
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left ">
             <h3 className="font-bold text-gray-900 mb-2">Policy</h3>
             <ul className="text-gray-600">
               <li>Shipping policy</li>
               <li>Warranty Policy</li>
             </ul>
           </div>
-          <div className="text-center md:text-left">
-            <h3 className="font-bold text-gray-900 mb-2">
-              Support Line (Free Call)
-            </h3>
+          <div className="text-center md:text-left ">
+            <h3 className="font-bold text-gray-900 mb-2">Support Line (Free Call)</h3>
             <ul className="text-gray-600">
               <li>Call to buy: 1800.xxxx (7:30 - 22:00)</li>
               <li>Technical: 1800.xyxy (7:30 - 22:00)</li>
@@ -43,16 +48,8 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="mt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex space-x-4 mb-4 md:mb-0">
-            <FaTwitter className="text-gray-600 hover:text-gray-900" />
-            <FaLinkedin className="text-gray-600 hover:text-gray-900" />
-            <FaFacebook className="text-gray-600 hover:text-gray-900" />
-            <FaInstagram className="text-gray-600 hover:text-gray-900" />
-          </div>
-          <p className="text-gray-600 text-sm">
-            © 2024 HolaWear. All rights reserved
-          </p>
+        <div className="mt-8 flex justify-center md:justify-between items-center">
+          <p className="text-gray-600 text-sm">© 2024 HolaWear. All rights reserved</p>
         </div>
       </div>
     </footer>

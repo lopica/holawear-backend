@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
         <img src={product.thumbnail} alt={product.title} className="w-full h-60 object-cover rounded-t-lg" />
         <div className="p-4">
           <p className="text-gray-700 mb-4">{product.type}</p>
-          <h3 className="text-lg font-bold">{product.title}</h3>
+          <h3 className="text-lg font-bold text-gray-900 truncate">{product.title}</h3>
           <div className="flex items-center">
             {renderStars(product.rating)}
             <span className="text-gray-600 ml-2">({product.reviews.length} reviews)</span>

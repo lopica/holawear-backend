@@ -2,6 +2,7 @@ import React from "react";
 import logo from "../assets/WEARIT.svg";
 import { Link } from "react-router-dom";
 import { CiUser, CiShoppingCart, CiHeart, CiLogout } from "react-icons/ci";
+import { AiOutlineDashboard } from "react-icons/ai";
 
 const Header = () => {
   return (
@@ -45,6 +46,13 @@ const Header = () => {
               <CiHeart className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />
             </button>
           </Link>
+          {/* admin  */}
+          <Link to="/admin1/dashboard" className="mr-4">
+            <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow ">
+              <AiOutlineDashboard className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />
+            </button>
+          </Link>
+          {/* admin  */}
           <Link to="/profile" className="mr-4">
             <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow ">
               <CiUser className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />

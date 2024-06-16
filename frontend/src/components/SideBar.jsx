@@ -6,8 +6,6 @@ const SideBar = ({
   setSelectedColors,
   selectedPrices,
   setSelectedPrices,
-  selectedSizes,
-  setSelectedSizes,
   selectedBrands,
   setSelectedBrands,
   priceRange,
@@ -27,7 +25,6 @@ const SideBar = ({
     "#00bcd4",
     "#607d8b",
   ];
-  const sizes = ["S", "M", "L", "XL", "2XL"];
   const brands = ["Adidas", "Nike", "Puma", "Gucci", "Dior", "Fila", "Vans", "Uniqlo", "Lacoste"];
 
   const toggleSelection = (item, setSelectedItems, selectedItems) => {
@@ -58,7 +55,6 @@ const SideBar = ({
             </div>
           </AccordionContent>
         </AccordionItem>
-
         <AccordionItem value="price">
           <AccordionTrigger>Price</AccordionTrigger>
           <AccordionContent>
@@ -80,26 +76,6 @@ const SideBar = ({
             </div>
           </AccordionContent>
         </AccordionItem>
-
-        <AccordionItem value="size">
-          <AccordionTrigger>Size</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap">
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  className={`w-10 h-10 m-1 rounded-full border ${
-                    selectedSizes.includes(size) ? "bg-gray-400" : "bg-white"
-                  }`}
-                  onClick={() => toggleSelection(size, setSelectedSizes, selectedSizes)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
         <AccordionItem value="brand">
           <AccordionTrigger>Brand</AccordionTrigger>
           <AccordionContent>

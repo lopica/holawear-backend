@@ -13,6 +13,8 @@ import UserProfile from "./pages/main/UserProfile";
 import Dashboard from "./pages/admin/Dashboard";
 import AddProduct from "./pages/admin/AddProduct";
 import ProductList from "./pages/main/ProductList";
+import SideBarAdmin from "./components/SideBarAdmin";
+import Layout from "./pages/admin/Layout";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -55,8 +57,11 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="*" element={<NotFoundPage />} />
-          <Route path="/admin" element={<PrivateRoute />}>
-            <Route path="/admin/dashboard" element={<Dashboard />} />
+
+          <Route path="/admin1" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="/admin1/dashboard" element={<Dashboard />} />
+            <Route path="/admin1/add-product" element={<AddProduct />} />
           </Route>
         </Routes>
       </main>
