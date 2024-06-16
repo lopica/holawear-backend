@@ -1,7 +1,8 @@
 import React from "react";
+import SideBarAdmin from "../../components/SideBarAdmin";
 
 const Dashboard = () => {
-  return <div>Dashboard123</div>;
+  return <div></div>;
 };
 
 export default Dashboard;

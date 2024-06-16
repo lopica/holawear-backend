@@ -5,7 +5,6 @@ import Sidebar from "../../components/SideBar";
 const ProductList = ({ products, category }) => {
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([0, 1000000]);
-  const [selectedSizes, setSelectedSizes] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [showSidebar, setShowSidebar] = useState(true);
   const [sortOption, setSortOption] = useState("featured");
@@ -38,7 +37,6 @@ const ProductList = ({ products, category }) => {
         selectedColors.some((color) => Object.keys(product.stockDetails).includes(color))) &&
       product.price >= selectedPrices[0] &&
       product.price <= selectedPrices[1] &&
-      (selectedSizes.length === 0 || selectedSizes.some((size) => product.stockDetails[size] > 0)) &&
       (selectedBrands.length === 0 || selectedBrands.includes(product.brand))
     );
   });
@@ -53,8 +51,6 @@ const ProductList = ({ products, category }) => {
           setSelectedColors={setSelectedColors}
           selectedPrices={selectedPrices}
           setSelectedPrices={setSelectedPrices}
-          selectedSizes={selectedSizes}
-          setSelectedSizes={setSelectedSizes}
           selectedBrands={selectedBrands}
           setSelectedBrands={setSelectedBrands}
           priceRange={selectedPrices}
