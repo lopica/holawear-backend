@@ -1,16 +1,23 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { AiOutlineDashboard } from "react-icons/ai";
-import { HiOutlineCog6Tooth } from "react-icons/hi2";
-import { FaGithub, FaBox, FaRegFileAlt, FaRegUser } from "react-icons/fa";
-import { SlLayers } from "react-icons/sl";
+import { FaGithub } from "react-icons/fa";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"; // Adjust this import according to your project structure
+import {
+  Gauge,
+  FolderKanban,
+  Settings,
+  PackageSearch,
+  ClipboardType,
+  BadgeCheck,
+  PackageOpen,
+  PaintBucket,
+  UsersRound,
+  NotebookText,
+} from "lucide-react";
 
 const SideBarAdmin = () => {
-  const isCollapsed = false; // Set to false since collapse functionality is removed
-
   return (
-    <div className="h-screen w-64 p-4 shadow-lg transition-all duration-300">
+    <div className="bg-white h-screen w-64 p-4 transition-all duration-300">
       <div className="text-center mb-4">
         <img src="https://via.placeholder.com/150" alt="Profile" className="w-12 h-12 rounded-full mx-auto mb-2" />
         <div>
@@ -21,51 +28,51 @@ const SideBarAdmin = () => {
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="dashboard">
           <Link to="/dashboard" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
-            <AiOutlineDashboard className="mr-3" />
-            {!isCollapsed && "Dashboard"}
+            <Gauge size={20} className="mr-3" />
+            Dashboard
           </Link>
         </AccordionItem>
         <AccordionItem value="crud">
           <AccordionTrigger className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-            <SlLayers className="mr-3" />
-            {!isCollapsed && "Manage"}
+            <FolderKanban size={20} className="mr-3" />
+            Manage
           </AccordionTrigger>
           <AccordionContent>
             <ul className="pl-8 space-y-2">
               <li>
-                <Link to="/users" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  <FaRegUser className="mr-3" />
-                  {!isCollapsed && "Users"}
+                <Link to="/admin1/users" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <UsersRound size={20} className="mr-3" />
+                  Users
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  <FaBox className="mr-3" />
-                  {!isCollapsed && "Products"}
+                <Link to="/admin1/products" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <PackageSearch size={20} className="mr-3" />
+                  Products
                 </Link>
               </li>
               <li>
-                <Link to="/types" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  <FaBox className="mr-3" />
-                  {!isCollapsed && "Types"}
+                <Link to="/admin1/types" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <ClipboardType size={20} className="mr-3" />
+                  Types
                 </Link>
               </li>
               <li>
-                <Link to="/brands" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  <FaBox className="mr-3" />
-                  {!isCollapsed && "Brands"}
+                <Link to="/admin1/brands" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <BadgeCheck size={20} className="mr-3" />
+                  Brands
                 </Link>
               </li>
               <li>
-                <Link to="/categories" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  <FaBox className="mr-3" />
-                  {!isCollapsed && "Categories"}
+                <Link to="/admin1/categories" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <PackageOpen size={20} className="mr-3" />
+                  Categories
                 </Link>
               </li>
               <li>
-                <Link to="/colors" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  <FaBox className="mr-3" />
-                  {!isCollapsed && "Colors"}
+                <Link to="/admin1/colors" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <PaintBucket size={20} className="mr-3" />
+                  Colors
                 </Link>
               </li>
             </ul>
@@ -73,25 +80,25 @@ const SideBarAdmin = () => {
         </AccordionItem>
         <AccordionItem value="settings">
           <Link to="/settings" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
-            <HiOutlineCog6Tooth className="mr-3" />
-            {!isCollapsed && "Settings"}
+            <Settings size={20} className="mr-3" />
+            Settings
           </Link>
         </AccordionItem>
         <AccordionItem value="pages">
           <AccordionTrigger className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-            <FaRegFileAlt className="mr-3" />
-            {!isCollapsed && "Pages"}
+            <NotebookText size={20} className="mr-3" />
+            Pages
           </AccordionTrigger>
           <AccordionContent>
             <ul className="pl-8 space-y-2">
               <li>
                 <Link to="/about" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  {!isCollapsed && "About"}
+                  About
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
-                  {!isCollapsed && "Contact"}
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -100,7 +107,7 @@ const SideBarAdmin = () => {
         <AccordionItem value="github">
           <Link to="/github" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
             <FaGithub className="mr-3" />
-            {!isCollapsed && "GitHub Repository"}
+            GitHub Repository
           </Link>
         </AccordionItem>
       </Accordion>
