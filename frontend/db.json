@@ -312,14 +312,18 @@
       "password": "$2a$10$UY4fxakOtR0zjFzMfUsHROPEzwwtNXTsgoTwSKNl38VtBmnfJuuOm",
       "username": "chungdt3",
       "confirmPassword": "111111",
-      "id": 1
+      "id": 1,
+      "role": "admin",
+      "phone": "0123456789"
     },
     {
       "email": "admin@fpt.edu.vn",
       "password": "$2a$10$Ov.4O5NCiJ2lxF0jUX81zekROkGViwZbVVkIq3sDwrGNiqEblTfNu",
       "username": "chungdt",
       "confirmPassword": "111111",
-      "id": 2
+      "id": 2,
+      "role": "customer",
+      "phone": "0123456798"
     }
   ],
   "types": [
