@@ -6,9 +6,11 @@ import HomePage from "./pages/main/HomePage";
 import AboutPage from "./pages/main/AboutPage";
 import NotFoundPage from "./pages/error/NotFoundPage";
 import ProductDetail from "./pages/main/ProductDetail";
+
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import UserProfile from "./pages/main/UserProfile";
+import UserProfile from "./pages/auth/UserProfile";
+import LayoutUser from "./pages/auth/LayoutUser";
 
 import Dashboard from "./pages/admin/Dashboard";
 import AddProduct from "./pages/admin/AddProduct";
@@ -35,6 +37,7 @@ function App() {
   const location = useLocation();
 
   const isAdminRoute = location.pathname.includes("/admin1");
+  const isUserRoute = location.pathname.includes("/user1");
 
   useEffect(() => {
     (async () => {
@@ -74,8 +77,10 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<UserProfile />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/user1" element={<LayoutUser />}>
+            <Route path="/user1/profile" element={<UserProfile />} />
+          </Route>
 
           <Route path="/admin1" element={<Layout />}>
             <Route index element={<Dashboard />} />
@@ -92,7 +97,7 @@ function App() {
           </Route>
         </Routes>
       </main>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isUserRoute && <Footer />}
     </>
   );
 }

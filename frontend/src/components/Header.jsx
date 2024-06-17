@@ -53,7 +53,7 @@ const Header = () => {
             </button>
           </Link>
           {/* admin  */}
-          <Link to="/profile" className="mr-4">
+          <Link to="/user1/profile" className="mr-4">
             <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow ">
               <CiUser className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />
             </button>

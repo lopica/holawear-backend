@@ -210,7 +210,7 @@ const OrderTable = ({ orders }) => {
         </div>
 
         {/* Active Sessions */}
-        <div className="bg-white shadow-sm rounded-lg p-4 flex flex-col justify-between">
+        {/* <div className="bg-white shadow-sm rounded-lg p-4 flex flex-col justify-between">
           <div className="grid grid-cols-3">
             <div className="col-span-2">
               <div>
@@ -227,10 +227,10 @@ const OrderTable = ({ orders }) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Total Sessions */}
-        <div className="bg-white shadow-sm rounded-lg p-4 flex flex-col justify-between">
+        {/* <div className="bg-white shadow-sm rounded-lg p-4 flex flex-col justify-between">
           <div className="grid grid-cols-3">
             <div className="col-span-2">
               <div>
@@ -247,7 +247,7 @@ const OrderTable = ({ orders }) => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="p-4 bg-white shadow-sm rounded-lg">
