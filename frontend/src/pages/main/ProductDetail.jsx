@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import instance from "../../axios/index";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
-import Footer from "../../components/Footer";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -225,7 +224,6 @@ const ProductDetail = () => {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 };

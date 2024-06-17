@@ -14,6 +14,7 @@ import {
   PaintBucket,
   UsersRound,
   NotebookText,
+  BaggageClaim,
 } from "lucide-react";
 
 const SideBarAdmin = () => {
@@ -34,6 +35,14 @@ const SideBarAdmin = () => {
               className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
             >
               <Gauge size={20} className="mr-3" /> Dashboard
+            </Link>
+          </AccordionItem>
+          <AccordionItem value="orders">
+            <Link
+              to="/admin1/orders"
+              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
+            >
+              <BaggageClaim size={20} className="mr-3" /> Orders
             </Link>
           </AccordionItem>
           <AccordionItem value="crud">

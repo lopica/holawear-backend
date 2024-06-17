@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import "./App.scss";
 
 import HomePage from "./pages/main/HomePage";
@@ -16,6 +16,7 @@ import ProductList from "./pages/main/ProductList";
 import Layout from "./pages/admin/Layout";
 import UserTable from "./components/UserTable";
 import ManageUser from "./pages/admin/ManageUser";
+import ManageOrder from "./pages/admin/ManageOrder";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -31,6 +32,9 @@ function App() {
   const [loginTypes, setLoginTypes] = useState([]);
   const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.includes("/admin1");
 
   useEffect(() => {
     (async () => {
@@ -58,7 +62,8 @@ function App() {
 
   return (
     <>
-      <Header />
+      {!isAdminRoute && <Header />}
+      {/* <Header /> */}
       <main>
         <Routes>
           <Route path="/" element={<HomePage products={products} categories={categories} brands={brands} />} />
@@ -80,9 +85,14 @@ function App() {
             />
             <Route path="/admin1/add-product" element={<AddProduct />} />
             <Route path="/admin1/users" element={<ManageUser users={users} roles={roles} loginTypes={loginTypes} />} />
+            <Route
+              path="/admin1/orders"
+              element={<ManageOrder usersData={users} productsData={products} ordersData={orders} />}
+            />
           </Route>
         </Routes>
       </main>
+      {!isAdminRoute && <Footer />}
     </>
   );
 }

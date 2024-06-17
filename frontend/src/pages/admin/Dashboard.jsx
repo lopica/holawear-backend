@@ -224,7 +224,7 @@ const Dashboard = ({ usersData, ordersData }) => {
             <div className="grid grid-cols-3">
               <div className="col-span-2">
                 <div>
-                  <p className="text-xl font-semibold">${totalRevenue}</p>
+                  <p className="text-xl font-semibold">{totalRevenue}₫</p>
                   <h2 className="text-base font-normal mt-2">Total Revenue</h2>
                 </div>
                 <div className="flex items-center">
