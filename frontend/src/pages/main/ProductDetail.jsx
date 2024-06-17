@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import instance from "../../axios/index";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
+import Footer from "../../components/Footer";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -92,137 +93,140 @@ const ProductDetail = () => {
     selectedColor && selectedSize ? product.stockDetails[selectedColor][selectedSize] : product.stock;
 
   return (
-    <div className="container mx-auto p-6 bg-white rounded shadow-md mt-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="flex justify-center">
-          <img src={product.thumbnail} alt={product.title} className="w-3/4 h-auto rounded-lg" />
-        </div>
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-          <p className="text-xl text-gray-800 mb-4">${product.price.toFixed(2)}</p>
-          <div className="flex items-center mb-4">
-            {[...Array(5)].map((_, i) =>
-              product.rating > i ? (
-                <FaStar key={i} className="text-yellow-500" />
-              ) : (
-                <FaRegStar key={i} className="text-gray-300" />
-              ),
-            )}
-            <span className="text-gray-600 ml-2">({product.rating} rating)</span>
+    <>
+      <div className="container mx-auto p-6 bg-white rounded shadow-md mt-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex justify-center">
+            <img src={product.thumbnail} alt={product.title} className="w-3/4 h-auto rounded-lg" />
           </div>
-          <p className="text-gray-700 mb-4">{product.type}</p>
-          <p className="text-gray-700 mb-4">{product.description}</p>
-          <div className="flex items-center space-x-2 mb-4">
-            {product.tags.map((tag, index) => (
-              <span key={index} className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <div className="flex space-x-2 mt-2">
-            {Object.keys(product.stockDetails).map((color) => (
-              <div
-                key={color}
-                className={`w-5 h-5 rounded-full cursor-pointer border-2 ${
-                  selectedColor === color ? `ring-2 ring-offset-2` : ""
-                }`}
-                style={{ backgroundColor: color }}
-                onClick={() => handleColorSelect(color)}
-              ></div>
-            ))}
-          </div>
-          {selectedColor && (
-            <div className="flex space-x-2 mt-4">
-              {availableSizes.map((size) => (
-                <button
-                  key={size}
-                  className={`px-3 py-1 border rounded ${
-                    selectedSize === size ? "bg-black text-white" : "bg-white text-black"
-                  }`}
-                  onClick={() => handleSizeSelect(size)}
-                >
-                  {size}
-                </button>
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
+            <p className="text-xl text-gray-800 mb-4">${product.price.toFixed(2)}</p>
+            <div className="flex items-center mb-4">
+              {[...Array(5)].map((_, i) =>
+                product.rating > i ? (
+                  <FaStar key={i} className="text-yellow-500" />
+                ) : (
+                  <FaRegStar key={i} className="text-gray-300" />
+                ),
+              )}
+              <span className="text-gray-600 ml-2">({product.rating} rating)</span>
+            </div>
+            <p className="text-gray-700 mb-4">{product.type}</p>
+            <p className="text-gray-700 mb-4">{product.description}</p>
+            <div className="flex items-center space-x-2 mb-4">
+              {product.tags.map((tag, index) => (
+                <span key={index} className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
+                  {tag}
+                </span>
               ))}
             </div>
-          )}
-          <div className="mt-6">
-            <div className="flex items-center mb-4">
-              <span className="text-gray-700">Quantity</span>
-              <div className="flex items-center mx-4">
-                <button onClick={() => handleQuantityChange(-1)} className="px-2 py-1 border rounded-l">
-                  -
+            <div className="flex space-x-2 mt-2">
+              {Object.keys(product.stockDetails).map((color) => (
+                <div
+                  key={color}
+                  className={`w-5 h-5 rounded-full cursor-pointer border-2 ${
+                    selectedColor === color ? `ring-2 ring-offset-2` : ""
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => handleColorSelect(color)}
+                ></div>
+              ))}
+            </div>
+            {selectedColor && (
+              <div className="flex space-x-2 mt-4">
+                {availableSizes.map((size) => (
+                  <button
+                    key={size}
+                    className={`px-3 py-1 border rounded ${
+                      selectedSize === size ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+                    onClick={() => handleSizeSelect(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="mt-6">
+              <div className="flex items-center mb-4">
+                <span className="text-gray-700">Quantity</span>
+                <div className="flex items-center mx-4">
+                  <button onClick={() => handleQuantityChange(-1)} className="px-2 py-1 border rounded-l">
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={handleQuantityInputChange}
+                    className="w-12 text-center border-t border-b"
+                    min="1"
+                    max={availableStock}
+                  />
+                  <button onClick={() => handleQuantityChange(1)} className="px-2 py-1 border rounded-r">
+                    +
+                  </button>
+                </div>
+                <span className="text-gray-600">{availableStock} pieces available</span>
+              </div>
+              {error && <p className="text-red-500">{error}</p>}
+              <div className="flex space-x-4">
+                <button
+                  className="flex items-center space-x-2 px-4 py-2 border border-black text-black rounded"
+                  onClick={handleAddToCart}
+                >
+                  <CiShoppingCart size={24} />
+                  <span>Add to Cart</span>
                 </button>
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={handleQuantityInputChange}
-                  className="w-12 text-center border-t border-b"
-                  min="1"
-                  max={availableStock}
-                />
-                <button onClick={() => handleQuantityChange(1)} className="px-2 py-1 border rounded-r">
-                  +
+                <button className="px-4 py-2 bg-black text-white rounded" onClick={handleBuyNow}>
+                  Buy Now
                 </button>
               </div>
-              <span className="text-gray-600">{availableStock} pieces available</span>
-            </div>
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="flex space-x-4">
-              <button
-                className="flex items-center space-x-2 px-4 py-2 border border-black text-black rounded"
-                onClick={handleAddToCart}
-              >
-                <CiShoppingCart size={24} />
-                <span>Add to Cart</span>
-              </button>
-              <button className="px-4 py-2 bg-black text-white rounded" onClick={handleBuyNow}>
-                Buy Now
-              </button>
             </div>
           </div>
         </div>
-      </div>
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-2">Reviews</h2>
-        <div className="flex space-x-2 mb-4">
-          {[1, 2, 3, 4, 5].map((star) => (
+        <div className="mt-10">
+          <h2 className="text-2xl font-bold mb-2">Reviews</h2>
+          <div className="flex space-x-2 mb-4">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                onClick={() => setFilter(star)}
+                className={`px-4 py-2 border ${
+                  filter === star ? "bg-yellow-500 text-white" : "bg-white text-gray-700"
+                } rounded`}
+              >
+                {star} Star{star > 1 && "s"}
+              </button>
+            ))}
             <button
-              key={star}
-              onClick={() => setFilter(star)}
+              onClick={() => setFilter(null)}
               className={`px-4 py-2 border ${
-                filter === star ? "bg-yellow-500 text-white" : "bg-white text-gray-700"
+                filter === null ? "bg-yellow-500 text-white" : "bg-white text-gray-700"
               } rounded`}
             >
-              {star} Star{star > 1 && "s"}
+              All
             </button>
-          ))}
-          <button
-            onClick={() => setFilter(null)}
-            className={`px-4 py-2 border ${
-              filter === null ? "bg-yellow-500 text-white" : "bg-white text-gray-700"
-            } rounded`}
-          >
-            All
-          </button>
-        </div>
-        {filteredReviews.length > 0 ? (
-          filteredReviews.map((review, index) => (
-            <div key={index} className="border-b py-2">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} className={`${review.rating > i ? "text-yellow-500" : "text-gray-300"}`} />
-                ))}
+          </div>
+          {filteredReviews.length > 0 ? (
+            filteredReviews.map((review, index) => (
+              <div key={index} className="border-b py-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar key={i} className={`${review.rating > i ? "text-yellow-500" : "text-gray-300"}`} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mt-2">{review.comment}</p>
+                <p className="text-gray-400 text-sm">{review.reviewerName}</p>
               </div>
-              <p className="text-gray-600 mt-2">{review.comment}</p>
-              <p className="text-gray-400 text-sm">{review.reviewerName}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-700">No reviews for this rating.</p>
-        )}
+            ))
+          ) : (
+            <p className="text-gray-700">No reviews for this rating.</p>
+          )}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

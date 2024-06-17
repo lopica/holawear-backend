@@ -29,7 +29,10 @@ const SideBarAdmin = () => {
         </div>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="dashboard">
-            <Link to="/dashboard" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
+            <Link
+              to="/admin1/dashboard"
+              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
+            >
               <Gauge size={20} className="mr-3" /> Dashboard
             </Link>
           </AccordionItem>

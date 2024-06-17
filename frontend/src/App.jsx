@@ -29,7 +29,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [loginTypes, setLoginTypes] = useState([]);
-
+  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,12 +41,14 @@ function App() {
         const userData = (await instance.get("/users")).data;
         const roleData = (await instance.get("/roles")).data;
         const loginTypeData = (await instance.get("/loginTypes")).data;
+        const ordersData = (await instance.get("/orders")).data;
         setProducts(productsData);
         setCategories(categoriesData);
         setBrands(brandsData);
         setUsers(userData);
         setRoles(roleData);
         setLoginTypes(loginTypeData);
+        setOrders(ordersData);
         // console.log(roles);
       } catch (error) {
         console.log(error);
@@ -72,13 +74,15 @@ function App() {
 
           <Route path="/admin1" element={<Layout />}>
             <Route index element={<Dashboard />} />
-            <Route path="/admin1/dashboard" element={<Dashboard />} />
+            <Route
+              path="/admin1/dashboard"
+              element={<Dashboard usersData={users} productsData={products} ordersData={orders} />}
+            />
             <Route path="/admin1/add-product" element={<AddProduct />} />
             <Route path="/admin1/users" element={<ManageUser users={users} roles={roles} loginTypes={loginTypes} />} />
           </Route>
         </Routes>
       </main>
-      <Footer />
     </>
   );
 }

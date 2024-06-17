@@ -17,7 +17,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
   const [selectedType, setSelectedType] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage, setUsersPerPage] = useState(5); // Default to 5 users per page
+  const [usersPerPage, setUsersPerPage] = useState(10); // Default to 10 users per page
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -210,7 +210,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
               <tr key={user.email}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{user.username}</div>
-                  <div className="text-sm text-gray-500">{user.email}</div>
+                  {/* <div className="text-sm text-gray-500">{user.email}</div> */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{user.email}</div>
