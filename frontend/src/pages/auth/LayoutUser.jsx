@@ -1,10 +1,10 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import SideBarAdmin from "../../components/SideBarAdmin";
-const Layout = () => {
+import SideBarUser from "../../components/SideBarUser";
+const LayoutUser = () => {
   return (
     <div className="flex bg-[#F5F6FA]">
-      <SideBarAdmin />
+      <SideBarUser />
       <div className="flex-grow p-4">
         <Outlet />
       </div>
@@ -12,4 +12,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default LayoutUser;

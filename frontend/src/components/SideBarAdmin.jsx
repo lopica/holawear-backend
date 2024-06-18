@@ -14,6 +14,8 @@ import {
   PaintBucket,
   UsersRound,
   NotebookText,
+  BaggageClaim,
+  Home,
 } from "lucide-react";
 
 const SideBarAdmin = () => {
@@ -28,12 +30,25 @@ const SideBarAdmin = () => {
           </div>
         </div>
         <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="homepage">
+            <Link to="/" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
+              <Home size={20} className="mr-3" /> Home Page
+            </Link>
+          </AccordionItem>
           <AccordionItem value="dashboard">
             <Link
               to="/admin1/dashboard"
               className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
             >
               <Gauge size={20} className="mr-3" /> Dashboard
+            </Link>
+          </AccordionItem>
+          <AccordionItem value="orders">
+            <Link
+              to="/admin1/orders"
+              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
+            >
+              <BaggageClaim size={20} className="mr-3" /> Orders
             </Link>
           </AccordionItem>
           <AccordionItem value="crud">
@@ -79,7 +94,10 @@ const SideBarAdmin = () => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="settings">
-            <Link to="/settings" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
+            <Link
+              to="/admin1/settings"
+              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
+            >
               <Settings size={20} className="mr-3" /> Settings
             </Link>
           </AccordionItem>
@@ -90,12 +108,12 @@ const SideBarAdmin = () => {
             <AccordionContent>
               <ul className="pl-8 space-y-2">
                 <li>
-                  <Link to="/about" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin1/about" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin1/contact" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     Contact
                   </Link>
                 </li>

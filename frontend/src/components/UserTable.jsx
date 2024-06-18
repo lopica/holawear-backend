@@ -230,7 +230,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
                 <td className="px-6 py-4 text-sm font-medium">
                   <button
                     onClick={() => onEdit(user.id)}
-                    className="ml-4 bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow"
+                    className=" bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow"
                   >
                     <Eye className="h-5 w-5 hover:opacity-85" />
                   </button>
@@ -240,12 +240,12 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
                   >
                     <Pencil className="h-5 w-5 opacity-55 hover:opacity-85" />
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => onDelete(user.id)}
                     className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow"
                   >
                     <Trash2 className="h-5 w-5 opacity-55 hover:opacity-85" />
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

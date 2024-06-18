@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ProductCard from "../../components/ProductCard";
 import Sidebar from "../../components/SideBar";
-import Footer from "../../components/Footer";
 
 const ProductList = ({ products, category }) => {
   const [selectedColors, setSelectedColors] = useState([]);
@@ -84,7 +83,6 @@ const ProductList = ({ products, category }) => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
