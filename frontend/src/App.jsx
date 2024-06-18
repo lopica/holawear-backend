@@ -96,25 +96,15 @@ function App() {
 
           <Route path="/admin1" element={<Layout />}>
             <Route index element={<Dashboard />} />
-            <Route
-              path="/admin1/dashboard"
-              element={<Dashboard usersData={users} productsData={products} ordersData={orders} />}
-            />
+            <Route path="/admin1/dashboard" element={<Dashboard usersData={users} productsData={products} ordersData={orders} />} />
             <Route path="/admin1/add-product" element={<AddProduct />} />
             <Route path="/admin1/users" element={<ManageUser users={users} roles={roles} loginTypes={loginTypes} />} />
-            <Route
-              path="/admin1/products"
-              element={<ManageProduct products={products} categories={categories} brands={brands} />}
-            />
+            <Route path="/admin1/products" element={<ManageProduct products={products} categories={categories} brands={brands} />} />
             <Route path="/admin1/types" element={<ManageType isType />} />
             <Route path="/admin1/brands" element={<ManageBrand isBrand />} />
             <Route path="/admin1/categories" element={<ManageCategory isCategory />} />
             <Route path="/admin1/colors" element={<ManageColor isColor />} />
-
-            <Route
-              path="/admin1/orders"
-              element={<ManageOrder usersData={users} productsData={products} ordersData={orders} />}
-            />
+            <Route path="/admin1/orders" element={<ManageOrder usersData={users} productsData={products} ordersData={orders} />} />
           </Route>
         </Routes>
       </main>
