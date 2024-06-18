@@ -6,6 +6,7 @@ import HomePage from "./pages/main/HomePage";
 import AboutPage from "./pages/main/AboutPage";
 import NotFoundPage from "./pages/error/NotFoundPage";
 import ProductDetail from "./pages/main/ProductDetail";
+import ShoppingCart from "./pages/main/ShoppingCart";
 
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -19,6 +20,11 @@ import Layout from "./pages/admin/Layout";
 import UserTable from "./components/UserTable";
 import ManageUser from "./pages/admin/ManageUser";
 import ManageOrder from "./pages/admin/ManageOrder";
+import ManageProduct from "./pages/admin/ManageProduct";
+import ManageType from "./pages/admin/ManageType";
+import ManageCategory from "./pages/admin/ManageCategory";
+import ManageBrand from "./pages/admin/ManageBrand";
+import ManageColor from "./pages/admin/ManageColor";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -33,6 +39,8 @@ function App() {
   const [roles, setRoles] = useState([]);
   const [loginTypes, setLoginTypes] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [carts, setCarts] = useState([]);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,6 +57,7 @@ function App() {
         const roleData = (await instance.get("/roles")).data;
         const loginTypeData = (await instance.get("/loginTypes")).data;
         const ordersData = (await instance.get("/orders")).data;
+        const cartsData = (await instance.get("/carts")).data;
         setProducts(productsData);
         setCategories(categoriesData);
         setBrands(brandsData);
@@ -56,7 +65,8 @@ function App() {
         setRoles(roleData);
         setLoginTypes(loginTypeData);
         setOrders(ordersData);
-        // console.log(roles);
+        setCarts(cartsData);
+        // console.log(carts);
       } catch (error) {
         console.log(error);
       }
@@ -78,6 +88,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/cart" element={<ShoppingCart cartsData={carts} />} />
+
           <Route path="/user1" element={<LayoutUser />}>
             <Route path="/user1/profile" element={<UserProfile />} />
           </Route>
@@ -90,6 +102,15 @@ function App() {
             />
             <Route path="/admin1/add-product" element={<AddProduct />} />
             <Route path="/admin1/users" element={<ManageUser users={users} roles={roles} loginTypes={loginTypes} />} />
+            <Route
+              path="/admin1/products"
+              element={<ManageProduct products={products} categories={categories} brands={brands} />}
+            />
+            <Route path="/admin1/types" element={<ManageType isType />} />
+            <Route path="/admin1/brands" element={<ManageBrand isBrand />} />
+            <Route path="/admin1/categories" element={<ManageCategory isCategory />} />
+            <Route path="/admin1/colors" element={<ManageColor isColor />} />
+
             <Route
               path="/admin1/orders"
               element={<ManageOrder usersData={users} productsData={products} ordersData={orders} />}

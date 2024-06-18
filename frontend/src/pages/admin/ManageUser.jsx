@@ -1,7 +1,7 @@
 import React from "react";
 import UserTable from "../../components/UserTable";
 
-const ManageProduct = ({ users, roles, loginTypes }) => {
+const ManageUser = ({ users, roles, loginTypes }) => {
   const handleDelete = (userId) => {
     // Implement delete functionality
     console.log("dele:" + userId);
@@ -19,4 +19,4 @@ const ManageProduct = ({ users, roles, loginTypes }) => {
   );
 };
 
-export default ManageProduct;
+export default ManageUser;
