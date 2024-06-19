@@ -4,7 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Pencil, Trash2, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
-const TableProduct = ({ products, categories, statuses, onDelete, onEdit }) => {
+const TableProduct = ({ products, categories, onEdit }) => {
+  const statuses = [
+    { id: 1, name: "Active" },
+    { id: 2, name: "Inactive" },
+  ];
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -25,7 +29,9 @@ const TableProduct = ({ products, categories, statuses, onDelete, onEdit }) => {
 
   const filteredProducts = products.filter(
     (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true) && (selectedStatus ? product.status === selectedStatus : true),
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory ? product.category === selectedCategory : true) &&
+      (selectedStatus ? product.status === selectedStatus : true),
   );
 
   // Pagination
@@ -154,7 +160,7 @@ const TableProduct = ({ products, categories, statuses, onDelete, onEdit }) => {
           {/* Table headers */}
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -167,7 +173,7 @@ const TableProduct = ({ products, categories, statuses, onDelete, onEdit }) => {
             {currentProducts.map((product) => (
               <tr key={product.id}>
                 <td className="px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                  <div className="text-sm font-medium text-gray-900">{product.title}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{product.category}</div>
@@ -179,7 +185,7 @@ const TableProduct = ({ products, categories, statuses, onDelete, onEdit }) => {
                   <Badge variant="outline">{product.status}</Badge>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{format(parseISO(product.createdAt), "HH:mm:ss dd-MM-yyyy")}</div>
+                  <div className="text-sm text-gray-900">{format(parseISO(product.meta.createdAt), "HH:mm:ss dd-MM-yyyy")}</div>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium">
                   <button onClick={() => onEdit(product.id)} className="bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
@@ -188,9 +194,9 @@ const TableProduct = ({ products, categories, statuses, onDelete, onEdit }) => {
                   <button onClick={() => onEdit(product.id)} className="ml-4 bg-white hover:bg-gray-50 text-indigo-600 hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Pencil className="h-5 w-5 opacity-55 hover:opacity-85" />
                   </button>
-                  <button onClick={() => onDelete(product.id)} className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow">
+                  {/* <button onClick={() => onDelete(product.id)} className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Trash2 className="h-5 w-5 opacity-55 hover:opacity-85" />
-                  </button>
+                  </button> */}
                 </td>
               </tr>
             ))}

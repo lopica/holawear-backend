@@ -46,10 +46,7 @@
         "barcode": "1234567890123",
         "qrCode": ""
       },
-      "images": [
-        "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmkceq521",
-        "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmk3zbhf4"
-      ],
+      "images": ["https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmkceq521", "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmk3zbhf4"],
       "thumbnail": "https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lvi9fsmkceq521",
       "stockDetails": {
         "#ff0000": {
@@ -79,6 +76,7 @@
       "brand": "Nike",
       "sku": "NK54321",
       "weight": 0.8,
+      "createdAt": "2024-05-23T08:56:21.618Z",
       "dimensions": {
         "width": 15,
         "height": 2,
@@ -141,6 +139,7 @@
       "brand": "Puma",
       "sku": "PM67890",
       "weight": 0.3,
+      "createdAt": "2024-05-23T08:56:21.618Z",
       "dimensions": {
         "width": 12,
         "height": 1,
@@ -204,6 +203,7 @@
       "brand": "Reebok",
       "sku": "RB12345",
       "weight": 0.5,
+      "createdAt": "2024-05-23T08:56:21.618Z",
       "dimensions": {
         "width": 14,
         "height": 1.5,
