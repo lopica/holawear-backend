@@ -27,11 +27,6 @@ const TableProduct2 = ({ productData, categories }) => {
     console.log("Form submitted successfully:", formData);
   };
 
-  const handleFormCancel = () => {
-    // Handle form cancellation (reset form or close dialog)
-    console.log("Form cancelled");
-  };
-
   const filteredProducts = productData.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true));
 
   return (
@@ -105,11 +100,7 @@ const TableProduct2 = ({ productData, categories }) => {
                       <ArrowDownToLine className="h-5 w-5 opacity-55 hover:opacity-85" />
                     </DialogTrigger>
                     <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Add Product Quantity</DialogTitle>
-                        <DialogDescription>Fill in the details below to add product quantities.</DialogDescription>
-                      </DialogHeader>
-                      <FormAddDepot initialFormData={initialFormData} onSubmit={handleFormSubmit} onCancel={handleFormCancel} />
+                      <FormAddDepot initialFormData={initialFormData} onSubmit={handleFormSubmit} />
                     </DialogContent>
                   </Dialog>
                   {product.availabilityStatus === "In Stock" && (
@@ -131,5 +122,6 @@ const TableProduct2 = ({ productData, categories }) => {
     </div>
   );
 };
+// không cho phép submit nếu như màu sắc nào đó có các size đều = 0 (tức là không có sản phẩm, hiện alert thông báo thừa màu sắc
 
 export default TableProduct2;
