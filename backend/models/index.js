@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const User = require("./user.model");
 const Role = require("./role.model");
+const Product = require("./product.model");
 
 mongoose.Promise = global.Promise;
 const db = {};
