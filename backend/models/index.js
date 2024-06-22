@@ -7,8 +7,6 @@ mongoose.Promise = global.Promise;
 const db = {};
 db.user = User;
 db.role = Role;
-//chỉ định các vai trò cho người dùng ngay từ khi khởi tạo
-db.ROLES = ["member", "admin", "mod"];
 
 db.connectDB = async () => {
   mongoose

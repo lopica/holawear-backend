@@ -1,38 +1,25 @@
-const express = require("express");
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const Role = require("./role.model.js");
 
-const userSchema = new Schema(
+const shippingAddressSchema = new mongoose.Schema(
   {
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      validate: {
-        validator: function (v) {
-          // Regular expression for email (contains @ and no whitespace)
-          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-        },
-        message: (props) => `input email -> ${props.value} is not a valid email number!`,
-      },
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-    },
-    type: {
-      type: String,
-      enum: {
-        values: ["system", "google", "facebook", "zalo"],
-        message: "{VALUE} is not supported",
-        required: true,
-      },
-    },
-    roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
+    fullName: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: { type: String, required: true },
+    specificAddress: { type: String, required: true },
   },
-
-  { timestamps: true },
+  { _id: false },
 );
 
-module.exports = mongoose.model("User", userSchema);
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true },
+  gender: { type: String, required: true },
+  phone: { type: String, required: true },
+  shippingAddress: { type: [shippingAddressSchema], default: [] },
+});
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
