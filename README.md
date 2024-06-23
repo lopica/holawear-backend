@@ -1,6 +1,36 @@
 # HolaWear
 
-### Front end
+### Back End
+
+    └── backend/
+        ├── controllers/
+        │   ├── index.js
+        │   ├── authController.js
+        │   ├── userController.js
+        │   └── ...
+        ├── middlewares/
+        │   ├── verifySignUp.js
+        │   ├── verifyJWT.js
+        │   └── ...
+        ├── models/
+        │   ├── index.js
+        │   ├── user.model.js
+        │   ├── role.model.js
+        │   └── ...
+        ├── node_modules
+        ├── routes/
+        │   ├── index.js
+        │   ├── authRoute.js
+        │   ├── userRoute.js
+        │   └── ...
+        ├── .env
+        ├── .prettierrc
+        ├── note BE.txt
+        ├── package-lock.json
+        ├── package.json
+        └── serevr.js
+
+### Front End
 
     └── frontEnd/
         ├── public
