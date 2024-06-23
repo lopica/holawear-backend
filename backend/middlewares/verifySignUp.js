@@ -3,7 +3,6 @@ const db = require("../models");
 const { create } = require("../models/role.model");
 const User = db.user;
 const Role = db.role;
-const ROLES = db.ROLES;
 
 async function checkExistUser(req, res, next) {
   try {

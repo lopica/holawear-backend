@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { AuthController } = require("../controllers/index.js");
-const verifySignUp = require("../middleware/verifySignUp");
+const verifySignUp = require("../middlewares/verifySignUp");
 
 const authRouter = express.Router();
 authRouter.use(bodyParser.json());
