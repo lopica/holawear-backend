@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const httpError = require("http-errors");
 const db = require("./models");
@@ -7,12 +9,19 @@ const { userRouter, roleRouter, authRouter } = require("./routes");
 require("dotenv").config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true, // Allow credentials (cookies)
+  }),
+);
+
 app.use(morgan("dev"));
+app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 
-app.get("/", (req, res, next) => {
-  res.status(200).json({ message: "Welcome to SE1740" });
-});
 app.use("/api/user", userRouter);
 app.use("/api/role", roleRouter);
 app.use("/api/auth", authRouter);

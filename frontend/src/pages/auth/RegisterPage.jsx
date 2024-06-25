@@ -1,8 +1,40 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
+import { toast } from "react-hot-toast";
 import banner1 from "../../assets/banner.png";
+import axiosInstance from "../../utils/axiosInstance";
 
 const RegisterPage = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+    const formData = { name, email, password };
+    try {
+      console.log(formData);
+      const response = await axiosInstance.post("/api/auth/signup", formData);
+      //mess này trả về từ server, hàm sign up bên trong authController ấy
+      if (!response.data.message === "ok") {
+        toast.error("Sign up failed");
+      } else {
+        toast.success("Sign up successful");
+      }
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.message + "hihi");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center pb-44">
       <div className="w-full max-w-4xl p-4">
@@ -11,41 +43,28 @@ const RegisterPage = () => {
             <div className="flex justify-center">
               <h2 className="text-3xl font-bold mb-4">Create an account</h2>
             </div>
-            <form>
+
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="flex justify-center text-gray-700 mb-5" htmlFor="email">
                   Enter your email to sign up for this app
                 </label>
                 <div className="mb-4">
-                  <input type="email" id="email" className="w-full px-3 py-2 border rounded" placeholder="Full Name" />
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border rounded" placeholder="Full Name" />
                 </div>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-3 py-2 border rounded"
-                  placeholder="email@domain.com"
-                />
+                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-3 py-2 border rounded" placeholder="email@domain.com" />
               </div>
               <div className="mb-4">
-                <input
-                  type="password"
-                  id="password"
-                  className="w-full px-3 py-2 border rounded"
-                  placeholder="Password"
-                />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded" placeholder="Password" />
               </div>
               <div className="mb-4">
-                <input
-                  type="password"
-                  id="confirm-password"
-                  className="w-full px-3 py-2 border rounded"
-                  placeholder="Confirm Password"
-                />
+                <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full px-3 py-2 border rounded" placeholder="Confirm Password" />
               </div>
               <button type="submit" className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800">
                 Register
               </button>
             </form>
+
             <div className="flex items-center my-4">
               <hr className="flex-grow border-t border-gray-300" />
               <span className="mx-2 text-gray-600">or continue with</span>

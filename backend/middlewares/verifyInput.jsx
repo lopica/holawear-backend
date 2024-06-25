@@ -1,12 +1,15 @@
 const createHttpError = require("http-errors");
 const db = require("../models");
-const { create } = require("../models/role.model");
+
 const User = db.user;
 const Role = db.role;
 
+/**
+ * Function ở đây là bước tiền kiểm tra trước khi đi vào trong controller
+ */
+
 async function checkExistUser(req, res, next) {
   try {
-    //kiểm soát trước khi đưa xung model
     if (!req.body.email || !req.body.password || !req.body.name) {
       throw createHttpError.BadRequest("Missing email, password or name");
     }
