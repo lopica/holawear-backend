@@ -27,7 +27,6 @@
     "dotenv": "^16.4.5",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.394.0",
-    "mdb-react-ui-kit": "^8.0.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

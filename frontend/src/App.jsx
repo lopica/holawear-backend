@@ -2,7 +2,6 @@ import React, { useState, useEffect, createContext } from "react";
 import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import axiosInstance from "./utils/axiosInstance";
 import "./App.scss";
 
