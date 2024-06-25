@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   name: { type: String, required: true },
   role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true },
-  gender: { type: String, required: true },
-  phone: { type: String, required: true },
+  gender: { type: String },
+  phone: { type: String },
   shippingAddress: { type: [shippingAddressSchema], default: [] },
 });
 

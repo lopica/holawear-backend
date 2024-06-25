@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import instance from "../../axios/index";
+import instance from "../../utils/index";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
 
@@ -29,8 +29,7 @@ const ProductDetail = () => {
   }
 
   const handleQuantityChange = (delta) => {
-    const maxQuantity =
-      selectedColor && selectedSize ? product.stockDetails[selectedColor][selectedSize] : product.stock;
+    const maxQuantity = selectedColor && selectedSize ? product.stockDetails[selectedColor][selectedSize] : product.stock;
     setQuantity((prevQuantity) => Math.min(Math.max(1, prevQuantity + delta), maxQuantity));
   };
 
@@ -88,8 +87,7 @@ const ProductDetail = () => {
 
   const availableSizes = selectedColor ? Object.keys(product.stockDetails[selectedColor]) : [];
 
-  const availableStock =
-    selectedColor && selectedSize ? product.stockDetails[selectedColor][selectedSize] : product.stock;
+  const availableStock = selectedColor && selectedSize ? product.stockDetails[selectedColor][selectedSize] : product.stock;
 
   return (
     <>
@@ -102,13 +100,7 @@ const ProductDetail = () => {
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
             <p className="text-xl text-gray-800 mb-4">${product.price.toFixed(2)}</p>
             <div className="flex items-center mb-4">
-              {[...Array(5)].map((_, i) =>
-                product.rating > i ? (
-                  <FaStar key={i} className="text-yellow-500" />
-                ) : (
-                  <FaRegStar key={i} className="text-gray-300" />
-                ),
-              )}
+              {[...Array(5)].map((_, i) => (product.rating > i ? <FaStar key={i} className="text-yellow-500" /> : <FaRegStar key={i} className="text-gray-300" />))}
               <span className="text-gray-600 ml-2">({product.rating} rating)</span>
             </div>
             <p className="text-gray-700 mb-4">{product.type}</p>
@@ -124,9 +116,7 @@ const ProductDetail = () => {
               {Object.keys(product.stockDetails).map((color) => (
                 <div
                   key={color}
-                  className={`w-5 h-5 rounded-full cursor-pointer border-2 ${
-                    selectedColor === color ? `ring-2 ring-offset-2` : ""
-                  }`}
+                  className={`w-5 h-5 rounded-full cursor-pointer border-2 ${selectedColor === color ? `ring-2 ring-offset-2` : ""}`}
                   style={{ backgroundColor: color }}
                   onClick={() => handleColorSelect(color)}
                 ></div>
@@ -135,13 +125,7 @@ const ProductDetail = () => {
             {selectedColor && (
               <div className="flex space-x-2 mt-4">
                 {availableSizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`px-3 py-1 border rounded ${
-                      selectedSize === size ? "bg-black text-white" : "bg-white text-black"
-                    }`}
-                    onClick={() => handleSizeSelect(size)}
-                  >
+                  <button key={size} className={`px-3 py-1 border rounded ${selectedSize === size ? "bg-black text-white" : "bg-white text-black"}`} onClick={() => handleSizeSelect(size)}>
                     {size}
                   </button>
                 ))}
@@ -154,14 +138,7 @@ const ProductDetail = () => {
                   <button onClick={() => handleQuantityChange(-1)} className="px-2 py-1 border rounded-l">
                     -
                   </button>
-                  <input
-                    type="number"
-                    value={quantity}
-                    onChange={handleQuantityInputChange}
-                    className="w-12 text-center border-t border-b"
-                    min="1"
-                    max={availableStock}
-                  />
+                  <input type="number" value={quantity} onChange={handleQuantityInputChange} className="w-12 text-center border-t border-b" min="1" max={availableStock} />
                   <button onClick={() => handleQuantityChange(1)} className="px-2 py-1 border rounded-r">
                     +
                   </button>
@@ -170,10 +147,7 @@ const ProductDetail = () => {
               </div>
               {error && <p className="text-red-500">{error}</p>}
               <div className="flex space-x-4">
-                <button
-                  className="flex items-center space-x-2 px-4 py-2 border border-black text-black rounded"
-                  onClick={handleAddToCart}
-                >
+                <button className="flex items-center space-x-2 px-4 py-2 border border-black text-black rounded" onClick={handleAddToCart}>
                   <CiShoppingCart size={24} />
                   <span>Add to Cart</span>
                 </button>
@@ -188,22 +162,11 @@ const ProductDetail = () => {
           <h2 className="text-2xl font-bold mb-2">Reviews</h2>
           <div className="flex space-x-2 mb-4">
             {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                onClick={() => setFilter(star)}
-                className={`px-4 py-2 border ${
-                  filter === star ? "bg-yellow-500 text-white" : "bg-white text-gray-700"
-                } rounded`}
-              >
+              <button key={star} onClick={() => setFilter(star)} className={`px-4 py-2 border ${filter === star ? "bg-yellow-500 text-white" : "bg-white text-gray-700"} rounded`}>
                 {star} Star{star > 1 && "s"}
               </button>
             ))}
-            <button
-              onClick={() => setFilter(null)}
-              className={`px-4 py-2 border ${
-                filter === null ? "bg-yellow-500 text-white" : "bg-white text-gray-700"
-              } rounded`}
-            >
+            <button onClick={() => setFilter(null)} className={`px-4 py-2 border ${filter === null ? "bg-yellow-500 text-white" : "bg-white text-gray-700"} rounded`}>
               All
             </button>
           </div>

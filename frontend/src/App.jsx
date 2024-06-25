@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
+import axiosInstance from "./utils/axiosInstance";
 import "./App.scss";
 
 import HomePage from "./pages/main/HomePage";
@@ -29,9 +32,13 @@ import ManageColor from "./pages/admin/ManageColor";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
-import instance from "./axios/index";
+// import instance from "./utils/index";
+
+export const UserContext = createContext({});
 
 function App() {
+  const [userAuth, setUserAuth] = useState({});
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -47,54 +54,66 @@ function App() {
   const isAdminRoute = location.pathname.includes("/admin1");
   const isUserRoute = location.pathname.includes("/user1");
 
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  // const productsData = (await instance.get("/products")).data;
+  // const categoriesData = (await instance.get("/categories")).data;
+  // const brandsData = (await instance.get("/brands")).data;
+  // const userData = (await instance.get("/users")).data;
+  // const roleData = (await instance.get("/roles")).data;
+  // const loginTypeData = (await instance.get("/loginTypes")).data;
+  // const ordersData = (await instance.get("/orders")).data;
+  // const cartsData = (await instance.get("/carts")).data;
+  // setProducts(productsData);
+  // setCategories(categoriesData);
+  // setBrands(brandsData);
+  // setUsers(userData);
+  // setRoles(roleData);
+  // setLoginTypes(loginTypeData);
+  // setOrders(ordersData);
+  // setCarts(cartsData);
+  // console.log(carts);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   })();
+  // }, []);
+
   useEffect(() => {
-    (async () => {
-      try {
-        const productsData = (await instance.get("/products")).data;
-        const categoriesData = (await instance.get("/categories")).data;
-        const brandsData = (await instance.get("/brands")).data;
-        const userData = (await instance.get("/users")).data;
-        const roleData = (await instance.get("/roles")).data;
-        const loginTypeData = (await instance.get("/loginTypes")).data;
-        const ordersData = (await instance.get("/orders")).data;
-        const cartsData = (await instance.get("/carts")).data;
-        setProducts(productsData);
-        setCategories(categoriesData);
-        setBrands(brandsData);
-        setUsers(userData);
-        setRoles(roleData);
-        setLoginTypes(loginTypeData);
-        setOrders(ordersData);
-        setCarts(cartsData);
-        // console.log(carts);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+    const user = sessionStorage.getItem("user");
+    const accessToken = sessionStorage.getItem("accessToken");
+    if (user && accessToken) {
+      setUserAuth({ accessToken: accessToken, user: JSON.parse(user) });
+    } else {
+      setUserAuth({ accessToken: null });
+    }
   }, []);
 
   return (
     <>
-      {!isAdminRoute && <Header />}
-      {/* <Header /> */}
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage products={products} categories={categories} brands={brands} />} />
-          <Route path="/home" element={<Navigate to="/" />} />
-          <Route path="/about" element={<AboutPage />} />
+      <UserContext.Provider value={{ userAuth, setUserAuth }}>
+        <Toaster />
+        {!isAdminRoute && <Header />}
+        {/* <Header /> */}
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage products={products} categories={categories} brands={brands} />} />
+            <Route path="/home" element={<Navigate to="/" />} />
+            {/* <Route path="/about" element={<AboutPage />} />
           <Route path="/men" element={<ProductList products={products} category="men" />} />
           <Route path="/women" element={<ProductList products={products} category="women" />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-          <Route path="/cart" element={<ShoppingCart cartsData={carts} />} />
+          <Route path="/product/:id" element={<ProductDetail />} /> */}
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            {/* <Route path="*" element={<NotFoundPage />} />
+          <Route path="/cart" element={<ShoppingCart cartsData={carts} />} /> */}
 
-          <Route path="/user1" element={<LayoutUser />}>
+            {/* <Route path="/user1" element={<LayoutUser />}>
             <Route path="/user1/profile" element={<UserProfile />} />
-          </Route>
+          </Route> */}
 
-          <Route path="/admin1" element={<Layout />}>
+            {/* <Route path="/admin1" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="/admin1/dashboard" element={<Dashboard usersData={users} productsData={products} ordersData={orders} />} />
             <Route path="/admin1/add-product" element={<AddProduct />} />
@@ -105,10 +124,11 @@ function App() {
             <Route path="/admin1/categories" element={<ManageCategory isCategory />} />
             <Route path="/admin1/colors" element={<ManageColor isColor />} />
             <Route path="/admin1/orders" element={<ManageOrder usersData={users} productsData={products} ordersData={orders} />} />
-          </Route>
-        </Routes>
-      </main>
-      {!isAdminRoute && !isUserRoute && <Footer />}
+          </Route> */}
+          </Routes>
+        </main>
+        {!isAdminRoute && !isUserRoute && <Footer />}
+      </UserContext.Provider>
     </>
   );
 }
