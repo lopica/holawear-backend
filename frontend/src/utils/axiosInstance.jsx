@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
         sessionStorage.removeItem("accessToken");
         // setUserAuth({ accessToken: null, user: null });
         toast.error("Session expired. Please sign in again");
-        window.location.href = "/login";
+        // window.location.href = "/login";
       }
       config.headers["token"] = `Bearer ${accessToken}`;
     }

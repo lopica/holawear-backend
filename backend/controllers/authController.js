@@ -105,9 +105,53 @@ async function signup(req, res, next) {
 }
 
 //sign in action
-async function signin(req, res, next) {}
+async function signin(req, res, next) {
+  try {
+    const { email, password } = req.body;
+
+    // Find user in the database by username
+    const user = await User.findOne({ email }).populate("role").exec();
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Compare password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.status(401).json({ message: "Invalid password" });
+
+    // Generate tokens
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    // Send response with tokens and user information
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Strict",
+      path: "/",
+    });
+
+    res.status(201).json({
+      message: "Logged in successfully",
+      accessToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role.name,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Log in fail. " + error.message });
+  }
+}
+
+//log out
+async function logout(req, res, next) {
+  res.clearCookie("refreshToken");
+  res.status(200).json({ message: "Logged out successfully" });
+}
 
 module.exports = {
   signup,
   signin,
+  logout,
 };
