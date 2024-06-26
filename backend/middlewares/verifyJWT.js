@@ -9,7 +9,9 @@ async function verifyToken(req, res, next) {
     jwt.verify(secretToken, process.env.JWT_ACCESS_KEY, (err, user) => {
       if (err) {
         //forbidden - ngăn cấm
-        return res.status(403).json("Token is not valid or expired.");
+        return res.status(403).json({
+          message: "Token is not valid. Forbidden!",
+        });
       }
       req.user = user;
       next();

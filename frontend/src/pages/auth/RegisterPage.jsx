@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { toast } from "react-hot-toast";
 import banner1 from "../../assets/banner.png";
+import axios from "axios";
 import axiosInstance from "../../utils/axiosInstance";
 
 const RegisterPage = () => {
@@ -22,7 +23,7 @@ const RegisterPage = () => {
     const formData = { name, email, password };
     try {
       console.log(formData);
-      const response = await axiosInstance.post("/api/auth/signup", formData);
+      const response = await axios.post("/api/auth/signup", formData);
       //mess này trả về từ server, hàm sign up bên trong authController ấy
       if (!response.data.message === "ok") {
         toast.error("Sign up failed");
@@ -31,7 +32,7 @@ const RegisterPage = () => {
       }
       navigate("/login");
     } catch (error) {
-      toast.error(error.message + "hihi");
+      toast.error(error.message);
     }
   };
 
