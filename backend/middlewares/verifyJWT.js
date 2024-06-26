@@ -21,6 +21,13 @@ async function verifyToken(req, res, next) {
   }
 }
 
+async function refreshToken(req, res, next) {
+  //tôi muốn kiểm tra, nếu như access token đã hết hạn(forbidden)
+  //thì tôi sẽ kiểm tra refresh token đã hết hạn chưa
+  //1. Nếu refresh token hết hạn thì tôi sẽ gọi function logout
+  //2. Nếu refresh token chưa hết hạn thì tôi sẽ gọi function requestRefreshToken
+}
+
 //just admin and its user can access
 async function verifyTokenIsUserAndAdmin(req, res, next) {
   verifyToken(req, res, () => {
