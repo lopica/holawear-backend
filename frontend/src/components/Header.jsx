@@ -15,7 +15,9 @@ const Header = () => {
     try {
       await axios.post(
         "http://localhost:9999/api/auth/logout",
-        {},
+        {
+          userId: userAuth.user.id,
+        },
         {
           headers: {
             token: `Bearer ${userAuth.accessToken}`,

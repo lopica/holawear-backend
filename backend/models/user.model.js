@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { type } = require(".");
 
 const shippingAddressSchema = new mongoose.Schema(
   {
@@ -19,7 +18,7 @@ const userSchema = new mongoose.Schema({
   gender: { type: String },
   phone: { type: String },
   shippingAddress: { type: [shippingAddressSchema], default: [] },
-  refreshToken: [{ type: String }],
+  refreshToken: { type: String },
 });
 
 const User = mongoose.model("User", userSchema);
