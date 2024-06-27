@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   gender: { type: String },
   phone: { type: String },
   shippingAddress: { type: [shippingAddressSchema], default: [] },
+  refreshToken: { type: String },
 });
 
 const User = mongoose.model("User", userSchema);
