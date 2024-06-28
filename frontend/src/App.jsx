@@ -8,6 +8,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NotFoundPage from "./pages/error/NotFoundPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 
 import UserProfile from "./pages/auth/UserProfile";
 
@@ -41,7 +42,7 @@ function App() {
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/register" element={!userAuth.accessToken ? <RegisterPage /> : <Navigate to="/" />} />
             <Route path="/user/profile" element={userAuth.accessToken ? <UserProfile /> : <Navigate to="/login" />} />
-
+            <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
