@@ -1,6 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "@/App";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import addressData from "../../data/address.js"; // Adjusted import path
 
 const ShippingAddress = () => {
   const { userAuth, setUserAuth } = useContext(UserContext);
@@ -11,35 +17,25 @@ const ShippingAddress = () => {
     address: "",
     specificAddress: "",
   });
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
+
+  const provinces = addressData.map((province) => province.Name);
+  const districts = selectedProvince ? addressData.find((province) => province.Name === selectedProvince).Districts.map((district) => district.Name) : [];
+  const wards = selectedDistrict
+    ? addressData
+        .find((province) => province.Name === selectedProvince)
+        .Districts.find((district) => district.Name === selectedDistrict)
+        .Wards.map((ward) => ward.Name)
+    : [];
 
   const handleDelete = async (id) => {
-    const updatedAddresses = addresses.filter((address) => address._id !== id);
-    setAddresses(updatedAddresses);
-    setUserAuth({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } });
-    sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } }));
-    try {
-      await axios.delete(`/api/addresses/${id}`);
-    } catch (error) {
-      console.error("Error deleting address:", error);
-    }
+    console.log("Delete address with id:", id);
   };
 
   const handleAdd = async () => {
-    try {
-      const response = await axios.post(`/api/addresses`, newAddress);
-      const updatedAddresses = [...addresses, response.data];
-      setAddresses(updatedAddresses);
-      setUserAuth({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } });
-      sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } }));
-      setNewAddress({
-        fullName: "",
-        phone: "",
-        address: "",
-        specificAddress: "",
-      });
-    } catch (error) {
-      console.error("Error adding address:", error);
-    }
+    console.log("Add new address:", newAddress);
   };
 
   const handleChange = (e) => {
@@ -47,35 +43,121 @@ const ShippingAddress = () => {
     setNewAddress({ ...newAddress, [name]: value });
   };
 
+  const handleProvinceChange = (value) => {
+    console.log("Selected Province:", value);
+    setSelectedProvince(value);
+    setSelectedDistrict("");
+    setSelectedWard("");
+  };
+
+  const handleDistrictChange = (value) => {
+    console.log("Selected District:", value);
+    setSelectedDistrict(value);
+    setSelectedWard("");
+  };
+
+  const handleWardChange = (value) => {
+    console.log("Selected Ward:", value);
+    setSelectedWard(value);
+  };
+
+  useEffect(() => {
+    if (selectedProvince && selectedDistrict && selectedWard) {
+      setNewAddress((prevState) => ({
+        ...prevState,
+        address: `${selectedWard} - ${selectedDistrict} - ${selectedProvince}`,
+      }));
+    }
+  }, [selectedProvince, selectedDistrict, selectedWard]);
+
   return (
     <div>
-      <div className="mb-4">
-        <h2 className="text-lg font-bold mb-2">Thêm địa chỉ mới</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input id="fullName" name="fullName" type="text" value={newAddress.fullName} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Phone
-            </label>
-            <input id="phone" name="phone" type="text" value={newAddress.phone} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
-            <input id="address" name="address" type="text" value={newAddress.address} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
-            <label htmlFor="specificAddress" className="block text-sm font-medium text-gray-700">
-              Specific Address
-            </label>
-            <input id="specificAddress" name="specificAddress" type="text" value={newAddress.specificAddress} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
+      <Dialog>
+        <DialogTrigger asChild className="w-auto">
+          <Button variant="outline">Add New Address</Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-auto">
+          <DialogHeader>
+            <DialogTitle>Add New Shipping Address</DialogTitle>
+            <DialogDescription>Fill in the details below to add a new shipping address.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-1 gap-4">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input id="fullName" name="fullName" value={newAddress.fullName} onChange={handleChange} />
+              <Label htmlFor="phone">Phone</Label>
+              <Input id="phone" name="phone" value={newAddress.phone} onChange={handleChange} />
+              <Label htmlFor="address">Address</Label>
+              <Input id="address" name="address" value={newAddress.address} readOnly />
+
+              <div className="flex flex-wrap gap-4">
+                <div>
+                  <Label htmlFor="province">Province</Label>
+                  <Select value={selectedProvince} onValueChange={handleProvinceChange}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Tỉnh/ Thành Phố" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Tỉnh/ Thành Phố</SelectLabel>
+                        {provinces.map((province) => (
+                          <SelectItem key={province} value={province}>
+                            {province}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="district">District</Label>
+                  <Select value={selectedDistrict} onValueChange={handleDistrictChange} disabled={!selectedProvince}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Quận/ Huyện / Thành phố" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Quận/ Huyện / Thành phố</SelectLabel>
+                        {districts.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="ward">Ward</Label>
+                  <Select value={selectedWard} onValueChange={handleWardChange} disabled={!selectedDistrict}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Phường / Xã" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Phường / Xã</SelectLabel>
+                        {wards.map((ward) => (
+                          <SelectItem key={ward} value={ward}>
+                            {ward}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Label htmlFor="specificAddress">Specific Address</Label>
+              <Input placeholder="Số nhà, đường, ngõ, ..." id="specificAddress" name="specificAddress" value={newAddress.specificAddress} onChange={handleChange} />
+            </div>
           </div>
-        </div>
-        <button onClick={handleAdd} className="bg-blue-500 text-white py-2 px-4 rounded">
-          Thêm địa chỉ
-        </button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <DialogFooter>
+            <Button onClick={handleAdd}>Add Address</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {addresses.map((address) => (
           <div key={address._id} className="bg-white p-4 rounded shadow-md">
             <div className="mb-4">
@@ -87,9 +169,9 @@ const ShippingAddress = () => {
               <p>{address.specificAddress}</p>
             </div>
             <div className="flex justify-end">
-              <button onClick={() => handleDelete(address._id)} className="bg-red-500 text-white py-2 px-4 rounded">
-                Xóa
-              </button>
+              <Button onClick={() => handleDelete(address._id)} className="bg-red-500 text-white py-2 px-4 rounded">
+                Delete
+              </Button>
             </div>
           </div>
         ))}
