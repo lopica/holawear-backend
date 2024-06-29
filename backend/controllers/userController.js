@@ -52,6 +52,7 @@ async function getUserByEmail(req, res, next) {
 }
 
 //Add shipping address by user ID
+//return shipping address(array) after adding
 async function addShippingAddress(req, res, next) {
   try {
     const userId = req.params.id;
@@ -62,17 +63,16 @@ async function addShippingAddress(req, res, next) {
       specificAddress: req.body.specificAddress,
     };
 
-    await User.findByIdAndUpdate(userId, { $push: { shippingAddress: address } }, { new: true })
-      .then((updatedUser) => {
-        if (updatedUser) {
-          res.status(200).json(updatedUser);
-        } else {
-          res.status(404).send("User not found");
-        }
-      })
-      .catch((error) => {
-        next(error);
+    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { shippingAddress: address } }, { new: true, runValidators: true });
+
+    if (updatedUser) {
+      res.status(200).json({
+        message: "Address added successfully",
+        shippingAddress: updatedUser.shippingAddress,
       });
+    } else {
+      res.status(404).send("User not found");
+    }
   } catch (error) {
     next(error);
   }

@@ -1,37 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserContext } from "@/App";
 
 const ShippingAddress = () => {
   const { userAuth, setUserAuth } = useContext(UserContext);
-  const [addresses, setAddresses] = useState(userAuth.user.addresses || []);
-  const [isEditing, setIsEditing] = useState(null);
-
-  const handleSetDefault = async (id) => {
-    const updatedAddresses = addresses.map((address) => (address.id === id ? { ...address, default: true } : { ...address, default: false }));
-    setAddresses(updatedAddresses);
-    setUserAuth({ ...userAuth, user: { ...userAuth.user, addresses: updatedAddresses } });
-    sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, addresses: updatedAddresses } }));
-
-    // Optionally, send the update to the backend
-    try {
-      await axios.post(`/api/addresses/${id}/set-default`);
-    } catch (error) {
-      console.error("Error setting default address:", error);
-    }
-  };
+  const [addresses, setAddresses] = useState(userAuth.user.shippingAddress || []);
+  const [newAddress, setNewAddress] = useState({
+    fullName: "",
+    phone: "",
+    address: "",
+    specificAddress: "",
+  });
 
   const handleDelete = async (id) => {
-    const updatedAddresses = addresses.filter((address) => address.id !== id);
+    const updatedAddresses = addresses.filter((address) => address._id !== id);
     setAddresses(updatedAddresses);
-    setUserAuth({ ...userAuth, user: { ...userAuth.user, addresses: updatedAddresses } });
-    sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, addresses: updatedAddresses } }));
-
-    // Optionally, send the delete request to the backend
+    setUserAuth({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } });
+    sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } }));
     try {
       await axios.delete(`/api/addresses/${id}`);
     } catch (error) {
@@ -39,68 +24,76 @@ const ShippingAddress = () => {
     }
   };
 
-  const handleUpdate = async (id, updatedAddress) => {
-    const updatedAddresses = addresses.map((address) => (address.id === id ? updatedAddress : address));
-    setAddresses(updatedAddresses);
-    setUserAuth({ ...userAuth, user: { ...userAuth.user, addresses: updatedAddresses } });
-    sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, addresses: updatedAddresses } }));
-
-    // Optionally, send the update to the backend
+  const handleAdd = async () => {
     try {
-      await axios.put(`/api/addresses/${id}`, updatedAddress);
+      const response = await axios.post(`/api/addresses`, newAddress);
+      const updatedAddresses = [...addresses, response.data];
+      setAddresses(updatedAddresses);
+      setUserAuth({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } });
+      sessionStorage.setItem("user", JSON.stringify({ ...userAuth, user: { ...userAuth.user, shippingAddress: updatedAddresses } }));
+      setNewAddress({
+        fullName: "",
+        phone: "",
+        address: "",
+        specificAddress: "",
+      });
     } catch (error) {
-      console.error("Error updating address:", error);
+      console.error("Error adding address:", error);
     }
-    setIsEditing(null);
   };
 
-  const handleEdit = (id) => {
-    setIsEditing(id);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewAddress({ ...newAddress, [name]: value });
   };
 
   return (
     <div>
-      <Button className="mb-4">Thêm địa chỉ mới</Button>
-      {addresses.map((address) => (
-        <Card key={address.id} className="mb-4">
-          <CardHeader>
-            <CardTitle>{address.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isEditing === address.id ? (
-              <>
-                <Label htmlFor={`name-${address.id}`}>Name</Label>
-                <Input id={`name-${address.id}`} type="text" defaultValue={address.name} onChange={(e) => handleUpdate(address.id, { ...address, name: e.target.value })} />
-                <Label htmlFor={`phone-${address.id}`}>Phone</Label>
-                <Input id={`phone-${address.id}`} type="text" defaultValue={address.phone} onChange={(e) => handleUpdate(address.id, { ...address, phone: e.target.value })} />
-                <Label htmlFor={`address-${address.id}`}>Address</Label>
-                <Input id={`address-${address.id}`} type="text" defaultValue={address.address} onChange={(e) => handleUpdate(address.id, { ...address, address: e.target.value })} />
-              </>
-            ) : (
-              <>
-                <p>{address.name}</p>
-                <p>{address.phone}</p>
-                <p>{address.address}</p>
-                {address.default && <span className="text-red-500">Mặc định</span>}
-              </>
-            )}
-          </CardContent>
-          <CardFooter>
-            {isEditing === address.id ? (
-              <>
-                <Button onClick={() => handleUpdate(address.id)}>Lưu</Button>
-                <Button onClick={() => setIsEditing(null)}>Hủy</Button>
-              </>
-            ) : (
-              <>
-                <Button onClick={() => handleEdit(address.id)}>Cập nhật</Button>
-                <Button onClick={() => handleDelete(address.id)}>Xóa</Button>
-                {!address.default && <Button onClick={() => handleSetDefault(address.id)}>Thiết lập mặc định</Button>}
-              </>
-            )}
-          </CardFooter>
-        </Card>
-      ))}
+      <div className="mb-4">
+        <h2 className="text-lg font-bold mb-2">Thêm địa chỉ mới</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
+            <input id="fullName" name="fullName" type="text" value={newAddress.fullName} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              Phone
+            </label>
+            <input id="phone" name="phone" type="text" value={newAddress.phone} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+              Address
+            </label>
+            <input id="address" name="address" type="text" value={newAddress.address} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
+            <label htmlFor="specificAddress" className="block text-sm font-medium text-gray-700">
+              Specific Address
+            </label>
+            <input id="specificAddress" name="specificAddress" type="text" value={newAddress.specificAddress} onChange={handleChange} className="w-full px-3 py-2 border rounded mb-2" />
+          </div>
+        </div>
+        <button onClick={handleAdd} className="bg-blue-500 text-white py-2 px-4 rounded">
+          Thêm địa chỉ
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {addresses.map((address) => (
+          <div key={address._id} className="bg-white p-4 rounded shadow-md">
+            <div className="mb-4">
+              <h3 className="text-lg font-bold">{address.fullName}</h3>
+            </div>
+            <div className="mb-4">
+              <p>{address.phone}</p>
+              <p>{address.address}</p>
+              <p>{address.specificAddress}</p>
+            </div>
+            <div className="flex justify-end">
+              <button onClick={() => handleDelete(address._id)} className="bg-red-500 text-white py-2 px-4 rounded">
+                Xóa
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
