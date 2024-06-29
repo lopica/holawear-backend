@@ -91,7 +91,7 @@ const Header = () => {
           </Link>
           {/* admin */}
           {userAuth.user?.role === "admin" && (
-            <Link to="/admin1/dashboard" className="mr-4">
+            <Link to="/admin/dashboard" className="mr-4">
               <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow ">
                 <AiOutlineDashboard className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />
               </button>
@@ -99,7 +99,7 @@ const Header = () => {
           )}
           {/* user profile */}
           {userAuth.accessToken && (
-            <Link to="/user1/profile" className="mr-4">
+            <Link to="/user/profile" className="mr-4">
               <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow ">
                 <CiUser className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />
               </button>

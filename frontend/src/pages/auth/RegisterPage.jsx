@@ -22,17 +22,16 @@ const RegisterPage = () => {
     }
     const formData = { name, email, password };
     try {
-      console.log(formData);
-      const response = await axios.post("/api/auth/signup", formData);
+      const response = await axios.post("http://localhost:9999/api/auth/signup", formData);
       //mess này trả về từ server, hàm sign up bên trong authController ấy
-      if (!response.data.message === "ok") {
-        toast.error("Sign up failed");
-      } else {
-        toast.success("Sign up successful");
+      if (!response.status === 201) {
+        toast.error(response.data.message);
+        return;
       }
+      toast.success("Account created successfully.");
       navigate("/login");
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 

@@ -1,7 +1,8 @@
 const db = require("../models");
 const User = db.user;
+const ShippingAddress = db.shippingAddress;
 
-//Create an user
+// Create a user
 async function create(req, res, next) {
   try {
     const newUser = new User({
@@ -23,12 +24,63 @@ async function create(req, res, next) {
   }
 }
 
-//Get all users
+// Get all users
 
-//Update an user
+// Update a user by user ID
+async function updateUserById(req, res, next) {}
 
-//Delete an user
+// Delete a user
+
+// Get user by email
+async function getUserByEmail(req, res, next) {
+  try {
+    const email = req.params.email;
+    await User.findOne({ email: email })
+      .then((user) => {
+        if (user) {
+          res.status(200).json(user);
+        } else {
+          res.status(404).send("User not found");
+        }
+      })
+      .catch((error) => {
+        next(error);
+      });
+  } catch (error) {
+    next(error);
+  }
+}
+
+//Add shipping address by user ID
+//return shipping address(array) after adding
+async function addShippingAddress(req, res, next) {
+  try {
+    const userId = req.params.id;
+    const address = {
+      fullName: req.body.fullName,
+      phone: req.body.phone,
+      address: req.body.address,
+      specificAddress: req.body.specificAddress,
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { shippingAddress: address } }, { new: true, runValidators: true });
+
+    if (updatedUser) {
+      res.status(200).json({
+        message: "Address added successfully",
+        shippingAddress: updatedUser.shippingAddress,
+      });
+    } else {
+      res.status(404).send("User not found");
+    }
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = {
   create,
+  getUserByEmail,
+  updateUserById,
+  addShippingAddress,
 };

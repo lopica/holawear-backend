@@ -18,7 +18,7 @@ function generateAccessToken(user) {
     },
     process.env.JWT_ACCESS_KEY,
     {
-      expiresIn: "30s",
+      expiresIn: "15m",
     },
   );
 }
@@ -85,7 +85,7 @@ async function signup(req, res, next) {
       }
 
       await newUser.save();
-      res.status(201).json({ message: "User was registered successfully!", user: newUser });
+      res.status(201).json({ message: "ok", user: newUser });
     }
   } catch (error) {
     next(error);
@@ -120,6 +120,8 @@ async function signin(req, res, next) {
         name: user.name,
         email: user.email,
         role: user.role.name,
+        phone: user.phone,
+        shippingAddress: user.shippingAddress,
       },
     });
   } catch (error) {

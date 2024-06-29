@@ -2,25 +2,36 @@ import React, { useState, useContext } from "react";
 import { FaGoogle } from "react-icons/fa";
 import banner1 from "../../assets/banner.png";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { UserContext } from "../../App"; // Import UserContext
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false); // Add state for Remember Me
   const navigate = useNavigate();
   const { setUserAuth } = useContext(UserContext); // Use setUserAuth from context
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:9999/api/auth/signin", { email, password });
+      const response = await axios.post("http://localhost:9999/api/auth/signin", {
+        email,
+        password,
+      });
       if (response.status === 201) {
         toast.success(response.data.message);
         const { accessToken, user } = response.data;
-        sessionStorage.setItem("accessToken", accessToken);
-        sessionStorage.setItem("user", JSON.stringify(user));
+
+        if (rememberMe) {
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("user", JSON.stringify(user));
+        } else {
+          sessionStorage.setItem("accessToken", accessToken);
+          sessionStorage.setItem("user", JSON.stringify(user));
+        }
+
         setUserAuth({ accessToken, user }); // Update context
         navigate("/");
       }
@@ -49,12 +60,17 @@ const LoginPage = () => {
               </div>
               <div className="mb-4 flex items-center justify-between">
                 <label className="flex items-center">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    type="checkbox"
+                    className="form-checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)} // Update state
+                  />
                   <span className="ml-2">Remember Me</span>
                 </label>
-                <a href="#" className="text-sm text-blue-500 hover:underline">
+                <Link to={"/forgot-password"} className="text-sm text-blue-500 hover:underline">
                   Forgot Password?
-                </a>
+                </Link>
               </div>
               <button type="submit" className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800">
                 Login

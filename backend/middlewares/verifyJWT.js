@@ -22,7 +22,7 @@ async function verifyToken(req, res, next) {
   const userIdFE = req.body.userId;
   const userFound = await User.findById(userIdFE).populate("role").exec();
   const refreshToken = userFound.refreshToken;
-  console.log("refreshToken: " + refreshToken);
+  // console.log("refreshToken: " + refreshToken);
 
   //2 ways to get token from user - cookie or header(đ dc) / db => 1 cách đó là lấy id user từ FE xong tìm token trong db
   if (refreshToken == null) console.log("refreshToken is null");
@@ -41,8 +41,8 @@ async function verifyToken(req, res, next) {
     const secretToken = token.split(" ")[1];
     const secretRefreshToken = refreshToken;
 
-    console.log("===== secretRefreshToken: " + secretRefreshToken);
-    console.log("===== secretToken: " + secretToken);
+    // console.log("===== secretRefreshToken: " + secretRefreshToken);
+    // console.log("===== secretToken: " + secretToken);
 
     jwt.verify(secretToken, process.env.JWT_ACCESS_KEY, async (err, user) => {
       if (err) {
@@ -57,13 +57,13 @@ async function verifyToken(req, res, next) {
         }
 
         const newAccessToken = await refreshAccessToken(userIdAccessToken);
-        console.log("=== newAccessToken: " + newAccessToken);
+        // console.log("=== newAccessToken: " + newAccessToken);
         res.setHeader("token", `Bearer ${newAccessToken}`);
 
         req.user = jwt.decode(newAccessToken); // Decode new token to get user info
         next();
       } else {
-        console.log("no error");
+        // console.log("no error");
         req.user = user;
         next();
       }
