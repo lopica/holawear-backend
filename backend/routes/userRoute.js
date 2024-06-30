@@ -13,4 +13,5 @@ userRouter.put("/update-general-user/:id", UserController.updateGeneralUserById)
 userRouter.post("/add-address/:id", UserController.addShippingAddress);
 userRouter.delete("/delete-address/:id", UserController.deleteShippingAddress);
 
+userRouter.post("/change-password/:id", UserController.changePassword);
 module.exports = userRouter;

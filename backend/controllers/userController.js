@@ -1,6 +1,7 @@
 const db = require("../models");
 const User = db.user;
 const Role = db.role;
+const bcrypt = require("bcrypt");
 // Create a user role seller / admin - for admin only
 async function create(req, res, next) {
   try {
@@ -155,10 +156,47 @@ async function deleteShippingAddress(req, res, next) {
   }
 }
 
+// Change password
+async function changePassword(req, res, next) {
+  try {
+    const userId = req.params.id;
+    const { currentPassword, newPassword } = req.body;
+
+    // Find user by ID
+    const userFound = await User.findById(userId);
+    if (!userFound) {
+      throw new Error("User not found");
+    }
+
+    // Check if current password is correct
+    const validPassword = await bcrypt.compare(currentPassword, userFound.password);
+    if (!validPassword) {
+      throw new Error("Current password is incorrect");
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update password
+    userFound.password = hashedPassword;
+    const result = await userFound.save();
+
+    if (result) {
+      res.status(200).json({ message: "Password changed successfully" });
+    } else {
+      throw new Error("Change password failed");
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   create,
   getUserByEmail,
   addShippingAddress,
   deleteShippingAddress,
   updateGeneralUserById,
+  changePassword,
 };

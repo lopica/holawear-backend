@@ -4,6 +4,17 @@ import { toast } from "react-hot-toast";
 import { UserContext } from "@/App";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +32,7 @@ const ShippingAddress = () => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
+  const [addressToDelete, setAddressToDelete] = useState(null);
 
   const provinces = addressData.map((province) => province.Name);
   const districts = selectedProvince ? addressData.find((province) => province.Name === selectedProvince).Districts.map((district) => district.Name) : [];
@@ -34,21 +46,18 @@ const ShippingAddress = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`http://localhost:9999/api/user/delete-address/${userAuth.user.id}?addressId=${id}`);
-      console.log("Response status:", response.status); // Log the status code
-      console.log("Response data:", response.data); // Log the response data
 
       if (response.status === 200) {
         const updatedAddresses = response.data.shippingAddress;
         setAddresses(updatedAddresses);
         const updatedUserAuth = { ...userAuth, user: response.data };
         setUserAuth(updatedUserAuth); // Update context
-        sessionStorage.setItem("user", JSON.stringify(response.data)); // Update session storage
+        sessionStorage.setItem("user", JSON.stringify(response.data));
         toast.success("Address deleted successfully!");
       } else {
         toast.error("Failed to delete address!");
       }
     } catch (error) {
-      console.error("Error deleting address:", error); // Log the error for debugging
       toast.error("Error deleting address!");
     }
   };
@@ -60,15 +69,13 @@ const ShippingAddress = () => {
     }
     try {
       const response = await axios.post(`http://localhost:9999/api/user/add-address/${userAuth.user.id}`, newAddress);
-      console.log("Response status:", response.status); // Log the status code
-      console.log("Response data:", response.data); // Log the response data
 
       if (response.status === 201) {
         const updatedAddresses = response.data.shippingAddress;
         setAddresses(updatedAddresses);
         const updatedUserAuth = { ...userAuth, user: response.data };
         setUserAuth(updatedUserAuth); // Update context
-        sessionStorage.setItem("user", JSON.stringify(response.data)); // Update session storage
+        sessionStorage.setItem("user", JSON.stringify(response.data));
         toast.success("Address added successfully!");
 
         setNewAddress({ fullName: "", phone: "", address: "", specificAddress: "" });
@@ -79,7 +86,6 @@ const ShippingAddress = () => {
         toast.error("Failed to add address!");
       }
     } catch (error) {
-      console.error("Error adding address:", error); // Log the error for debugging
       toast.error("Error adding address!");
     }
   };
@@ -197,6 +203,7 @@ const ShippingAddress = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         {addresses.map((address) => (
           <div key={address._id} className="bg-white p-4 rounded shadow-md">
@@ -215,9 +222,23 @@ const ShippingAddress = () => {
               </p>
             </div>
             <div className="flex justify-end">
-              <Button onClick={() => handleDelete(address._id)} className="bg-red-500 text-white py-2 px-4 rounded">
-                Delete
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" onClick={() => setAddressToDelete(address._id)}>
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>This action cannot be undone. This will permanently delete the address.</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(addressToDelete)}>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         ))}
