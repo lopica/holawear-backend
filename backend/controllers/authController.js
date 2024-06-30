@@ -121,6 +121,7 @@ async function signin(req, res, next) {
         email: user.email,
         role: user.role.name,
         phone: user.phone,
+        gender: user.gender,
         shippingAddress: user.shippingAddress,
       },
     });

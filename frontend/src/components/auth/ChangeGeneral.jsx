@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,34 +14,38 @@ const ChangeGeneral = () => {
   const [email, setEmail] = useState(userAuth?.user?.email || "");
   const [phone, setPhone] = useState(userAuth?.user?.phone || "");
   const [gender, setGender] = useState(userAuth?.user?.gender || "");
-  const [isEditing, setIsEditing] = useState(false); // State for edit mode
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleSave = async () => {
+    if (!name.trim() || !email.trim()) {
+      toast.error("Name and email cannot be empty!");
+      return;
+    }
+
     const updatedUser = { name, email, phone, gender };
-    console.log("Updated user:", updatedUser);
-    // try {
-    //   const response = await axios.put(`http://localhost:9999/api/update/${userAuth.user.id}`, updatedUser);
-    //   if (response.status === 200) {
-    //     // Update user data in sessionStorage
-    //     sessionStorage.setItem("user", JSON.stringify(response.data));
-    //     setUserAuth({ ...userAuth, user: response.data }); // Update context
-    //     console.log("User data saved:", response.data);
-    //     setIsEditing(false); // Disable edit mode after saving
-    //   } else {
-    //     console.error("Failed to update user:", response.data);
-    //   }
-    // } catch (error) {
-    //   console.error("Error updating user:", error);
-    // }
+
+    try {
+      const response = await axios.put(`http://localhost:9999/api/user/update-general-user/${userAuth.user.id}`, updatedUser);
+
+      if (response.status === 201) {
+        sessionStorage.setItem("user", JSON.stringify(response.data));
+        setUserAuth({ ...userAuth, user: response.data });
+        toast.success("Updated successfully!");
+        setIsEditing(false);
+      } else {
+        toast.error("Failed to update user!");
+      }
+    } catch (error) {
+      toast.error("Error updating user!");
+    }
   };
 
   const handleCancel = () => {
-    // Reset state to initial values from userAuth
     setFullName(userAuth?.user?.name || "");
     setEmail(userAuth?.user?.email || "");
     setPhone(userAuth?.user?.phone || "");
     setGender(userAuth?.user?.gender || "");
-    setIsEditing(false); // Disable edit mode
+    setIsEditing(false);
   };
 
   return (
@@ -53,39 +58,21 @@ const ChangeGeneral = () => {
         <CardContent className="space-y-2">
           <div className="space-y-1">
             <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setFullName(e.target.value)}
-              disabled={!isEditing} // Disable input if not editing
-            />
+            <Input id="name" type="text" value={name} onChange={(e) => setFullName(e.target.value)} disabled={!isEditing} />
           </div>
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={!isEditing} // Disable input if not editing
-            />
+            <Input id="email" type="text" value={email} onChange={(e) => setEmail(e.target.value)} disabled={!isEditing} />
           </div>
           <div className="space-y-1">
             <Label htmlFor="phone">Phone</Label>
-            <Input
-              id="phone"
-              type="number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              disabled={!isEditing} // Disable input if not editing
-            />
+            <Input id="phone" type="number" value={phone} onChange={(e) => setPhone(e.target.value)} disabled={!isEditing} />
           </div>
           <div className="space-y-1">
             <Label htmlFor="gender">Gender</Label>
             <Select value={gender} onValueChange={(value) => setGender(value)} disabled={!isEditing}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a gender" />
+                <SelectValue placeholder="Select gender" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

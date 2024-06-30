@@ -1,8 +1,8 @@
 const db = require("../models");
 const User = db.user;
-const ShippingAddress = db.shippingAddress;
-
-// Create a user
+const Role = db.role;
+const bcrypt = require("bcrypt");
+// Create a user role seller / admin - for admin only
 async function create(req, res, next) {
   try {
     const newUser = new User({
@@ -26,10 +26,50 @@ async function create(req, res, next) {
 
 // Get all users
 
-// Update a user by user ID
-async function updateUserById(req, res, next) {}
+// Update a user by user ID - update general : name - email - phone - gender
+async function updateGeneralUserById(req, res, next) {
+  try {
+    //get input + find user + find role by user role id
+    const userId = req.params.id;
+    const { name, email, phone, gender } = req.body;
+    const userFound = await User.findById(userId);
+    const getRole = await Role.findById(userFound.role);
+    const roleName = getRole.name;
 
-// Delete a user
+    //email , name cannot be null
+    if (!email || !name) {
+      throw new Error("Email and name cannot be null!");
+    }
+
+    if (userFound != null) {
+      userFound.name = name ? name : userFound.name;
+      userFound.email = email ? email : userFound.email;
+      userFound.phone = phone ? phone : userFound.phone;
+      userFound.gender = gender ? gender : userFound.gender;
+
+      var dataBack = await userFound.save();
+      if (dataBack) {
+        res.status(201).json({
+          id: dataBack._id,
+          name: dataBack.name,
+          email: dataBack.email,
+          phone: dataBack.phone,
+          gender: dataBack.gender,
+          role: roleName,
+          shippingAddress: dataBack.shippingAddress,
+        });
+      } else {
+        throw new Error("Update general user failed");
+      }
+    } else {
+      res.status(404).json({
+        message: "User not found",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+}
 
 // Get user by email
 async function getUserByEmail(req, res, next) {
@@ -56,6 +96,7 @@ async function getUserByEmail(req, res, next) {
 async function addShippingAddress(req, res, next) {
   try {
     const userId = req.params.id;
+
     const address = {
       fullName: req.body.fullName,
       phone: req.body.phone,
@@ -63,15 +104,88 @@ async function addShippingAddress(req, res, next) {
       specificAddress: req.body.specificAddress,
     };
 
+    //tìm + thêm address vào mảng shippingAddress
     const updatedUser = await User.findByIdAndUpdate(userId, { $push: { shippingAddress: address } }, { new: true, runValidators: true });
+    const getRole = await Role.findById(updatedUser.role);
+    const roleName = getRole.name;
 
     if (updatedUser) {
-      res.status(200).json({
-        message: "Address added successfully",
+      res.status(201).json({
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        gender: updatedUser.gender,
+        role: roleName,
         shippingAddress: updatedUser.shippingAddress,
       });
     } else {
-      res.status(404).send("User not found");
+      throw new Error("Add shipping address failed");
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteShippingAddress(req, res, next) {
+  try {
+    const userId = req.params.id;
+    const addressId = req.query.addressId;
+
+    // Find the user by ID and pull the address with the given ID from the shippingAddress array
+    const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { shippingAddress: { _id: addressId } } }, { new: true, runValidators: true });
+
+    const getRole = await Role.findById(updatedUser.role);
+    const roleName = getRole.name;
+
+    if (updatedUser) {
+      res.status(200).json({
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        gender: updatedUser.gender,
+        role: roleName,
+        shippingAddress: updatedUser.shippingAddress,
+      });
+    } else {
+      throw new Error("Delete shipping address failed");
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Change password
+async function changePassword(req, res, next) {
+  try {
+    const userId = req.params.id;
+    const { currentPassword, newPassword } = req.body;
+
+    // Find user by ID
+    const userFound = await User.findById(userId);
+    if (!userFound) {
+      throw new Error("User not found");
+    }
+
+    // Check if current password is correct
+    const validPassword = await bcrypt.compare(currentPassword, userFound.password);
+    if (!validPassword) {
+      throw new Error("Current password is incorrect");
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update password
+    userFound.password = hashedPassword;
+    const result = await userFound.save();
+
+    if (result) {
+      res.status(200).json({ message: "Password changed successfully" });
+    } else {
+      throw new Error("Change password failed");
     }
   } catch (error) {
     next(error);
@@ -81,6 +195,8 @@ async function addShippingAddress(req, res, next) {
 module.exports = {
   create,
   getUserByEmail,
-  updateUserById,
   addShippingAddress,
+  deleteShippingAddress,
+  updateGeneralUserById,
+  changePassword,
 };

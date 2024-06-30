@@ -1,12 +1,24 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 import { UserContext } from "@/App";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import addressData from "../../data/address.js"; // Adjusted import path
+import addressData from "../../data/address.js";
 
 const ShippingAddress = () => {
   const { userAuth, setUserAuth } = useContext(UserContext);
@@ -20,6 +32,7 @@ const ShippingAddress = () => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState("");
+  const [addressToDelete, setAddressToDelete] = useState(null);
 
   const provinces = addressData.map((province) => province.Name);
   const districts = selectedProvince ? addressData.find((province) => province.Name === selectedProvince).Districts.map((district) => district.Name) : [];
@@ -31,11 +44,50 @@ const ShippingAddress = () => {
     : [];
 
   const handleDelete = async (id) => {
-    console.log("Delete address with id:", id);
+    try {
+      const response = await axios.delete(`http://localhost:9999/api/user/delete-address/${userAuth.user.id}?addressId=${id}`);
+
+      if (response.status === 200) {
+        const updatedAddresses = response.data.shippingAddress;
+        setAddresses(updatedAddresses);
+        const updatedUserAuth = { ...userAuth, user: response.data };
+        setUserAuth(updatedUserAuth); // Update context
+        sessionStorage.setItem("user", JSON.stringify(response.data));
+        toast.success("Address deleted successfully!");
+      } else {
+        toast.error("Failed to delete address!");
+      }
+    } catch (error) {
+      toast.error("Error deleting address!");
+    }
   };
 
   const handleAdd = async () => {
-    console.log("Add new address:", newAddress);
+    if (!newAddress.fullName.trim() || !newAddress.phone.trim() || !newAddress.address.trim() || !newAddress.specificAddress.trim()) {
+      toast.error("All fields are required!");
+      return;
+    }
+    try {
+      const response = await axios.post(`http://localhost:9999/api/user/add-address/${userAuth.user.id}`, newAddress);
+
+      if (response.status === 201) {
+        const updatedAddresses = response.data.shippingAddress;
+        setAddresses(updatedAddresses);
+        const updatedUserAuth = { ...userAuth, user: response.data };
+        setUserAuth(updatedUserAuth); // Update context
+        sessionStorage.setItem("user", JSON.stringify(response.data));
+        toast.success("Address added successfully!");
+
+        setNewAddress({ fullName: "", phone: "", address: "", specificAddress: "" });
+        setSelectedProvince("");
+        setSelectedDistrict("");
+        setSelectedWard("");
+      } else {
+        toast.error("Failed to add address!");
+      }
+    } catch (error) {
+      toast.error("Error adding address!");
+    }
   };
 
   const handleChange = (e) => {
@@ -44,20 +96,17 @@ const ShippingAddress = () => {
   };
 
   const handleProvinceChange = (value) => {
-    console.log("Selected Province:", value);
     setSelectedProvince(value);
     setSelectedDistrict("");
     setSelectedWard("");
   };
 
   const handleDistrictChange = (value) => {
-    console.log("Selected District:", value);
     setSelectedDistrict(value);
     setSelectedWard("");
   };
 
   const handleWardChange = (value) => {
-    console.log("Selected Ward:", value);
     setSelectedWard(value);
   };
 
@@ -87,9 +136,6 @@ const ShippingAddress = () => {
               <Input id="fullName" name="fullName" value={newAddress.fullName} onChange={handleChange} />
               <Label htmlFor="phone">Phone</Label>
               <Input id="phone" name="phone" value={newAddress.phone} onChange={handleChange} />
-              <Label htmlFor="address">Address</Label>
-              <Input id="address" name="address" value={newAddress.address} readOnly />
-
               <div className="flex flex-wrap gap-4">
                 <div>
                   <Label htmlFor="province">Province</Label>
@@ -146,7 +192,8 @@ const ShippingAddress = () => {
                   </Select>
                 </div>
               </div>
-
+              <Label htmlFor="address">Address</Label>
+              <Input id="address" name="address" value={newAddress.address} readOnly />
               <Label htmlFor="specificAddress">Specific Address</Label>
               <Input placeholder="Số nhà, đường, ngõ, ..." id="specificAddress" name="specificAddress" value={newAddress.specificAddress} onChange={handleChange} />
             </div>
@@ -161,17 +208,37 @@ const ShippingAddress = () => {
         {addresses.map((address) => (
           <div key={address._id} className="bg-white p-4 rounded shadow-md">
             <div className="mb-4">
-              <h3 className="text-lg font-bold">{address.fullName}</h3>
+              <h3 className="text-lg font-bold">Full name: {address.fullName}</h3>
             </div>
             <div className="mb-4">
-              <p>{address.phone}</p>
-              <p>{address.address}</p>
-              <p>{address.specificAddress}</p>
+              <p>
+                Phone number: <i>{address.phone}</i>
+              </p>
+              <p>
+                Address: <i>{address.address}</i>
+              </p>
+              <p>
+                Specific Address: <i>{address.specificAddress}</i>
+              </p>
             </div>
             <div className="flex justify-end">
-              <Button onClick={() => handleDelete(address._id)} className="bg-red-500 text-white py-2 px-4 rounded">
-                Delete
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" onClick={() => setAddressToDelete(address._id)}>
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>This action cannot be undone. This will permanently delete the address.</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleDelete(addressToDelete)}>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </div>
         ))}
