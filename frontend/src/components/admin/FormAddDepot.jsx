@@ -64,11 +64,7 @@ const FormAddDepot = ({ initialFormData, onSubmit }) => {
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>Add Depot</CardTitle>
-        <CardDescription>Fill in the details to add product quantities.</CardDescription>
-      </CardHeader>
+    <Card className="w-full max-w-lg mx-auto border-none">
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">

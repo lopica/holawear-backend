@@ -14,7 +14,8 @@ const TableProduct = ({ productData, categories }) => {
     const fetchData = async () => {
       try {
         const resCategory = await axios.get("");
-        const resProduct = await axios.get("");
+        const resProduct = await axios.get("http://localhost:9999/api/product/get-all-product");
+        console.log("resProduct", resProduct.data);
 
         // setCategories1(res.data);
       } catch (error) {
@@ -117,7 +118,12 @@ const TableProduct = ({ productData, categories }) => {
                     <DialogTrigger className="ml-4 bg-white hover:bg-gray-50 text-[#FB5012] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                       <ArrowDownToLine className="h-5 w-5 opacity-55 hover:opacity-85" />
                     </DialogTrigger>
+
                     <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Depot</DialogTitle>
+                        <DialogDescription>Add new depot for this product</DialogDescription>
+                      </DialogHeader>
                       <FormAddDepot initialFormData={initialFormData} onSubmit={handleFormSubmit} />
                     </DialogContent>
                   </Dialog>
