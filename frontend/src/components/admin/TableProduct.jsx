@@ -4,27 +4,8 @@ import { ArrowDownToLine, ChevronDown, Pencil, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import FormAddDepot from "./FormAddDepot";
-import axios from "axios";
 
 const TableProduct = ({ productData, categories }) => {
-  const [categories1, setCategories1] = useState([]);
-  const [products, setProducts] = useState([]);
-  //get data from api
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resCategory = await axios.get("");
-        const resProduct = await axios.get("http://localhost:9999/api/product/get-all-product");
-        console.log("resProduct", resProduct.data);
-
-        // setCategories1(res.data);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchData();
-  }, []);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [initialFormData] = useState({

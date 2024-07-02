@@ -1,66 +1,55 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 const FormAddDepot = ({ initialFormData, onSubmit }) => {
-  const [formData, setFormData] = useState(initialFormData);
+  const colors = [
+    "#FF0000", // Red
+    "#008000", // Green
+    "#0000FF", // Blue
+    "#FFFF00", // Yellow
+    "#FFA500", // Orange
+    "#800080", // Purple
+    "#FFC0CB", // Pink
+    "#A52A2A", // Brown
+    "#808080", // Grey
+    "#000000", // Black
+  ];
 
-  // Handle form change for size quantities
+  const initialColorsData = colors.map((color) => ({
+    colorCode: color,
+    details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 },
+  }));
+
+  const [formData, setFormData] = useState({
+    ...initialFormData,
+    colors: initialColorsData,
+  });
+
   const handleFormChange = (index, size, value) => {
     const newColors = [...formData.colors];
-    newColors[index].sizes[size] = value === "" ? 0 : Math.max(parseInt(value, 10), 0);
+    newColors[index].details[size] = value === "" ? 0 : Math.max(parseInt(value, 10), 0);
     setFormData({ ...formData, colors: newColors });
   };
 
-  // Handle color input change
-  const handleColorChange = (index, value) => {
-    const newColors = [...formData.colors];
-    newColors[index].color = value;
-    setFormData({ ...formData, colors: newColors });
-  };
-
-  // Add a new color field
-  const addColorField = () => {
-    setFormData({
-      ...formData,
-      colors: [...formData.colors, { color: "", sizes: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }],
-    });
-  };
-
-  // Remove a color field
-  const removeColorField = (index) => {
-    const newColors = formData.colors.filter((_, i) => i !== index);
-    setFormData({ ...formData, colors: newColors });
-  };
-
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Check for any color where all sizes are 0 or color is empty
-    for (let i = 0; i < formData.colors.length; i++) {
-      const colorSizes = formData.colors[i].sizes;
-      const totalSize = Object.values(colorSizes).reduce((sum, qty) => sum + qty, 0);
-      if (formData.colors[i].color.trim() === "") {
-        // alert("Please enter a color for all entries.");
-        return;
-      }
-      if (totalSize === 0) {
-        alert("A color has all sizes set to 0. Please provide at least one size quantity for each color.");
-        return;
-      }
-    }
-
-    const totalStock = formData.colors.reduce((total, color) => total + Object.values(color.sizes).reduce((sum, qty) => sum + qty, 0), 0);
-
+    const totalStock = formData.colors.reduce((total, color) => total + Object.values(color.details).reduce((sum, qty) => sum + qty, 0), 0);
     if (totalStock !== formData.stock) {
       alert("Total sizes quantity must equal the total stock");
       return;
     }
-
-    onSubmit(formData);
+    const outputData = {
+      productId: formData.productId,
+      importPrice: formData.importPrice,
+      stock: formData.stock,
+      stockDetails: formData.colors,
+      importTotal: formData.importTotal,
+      createdAt: formData.createdAt,
+    };
+    onSubmit(outputData);
   };
 
   return (
@@ -100,28 +89,17 @@ const FormAddDepot = ({ initialFormData, onSubmit }) => {
             </div>
             {formData.colors.map((color, index) => (
               <div key={index} className="flex flex-col space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <Label htmlFor={`color-${index}`}>Color</Label>
-                  {formData.colors.length > 1 && (
-                    <Button variant="outline" onClick={() => removeColorField(index)}>
-                      Delete Color
-                    </Button>
-                  )}
-                </div>
-                <Input id={`color-${index}`} type="text" value={color.color} onChange={(e) => handleColorChange(index, e.target.value)} />
+                <Label>Color: {color.colorCode}</Label>
                 <div className="grid grid-cols-5 gap-4 mt-2">
-                  {Object.keys(color.sizes).map((size) => (
+                  {Object.keys(color.details).map((size) => (
                     <div key={size} className="flex flex-col space-y-1.5">
                       <Label htmlFor={`size-${index}-${size}`}>{size}</Label>
-                      <Input id={`size-${index}-${size}`} type="number" min="0" value={color.sizes[size]} onChange={(e) => handleFormChange(index, size, e.target.value)} />
+                      <Input id={`size-${index}-${size}`} type="number" min="0" value={color.details[size]} onChange={(e) => handleFormChange(index, size, e.target.value)} />
                     </div>
                   ))}
                 </div>
               </div>
             ))}
-            <Button variant="outline" onClick={addColorField}>
-              Add Color
-            </Button>
           </div>
           <CardFooter className="flex justify-end space-x-4 mt-4">
             <Button type="submit">Submit</Button>
