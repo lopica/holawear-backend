@@ -1,5 +1,9 @@
 # HolaWear
 
+### database
+
+- Dùng các file json ở folder `db` để import vào `db local`
+
 ### Back End
 
 > `npm start` - http://localhost:9999/

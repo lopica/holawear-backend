@@ -4,26 +4,8 @@ import { ArrowDownToLine, ChevronDown, Pencil, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import FormAddDepot from "./FormAddDepot";
-import axios from "axios";
 
 const TableProduct = ({ productData, categories }) => {
-  const [categories1, setCategories1] = useState([]);
-  const [products, setProducts] = useState([]);
-  //get data from api
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const resCategory = await axios.get("");
-        const resProduct = await axios.get("");
-
-        // setCategories1(res.data);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchData();
-  }, []);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [initialFormData] = useState({
@@ -117,7 +99,12 @@ const TableProduct = ({ productData, categories }) => {
                     <DialogTrigger className="ml-4 bg-white hover:bg-gray-50 text-[#FB5012] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                       <ArrowDownToLine className="h-5 w-5 opacity-55 hover:opacity-85" />
                     </DialogTrigger>
+
                     <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Add Depot</DialogTitle>
+                        <DialogDescription>Add new depot for this product</DialogDescription>
+                      </DialogHeader>
                       <FormAddDepot initialFormData={initialFormData} onSubmit={handleFormSubmit} />
                     </DialogContent>
                   </Dialog>

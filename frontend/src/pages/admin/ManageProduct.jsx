@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TableDepot from "../../components/admin/TableDepot";
 import TableProduct from "../../components/admin/TableProduct";
+import axios from "axios";
 
 const ManageProduct = () => {
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  //get data from api
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resCategory = await axios.get("http://localhost:9999/api/category/get-all");
+        const resProduct = await axios.get("http://localhost:9999/api/product/get-all-product");
+        console.log("productsData: ", resProduct.data);
+        console.log("categoriesData: ", resCategory.data);
+
+        setCategories(resCategory.data);
+        setProducts(resProduct.data);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const depotData = [
     {
       id: 1,
