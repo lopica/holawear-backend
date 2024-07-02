@@ -23,6 +23,7 @@ const getAllProducts = async (req, res) => {
 
     const skip = (page - 1) * limit;
     const products = await Product.find(query).skip(skip).limit(limit);
+    console.log(products);
 
     const totalProducts = await Product.countDocuments(query);
     const totalPages = Math.ceil(totalProducts / limit);

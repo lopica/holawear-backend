@@ -25,6 +25,29 @@ async function create(req, res, next) {
 }
 
 // Get all users
+async function getAllUsers(req, res, next) {
+  //get all users + change their role to role name
+  try {
+    const users = await User.find();
+    const usersWithRole = await Promise.all(
+      users.map(async (user) => {
+        const getRole = await Role.findById(user.role);
+        const roleName = getRole.name;
+        return {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone ? user.phone : "Not provided",
+          role: roleName,
+          shippingAddress: user.shippingAddress?.length > 0 ? user.shippingAddress : "Not provided",
+        };
+      }),
+    );
+    res.status(200).json(usersWithRole);
+  } catch (error) {
+    next(error);
+  }
+}
 
 // Update a user by user ID - update general : name - email - phone - gender
 async function updateGeneralUserById(req, res, next) {
@@ -199,4 +222,5 @@ module.exports = {
   deleteShippingAddress,
   updateGeneralUserById,
   changePassword,
+  getAllUsers,
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TableDepot from "../../components/admin/TableDepot";
-import TableProduct2 from "../../components/admin/TableProduct2";
+import TableProduct from "../../components/admin/TableProduct";
 
 const ManageProduct = () => {
   const depotData = [
@@ -184,14 +184,14 @@ const ManageProduct = () => {
   ];
   return (
     <div className="w-full h-full">
-      <Tabs defaultValue="account">
+      <Tabs defaultValue="product">
         <TabsList>
           <TabsTrigger value="product">Products</TabsTrigger>
           <TabsTrigger value="depot">Depot History</TabsTrigger>
         </TabsList>
         {/* product table */}
         <TabsContent value="product">
-          <TableProduct2 productData={productData} categories={categoryData} />
+          <TableProduct productData={productData} categories={categoryData} />
         </TabsContent>
         {/* product depot table */}
         <TabsContent value="depot">
