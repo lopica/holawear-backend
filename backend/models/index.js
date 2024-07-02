@@ -28,8 +28,8 @@ db.color = Color;
 
 db.connectDB = async () => {
   mongoose
-    .connect(process.env.MONGO_URI, {
-      dbName: process.env.DB_NAME,
+    .connect("mongodb://127.0.0.1", {
+      dbName: "Holawear",
     })
     .then(() => {
       console.log("Successfully connect to MongoDB.");
