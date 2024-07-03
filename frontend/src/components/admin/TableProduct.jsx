@@ -31,8 +31,44 @@ const TableProduct = ({ productData, categories, tags }) => {
 
   return (
     <div className="p-4">
-      <div className="flex items-center justify-between space-x-4 mb-4">
+      <div className="flex items-center justify-start space-x-4 mb-4">
         <input type="text" placeholder="Search by product name" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
+
+        {/* import file excel */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <p>Import</p>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Import Product</DialogTitle>
+              <DialogDescription>Import product from excel file</DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-center items-center">
+              <input type="file" className="border border-gray-300 rounded-md p-2" />
+              <Button variant="outline" className="ml-4">
+                Import
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        {/* add product button */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <p>Add Product</p>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Product</DialogTitle>
+              <DialogDescription>Add new product</DialogDescription>
+            </DialogHeader>
+            <FormAddProduct />
+          </DialogContent>
+        </Dialog>
         {/* categories dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
@@ -52,21 +88,6 @@ const TableProduct = ({ productData, categories, tags }) => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* add product button */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">
-              <p>Add Product</p>
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add Product</DialogTitle>
-              <DialogDescription>Add new product</DialogDescription>
-            </DialogHeader>
-            <FormAddProduct />
-          </DialogContent>
-        </Dialog>
       </div>
       <div className="overflow-x-auto border rounded-lg">
         <table className="min-w-full divide-y divide-gray-200 table-auto">
