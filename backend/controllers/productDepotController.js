@@ -27,7 +27,7 @@ const getAllProductDepots = async (req, res) => {
   try {
     const query = {};
     const skip = (page - 1) * limit;
-    const productDepots = await ProductDepot.find(query).populate("productId").skip(skip).limit(limit);
+    const productDepots = await ProductDepot.find(query).populate("_id").skip(skip).limit(limit);
 
     const totalProductDepots = await ProductDepot.countDocuments(query);
     const totalPages = Math.ceil(totalProductDepots / limit);

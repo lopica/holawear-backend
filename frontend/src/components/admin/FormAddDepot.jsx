@@ -16,7 +16,7 @@ const colors = [
   { code: "#000000", name: "Black" },
 ];
 
-const FormAddDepot = () => {
+const FormAddDepot = ({ productDataById }) => {
   const [importPrice, setImportPrice] = useState("");
   const [stock, setStock] = useState("");
   const [stockDetails, setStockDetails] = useState([{ colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
@@ -69,61 +69,82 @@ const FormAddDepot = () => {
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className="flex flex-col">
-        <Label className="mb-2">Import Price:</Label>
-        <Input type="number" className="p-2 border border-gray-300 rounded-md" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
+    <>
+      <div>
+        <p>
+          <b>Product</b> : <i>{productDataById.title}</i>
+        </p>
+        <p>
+          <b>Stock available</b>: <i>{productDataById.stock}</i>
+        </p>
+        <p>
+          <b>Price</b> : <i>{productDataById.price} vnd</i>
+        </p>
       </div>
-      <div className="flex flex-col">
-        <Label className="mb-2">Total Stock:</Label>
-        <Input type="number" className="p-2 border border-gray-300 rounded-md" value={stock} onChange={(e) => setStock(e.target.value)} required />
-      </div>
-      <div className="space-y-4">
-        {stockDetails.map((stockDetail, index) => (
-          <div key={index} className="border border-gray-300 rounded-md p-4">
-            <div className="flex justify-between items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Label className="mb-2">Color:</Label>
-                <select className="p-2 border border-gray-300 rounded-md" value={stockDetail.colorCode} onChange={(e) => handleColorChange(index, e.target.value)}>
-                  {colors.map((color) => (
-                    <option key={color.code} value={color.code}>
-                      {color.name}
-                    </option>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="flex flex-col">
+          <Label className="mb-2">Import Price:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Total Stock:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={stock} onChange={(e) => setStock(e.target.value)} required />
+        </div>
+        <div className="space-y-4">
+          {stockDetails.map((stockDetail, index) => (
+            <div key={index} className="border border-gray-300 rounded-md p-4">
+              <div className="flex justify-between items-center space-x-4">
+                <div className="flex items-center space-x-2 justify-center">
+                  {/* color ============== */}
+                  <Label>Color:</Label>
+                  <select
+                    className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow w-1/2"
+                    value={stockDetail.colorCode}
+                    onChange={(e) => handleColorChange(index, e.target.value)}
+                  >
+                    {colors.map((color) => (
+                      <option key={color.code} value={color.code}>
+                        {color.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {stockDetails.length > 1 && (
+                    <Button variant="outline" type="button" onClick={() => removeColor(index)}>
+                      Remove
+                    </Button>
+                  )}
+                </div>
+                <div className="flex space-x-2">
+                  {["S", "M", "L", "XL", "2XL"].map((size) => (
+                    <div key={size} className="flex flex-col items-center mb-4">
+                      <Label>{size}</Label>
+                      <Input
+                        type="number"
+                        className="p-2 border border-gray-300 rounded-md w-20"
+                        value={stockDetail.details[size]}
+                        onChange={(e) => handleSizeChange(index, size, e.target.value)}
+                        min="0"
+                      />
+                    </div>
                   ))}
-                </select>
-                {stockDetails.length > 1 && (
-                  <Button type="button" className="text-red-500" onClick={() => removeColor(index)}>
-                    Remove
-                  </Button>
-                )}
-              </div>
-              <div className="flex space-x-2">
-                {["S", "M", "L", "XL", "2XL"].map((size) => (
-                  <div key={size} className="flex flex-col items-center">
-                    <Label>{size}</Label>
-                    <Input
-                      type="number"
-                      className="p-2 border border-gray-300 rounded-md w-20"
-                      value={stockDetail.details[size]}
-                      onChange={(e) => handleSizeChange(index, size, e.target.value)}
-                      min="0"
-                    />
-                  </div>
-                ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      {stockDetails.length < 10 && (
-        <Button type="button" className="p-2 mt-4 bg-blue-500 text-white rounded-md" onClick={addColor}>
-          Add Color
-        </Button>
-      )}
-      <Button type="submit" className="p-2 mt-4 bg-green-500 text-white rounded-md">
-        Submit
-      </Button>
-    </form>
+          ))}
+        </div>
+        {stockDetails.length < 10 && (
+          <Button type="button" className=" bg-blue-500 text-white rounded-md" onClick={addColor}>
+            Add Color
+          </Button>
+        )}
+        <div className="flex justify-end">
+          <Button type="submit" className=" bg-green-500 text-white rounded-md">
+            Submit
+          </Button>
+        </div>
+      </form>
+    </>
   );
 };
 

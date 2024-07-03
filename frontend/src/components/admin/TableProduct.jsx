@@ -9,11 +9,6 @@ import AdminProductDetail from "./AdminProductDetail";
 const TableProduct = ({ productData, categories }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [initialFormData] = useState({
-    stock: 0,
-    importPrice: 0,
-    colors: [{ color: "", sizes: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }],
-  });
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -21,11 +16,6 @@ const TableProduct = ({ productData, categories }) => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-  };
-
-  const handleFormSubmit = (formData) => {
-    // Handle form submission (e.g., API call)
-    console.log("Form submitted successfully:", formData);
   };
 
   const filteredProducts = productData.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true));
@@ -83,7 +73,7 @@ const TableProduct = ({ productData, categories }) => {
                   <div className="text-sm text-gray-900">{product.stock}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">${product.price}</div>
+                  <div className="text-sm text-gray-900">{product.price} vnd</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
@@ -112,7 +102,7 @@ const TableProduct = ({ productData, categories }) => {
                         <DialogTitle>Add Depot</DialogTitle>
                         <DialogDescription>Add new depot for this product</DialogDescription>
                       </DialogHeader>
-                      <FormAddDepot productId={product._id} initialFormData={initialFormData} onSubmit={handleFormSubmit} />
+                      <FormAddDepot productDataById={product} />
                     </DialogContent>
                   </Dialog>
                   {product.availabilityStatus === "In Stock" && (
