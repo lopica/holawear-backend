@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 // Adjust this import according to your project structure
-import { Gauge, FolderKanban, Settings, PackageSearch, ClipboardType, BadgeCheck, PackageOpen, PaintBucket, UsersRound, NotebookText, BaggageClaim, Home } from "lucide-react";
+import { Gauge, FolderKanban, Settings, PackageSearch, ClipboardType, BadgeCheck, PackageOpen, PaintBucket, UsersRound, NotebookText, BaggageClaim, Home, Tags } from "lucide-react";
 
 const SideBarAdmin = () => {
   return (
@@ -51,6 +51,11 @@ const SideBarAdmin = () => {
                 <li>
                   <Link to="/admin/types" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <ClipboardType size={20} className="mr-3" /> Types
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/tags" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                    <Tags size={20} className="mr-3" /> Tags
                   </Link>
                 </li>
                 <li>
