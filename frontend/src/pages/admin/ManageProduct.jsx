@@ -7,6 +7,7 @@ import axios from "axios";
 const ManageProduct = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [depotData, setDepotData] = useState([]);
 
   //get data from api
   useEffect(() => {
@@ -14,61 +15,21 @@ const ManageProduct = () => {
       try {
         const resCategory = await axios.get("http://localhost:9999/api/category/get-all");
         const resProduct = await axios.get("http://localhost:9999/api/product/get-all-product");
+        const resProductDepot = await axios.get("http://localhost:9999/api/depotProduct/get-all-product");
         const myProduct = resProduct.data.products;
         const myCategory = resCategory.data;
+        const myProductDepot = resProductDepot.data.productDepots;
+        setDepotData(myProductDepot);
         setCategories(myCategory);
         setProducts(myProduct);
+        // console.log(myProductDepot);
+        // console.log(myCategory);
       } catch (error) {
         console.log("error", error);
       }
     };
     fetchData();
   }, []);
-
-  const depotData = [
-    {
-      id: 1,
-      productId: 1,
-      importPrice: 5000,
-      stock: 20,
-      stockDetails: {
-        "#ff0000": {
-          L: 3,
-          M: 2,
-          XL: 5,
-        },
-        "#50d71e": {
-          S: 2,
-          L: 1,
-          XL: 3,
-          "2XL": 4,
-        },
-      },
-      importTotal: 100000,
-      createdAt: "2024-05-23T08:56:21.618Z",
-    },
-    {
-      id: 2,
-      productId: 1,
-      importPrice: 5000,
-      stock: 30,
-      stockDetails: {
-        "#ff0000": {
-          L: 3,
-          M: 2,
-          XL: 5,
-        },
-        "#50d71e": {
-          S: 2,
-          L: 1,
-          XL: 3,
-          "2XL": 4,
-        },
-      },
-      importTotal: 150000,
-      createdAt: "2024-05-23T08:56:21.618Z",
-    },
-  ];
 
   return (
     <div className="w-full h-full">

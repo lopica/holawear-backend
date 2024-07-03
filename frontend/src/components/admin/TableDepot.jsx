@@ -17,18 +17,18 @@ const TableDepot = ({ depotData }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {depotData.map((depot) => (
-              <tr key={depot.id}>
+              <tr key={depot._id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{depot.productId}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">${depot.importPrice}</div>
+                  <div className="text-sm text-gray-900">{depot.importPrice} vnd</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{depot.stock}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">${depot.importTotal}</div>
+                  <div className="text-sm text-gray-900">{depot.importTotal} vnd</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{format(parseISO(depot.createdAt), "HH:mm:ss dd-MM-yyyy")}</div>

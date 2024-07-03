@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { CircleHelp } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const colors = [
   { code: "#FF0000", name: "Red" },
@@ -17,6 +20,7 @@ const colors = [
 ];
 
 const FormAddDepot = ({ productDataById }) => {
+  const productId = productDataById._id;
   const [importPrice, setImportPrice] = useState("");
   const [stock, setStock] = useState("");
   const [stockDetails, setStockDetails] = useState([{ colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
@@ -49,46 +53,68 @@ const FormAddDepot = ({ productDataById }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (importPrice <= 0) {
-      alert("Import price must be greater than 0");
+      toast.error("Import price must be greater than 0");
       return;
     }
     const totalStock = stockDetails.reduce((acc, curr) => {
       return acc + Object.values(curr.details).reduce((sum, q) => sum + parseInt(q), 0);
     }, 0);
     if (totalStock !== parseInt(stock)) {
-      alert("Total stock does not match the sum of stock details");
+      toast.error("Total stock must be equal to sum of all sizes");
       return;
     }
     const colorCodes = stockDetails.map((detail) => detail.colorCode);
     if (new Set(colorCodes).size !== colorCodes.length) {
-      alert("Color codes must be unique");
+      toast.error("Color must be unique");
       return;
     }
     // Submit form data
-    console.log({ importPrice, stock, stockDetails });
+    console.log({ productId, importPrice, stock, stockDetails });
   };
 
   return (
     <>
-      <div>
-        <p>
-          <b>Product</b> : <i>{productDataById.title}</i>
-        </p>
-        <p>
-          <b>Stock available</b>: <i>{productDataById.stock}</i>
-        </p>
-        <p>
-          <b>Price</b> : <i>{productDataById.price} vnd</i>
-        </p>
+      <div className="flex justify-between">
+        <div>
+          <p>
+            <b>Product</b> : <i>{productDataById.title}</i>
+          </p>
+          <p>
+            <b>Stock available</b>: <i>{productDataById.stock}</i>
+          </p>
+          <p>
+            <b>Price</b> : <i>{productDataById.price} vnd</i>
+          </p>
+        </div>
+        <TooltipProvider className="">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" className="border-none mr-20">
+                <CircleHelp className="  " size={25} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Import price : Giá tiền nhập của 1 sản phẩm</p>
+              <p></p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="flex flex-col">
+          {/* importPrice: Giá tiền nhập của 1 sản phẩm */}
           <Label className="mb-2">Import Price:</Label>
-          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
+          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
         </div>
         <div className="flex flex-col">
+          {/* stock: Tổng số lượng sản phẩm */}
           <Label className="mb-2">Total Stock:</Label>
-          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={stock} onChange={(e) => setStock(e.target.value)} required />
+          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" value={stock} onChange={(e) => setStock(e.target.value)} required />
+        </div>
+        <div className="flex flex-col">
+          {/* Tổng tiền */}
+          <Label className="mb-2">Total Money:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" readOnly />
         </div>
         <div className="space-y-4">
           {stockDetails.map((stockDetail, index) => (
