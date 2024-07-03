@@ -40,14 +40,10 @@ app.use((error, req, res, next) => {
   });
 });
 
-// app.listen(process.env.PORT, process.env.HOST_NAME, () => {
-//   console.log(
-//     `Server is running on port ${process.env.PORT}
-//       and at : https://${process.env.HOST_NAME}:${process.env.PORT}`,
-//   );
-//   db.connectDB();
-// });
-app.listen(3000, () => {
-  console.log("Server is running ");
+app.listen(process.env.PORT, process.env.HOST_NAME, () => {
+  console.log(
+    `Server is running on port ${process.env.PORT}
+      and at : https://${process.env.HOST_NAME}:${process.env.PORT}`,
+  );
   db.connectDB();
 });

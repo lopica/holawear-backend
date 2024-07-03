@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
-  importPrice: { type: Number, required: true },
+  importPrice: { type: Number },
   price: { type: Number, required: true },
   discountPercentage: { type: Number, required: true },
   rating: { type: Number, required: true },

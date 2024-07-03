@@ -7,7 +7,8 @@ productRouter.get("/get-all-product", ProductController.getAllProducts);
 
 // GET a single product by ID
 productRouter.get("/get-detail-product/:id", ProductController.getProductById);
-
+// GET  product by categoryId
+productRouter.get("/get-product-by-category-id/:id", ProductController.getProductByCategoryId);
 // POST create a new product
 productRouter.post("/create", ProductController.createProduct);
 

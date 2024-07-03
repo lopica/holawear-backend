@@ -4,7 +4,7 @@ const Category = db.category;
 const Tag = db.tag;
 const Brand = db.brand;
 const Type = db.type;
-
+const mongoose = require("mongoose");
 const getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -49,29 +49,43 @@ const getProductById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// GET  product by category ID
+const getProductByCategoryId = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    console.log(`Category ID: ${categoryId}`);
+    const products = await Product.find({ category: categoryId });
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Products not found" });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const createProduct = async (req, res) => {
   try {
     const { title, description, category, importPrice, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
-    const categoryObject = await Category.findOne({ name: category });
-    const tagObject = await Tag.findOne({ name: tag });
-    const brandObject = await Brand.findOne({ name: brand });
-    const typeObject = await Type.findOne({ name: type });
+    // const categoryObject = await Category.findOne({ name: category });
+    // const tagObject = await Tag.findOne({ name: tag });
+    // const brandObject = await Brand.findOne({ name: brand });
+    // const typeObject = await Type.findOne({ name: type });
 
     const stockdetails = req.body.stockDetails;
     // Create a new product instance
     const newProduct = new Product({
       title,
       description,
-      category: categoryObject._id,
-      importPrice,
+      category: category,
       price: 0,
       discountPercentage,
       rating,
       stock,
-      type: typeObject._id,
-      tag: tagObject._id,
-      brand: brandObject._id,
+      type: type,
+      tag: tag,
+      brand: brand,
       availabilityStatus,
       minimumOrderQuantity,
       images,
@@ -114,4 +128,4 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-module.exports = { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };
+module.exports = { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, getProductByCategoryId };
