@@ -114,4 +114,28 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-module.exports = { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };
+
+const getProductByCategoryId = async (req, res) => {
+  const categoryId = req.params.categoryId;
+
+  try {
+    // Log the categoryId and the query being executed
+    console.log(`Fetching products for category ID: ${categoryId}`);
+
+    // Find products by category ID without pagination
+    const products = await Product.find({ category: categoryId });
+
+    // Log the number of products found
+    console.log(`Found ${products.length} products for category ID: ${categoryId}`);
+
+    res.status(200).json({
+      products,
+      totalProducts: products.length,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };

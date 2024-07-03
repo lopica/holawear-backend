@@ -17,4 +17,7 @@ productRouter.put("/:id", ProductController.updateProduct);
 // DELETE delete a product by ID
 productRouter.delete("/:id", ProductController.deleteProduct);
 
+// GET list product by category id || tag id || brand id || type id
+productRouter.get("/get-product-by-category-id/:id", ProductController.getProductByCategoryId);
+
 module.exports = productRouter;

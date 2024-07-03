@@ -1,112 +1,176 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { CircleHelp } from "lucide-react";
+import { toast } from "react-hot-toast";
 
-const FormAddDepot = ({ initialFormData, onSubmit }) => {
-  const colors = [
-    "#FF0000", // Red
-    "#008000", // Green
-    "#0000FF", // Blue
-    "#FFFF00", // Yellow
-    "#FFA500", // Orange
-    "#800080", // Purple
-    "#FFC0CB", // Pink
-    "#A52A2A", // Brown
-    "#808080", // Grey
-    "#000000", // Black
-  ];
+const colors = [
+  { code: "#FF0000", name: "Red" },
+  { code: "#008000", name: "Green" },
+  { code: "#0000FF", name: "Blue" },
+  { code: "#FFFF00", name: "Yellow" },
+  { code: "#FFA500", name: "Orange" },
+  { code: "#800080", name: "Purple" },
+  { code: "#FFC0CB", name: "Pink" },
+  { code: "#A52A2A", name: "Brown" },
+  { code: "#808080", name: "Grey" },
+  { code: "#000000", name: "Black" },
+];
 
-  const initialColorsData = colors.map((color) => ({
-    colorCode: color,
-    details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 },
-  }));
+const FormAddDepot = ({ productDataById }) => {
+  const productId = productDataById._id;
+  const [importPrice, setImportPrice] = useState("");
+  const [stock, setStock] = useState("");
+  const [stockDetails, setStockDetails] = useState([{ colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
 
-  const [formData, setFormData] = useState({
-    ...initialFormData,
-    colors: initialColorsData,
-  });
+  const handleColorChange = (index, newColor) => {
+    const updatedStockDetails = [...stockDetails];
+    updatedStockDetails[index].colorCode = newColor;
+    setStockDetails(updatedStockDetails);
+  };
 
-  const handleFormChange = (index, size, value) => {
-    const newColors = [...formData.colors];
-    newColors[index].details[size] = value === "" ? 0 : Math.max(parseInt(value, 10), 0);
-    setFormData({ ...formData, colors: newColors });
+  const handleSizeChange = (index, size, quantity) => {
+    const updatedStockDetails = [...stockDetails];
+    updatedStockDetails[index].details[size] = quantity;
+    setStockDetails(updatedStockDetails);
+  };
+
+  const addColor = () => {
+    if (stockDetails.length < 10) {
+      setStockDetails([...stockDetails, { colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
+    }
+  };
+
+  const removeColor = (index) => {
+    if (stockDetails.length > 1) {
+      const updatedStockDetails = stockDetails.filter((_, i) => i !== index);
+      setStockDetails(updatedStockDetails);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const totalStock = formData.colors.reduce((total, color) => total + Object.values(color.details).reduce((sum, qty) => sum + qty, 0), 0);
-    if (totalStock !== formData.stock) {
-      alert("Total sizes quantity must equal the total stock");
+    if (importPrice <= 0) {
+      toast.error("Import price must be greater than 0");
       return;
     }
-    const outputData = {
-      productId: formData.productId,
-      importPrice: formData.importPrice,
-      stock: formData.stock,
-      stockDetails: formData.colors,
-      importTotal: formData.importTotal,
-      createdAt: formData.createdAt,
-    };
-    onSubmit(outputData);
+    const totalStock = stockDetails.reduce((acc, curr) => {
+      return acc + Object.values(curr.details).reduce((sum, q) => sum + parseInt(q), 0);
+    }, 0);
+    if (totalStock !== parseInt(stock)) {
+      toast.error("Total stock must be equal to sum of all sizes");
+      return;
+    }
+    const colorCodes = stockDetails.map((detail) => detail.colorCode);
+    if (new Set(colorCodes).size !== colorCodes.length) {
+      toast.error("Color must be unique");
+      return;
+    }
+    // Submit form data
+    console.log({ productId, importPrice, stock, stockDetails });
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto border-none">
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="stock">Stock</Label>
-              <Input
-                id="stock"
-                type="number"
-                min="0"
-                value={formData.stock}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    stock: e.target.value === "" ? 0 : Math.max(parseInt(e.target.value, 10), 0),
-                  })
-                }
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="importPrice">Import Price</Label>
-              <Input
-                id="importPrice"
-                type="number"
-                min="0"
-                value={formData.importPrice}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    importPrice: e.target.value === "" ? 0 : Math.max(parseInt(e.target.value, 10), 0),
-                  })
-                }
-              />
-            </div>
-            {formData.colors.map((color, index) => (
-              <div key={index} className="flex flex-col space-y-1.5">
-                <Label>Color: {color.colorCode}</Label>
-                <div className="grid grid-cols-5 gap-4 mt-2">
-                  {Object.keys(color.details).map((size) => (
-                    <div key={size} className="flex flex-col space-y-1.5">
-                      <Label htmlFor={`size-${index}-${size}`}>{size}</Label>
-                      <Input id={`size-${index}-${size}`} type="number" min="0" value={color.details[size]} onChange={(e) => handleFormChange(index, size, e.target.value)} />
+    <>
+      <div className="flex justify-between">
+        <div>
+          <p>
+            <b>Product</b> : <i>{productDataById.title}</i>
+          </p>
+          <p>
+            <b>Stock available</b>: <i>{productDataById.stock}</i>
+          </p>
+          <p>
+            <b>Price</b> : <i>{productDataById.price} vnd</i>
+          </p>
+        </div>
+        <TooltipProvider className="">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" className="border-none mr-20">
+                <CircleHelp className="  " size={25} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Import price : Giá tiền nhập của 1 sản phẩm</p>
+              <p></p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="flex flex-col">
+          {/* importPrice: Giá tiền nhập của 1 sản phẩm */}
+          <Label className="mb-2">Import Price:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
+        </div>
+        <div className="flex flex-col">
+          {/* stock: Tổng số lượng sản phẩm */}
+          <Label className="mb-2">Total Stock:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" value={stock} onChange={(e) => setStock(e.target.value)} required />
+        </div>
+        <div className="flex flex-col">
+          {/* Tổng tiền */}
+          <Label className="mb-2">Total Money:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" readOnly />
+        </div>
+        <div className="space-y-4">
+          {stockDetails.map((stockDetail, index) => (
+            <div key={index} className="border border-gray-300 rounded-md p-4">
+              <div className="flex justify-between items-center space-x-4">
+                <div className="flex items-center space-x-2 justify-center">
+                  {/* color ============== */}
+                  <Label>Color:</Label>
+                  <select
+                    className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow w-1/2"
+                    value={stockDetail.colorCode}
+                    onChange={(e) => handleColorChange(index, e.target.value)}
+                  >
+                    {colors.map((color) => (
+                      <option key={color.code} value={color.code}>
+                        {color.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {stockDetails.length > 1 && (
+                    <Button variant="outline" type="button" onClick={() => removeColor(index)}>
+                      Remove
+                    </Button>
+                  )}
+                </div>
+                <div className="flex space-x-2">
+                  {["S", "M", "L", "XL", "2XL"].map((size) => (
+                    <div key={size} className="flex flex-col items-center mb-4">
+                      <Label>{size}</Label>
+                      <Input
+                        type="number"
+                        className="p-2 border border-gray-300 rounded-md w-20"
+                        value={stockDetail.details[size]}
+                        onChange={(e) => handleSizeChange(index, size, e.target.value)}
+                        min="0"
+                      />
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
-          <CardFooter className="flex justify-end space-x-4 mt-4">
-            <Button type="submit">Submit</Button>
-          </CardFooter>
-        </form>
-      </CardContent>
-    </Card>
+            </div>
+          ))}
+        </div>
+        {stockDetails.length < 10 && (
+          <Button type="button" className=" bg-blue-500 text-white rounded-md" onClick={addColor}>
+            Add Color
+          </Button>
+        )}
+        <div className="flex justify-end">
+          <Button type="submit" className=" bg-green-500 text-white rounded-md">
+            Submit
+          </Button>
+        </div>
+      </form>
+    </>
   );
 };
 
