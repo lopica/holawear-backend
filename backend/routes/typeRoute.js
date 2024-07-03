@@ -1,6 +1,7 @@
 const express = require("express");
 const typeRouter = express.Router();
-const { TypeController } = require("../controllers");
+
+const { TypeController } = require("../controllers/index");
 
 // GET all tags
 typeRouter.get("/get-all", TypeController.getAllTypes);

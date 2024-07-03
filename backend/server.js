@@ -5,7 +5,8 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const httpError = require("http-errors");
 const db = require("./models");
-const { userRouter, roleRouter, authRouter, productRouter, categoryRouter, tagRouter, productDepotRouter, typeRouter } = require("./routes");
+const { userRouter, roleRouter, authRouter, productRouter, categoryRouter, typeRouter, tagRouter, productDepotRouter } = require("./routes");
+
 require("dotenv").config();
 
 const app = express();
