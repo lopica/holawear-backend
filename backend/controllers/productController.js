@@ -114,4 +114,56 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-module.exports = { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };
+
+//get list product by category id || tag id || brand id || type id
+// const getProductByCategoryId = async (req, res) => {
+//   try {
+//     const categoryId = req.params.id;
+//     console.log(categoryId);
+//     const products = await Product.find({ category: categoryId });
+//     console.log(products);
+//     if (!products) {
+//       return res.status(404).json({ message: "Products not found" });
+//     }
+//     const tag = await Tag.findById(products.tag);
+//     const brand = await Brand.findById(products.brand);
+//     const type = await Type.findById(products.type);
+//     const category = await Category.findById(products.category);
+
+//     console.log(tag + " " + brand + " " + type + " " + category);
+//     res.status(200).json({
+//       _id: products._id,
+//       title: products.title,
+//       description: products.description,
+//       category: products.category,
+//       price: products.price,
+//       discountPercentage: products.discountPercentage,
+//       rating: products.rating,
+//       reviews: products.reviews,
+//       stock: products.stock,
+//       type: products.type,
+//       tag: products.tags,
+//       brand: products.brand,
+//       availabilityStatus: products.availabilityStatus,
+//       images: products.images,
+//       thumbnail: products.thumbnail,
+//       stockDetails: products.stockDetails,
+//     });
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// };
+const getProductByCategoryId = async (req, res) => {
+  const categoryId = req.params.id;
+  console.log(categoryId);
+
+  try {
+    //hàm find sẽ trả về một mảng các sản phẩm có category trùng với categoryId
+    const products = await Product.find({ category: categoryId });
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { format, parseISO } from "date-fns";
 import { ArrowDownToLine, ChevronDown, Pencil, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import FormAddDepot from "./FormAddDepot";
+import AdminProductDetail from "./AdminProductDetail";
 
 const TableProduct = ({ productData, categories }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -33,6 +34,8 @@ const TableProduct = ({ productData, categories }) => {
     <div className="p-4">
       <div className="flex items-center justify-between space-x-4 mb-4">
         <input type="text" placeholder="Search by product name" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
+
+        {/* categories dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
             {selectedCategory || "Category"}
@@ -41,15 +44,18 @@ const TableProduct = ({ productData, categories }) => {
           <DropdownMenuContent>
             <DropdownMenuLabel className="flex items-center">Category</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleCategorySelect("")}>All</DropdownMenuItem>
+            <DropdownMenuItem key="all" onClick={() => handleCategorySelect("")}>
+              All
+            </DropdownMenuItem>
             {categories.map((category) => (
-              <DropdownMenuItem key={category.id} onClick={() => handleCategorySelect(category.name)}>
-                {category.name}
+              <DropdownMenuItem key={category._id} onClick={() => handleCategorySelect(category.name)}>
+                {category.name} - {category._id}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="overflow-x-auto border rounded-lg">
         <table className="min-w-full divide-y divide-gray-200 table-auto">
           <thead className="bg-gray-50">
@@ -63,9 +69,10 @@ const TableProduct = ({ productData, categories }) => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
+
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredProducts.map((product) => (
-              <tr key={product.id}>
+              <tr key={product._id}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{product.title}</div>
                 </td>
@@ -86,9 +93,10 @@ const TableProduct = ({ productData, categories }) => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{format(parseISO(product.createdAt), "HH:mm:ss dd-MM-yyyy")}</div>
+                  <div className="text-sm text-gray-900">{product.createdAt ? format(parseISO(product.createdAt), "HH:mm:ss dd-MM-yyyy") : "N/A"}</div>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium flex">
+                  {/* show detail product */}
                   <button className="bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Eye className="h-5 w-5 hover:opacity-85" />
                   </button>
@@ -99,18 +107,17 @@ const TableProduct = ({ productData, categories }) => {
                     <DialogTrigger className="ml-4 bg-white hover:bg-gray-50 text-[#FB5012] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                       <ArrowDownToLine className="h-5 w-5 opacity-55 hover:opacity-85" />
                     </DialogTrigger>
-
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Add Depot</DialogTitle>
                         <DialogDescription>Add new depot for this product</DialogDescription>
                       </DialogHeader>
-                      <FormAddDepot initialFormData={initialFormData} onSubmit={handleFormSubmit} />
+                      <FormAddDepot productId={product._id} initialFormData={initialFormData} onSubmit={handleFormSubmit} />
                     </DialogContent>
                   </Dialog>
                   {product.availabilityStatus === "In Stock" && (
                     <button className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow">
-                      <p className="text-sm">Inactive</p>
+                      <p className="text-sm">InActive</p>
                     </button>
                   )}
                   {(product.availabilityStatus === "Sold Out" || product.availabilityStatus === "Inactive") && (
@@ -127,6 +134,5 @@ const TableProduct = ({ productData, categories }) => {
     </div>
   );
 };
-// không cho phép submit nếu như màu sắc nào đó có các size đều = 0 (tức là không có sản phẩm, hiện alert thông báo thừa màu sắc
 
 export default TableProduct;

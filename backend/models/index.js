@@ -32,7 +32,7 @@ db.connectDB = async () => {
       dbName: process.env.DB_NAME,
     })
     .then(() => {
-      console.log("Successfully connect to MongoDB.");
+      console.log("Successfully connect to MongoDB. -> " + process.env.DB_NAME);
     })
     .catch((err) => {
       console.error(err.message);
