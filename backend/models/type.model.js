@@ -6,6 +6,7 @@ const typeSchema = new Schema(
     name: { type: String, required: true },
     description: { type: String, default: "" },
     image: { type: String, default: "" },
+    status: { type: Boolean, default: true, required: true },
   },
   { timestamps: true },
 );

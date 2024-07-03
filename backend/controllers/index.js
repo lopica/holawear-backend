@@ -6,6 +6,7 @@ const TypeController = require("./typeController");
 const TagController = require("./tagController");
 const CategoryController = require("./categoryController");
 const productDepotController = require("./productDepotController");
+const TypeController = require("./typeController");
 module.exports = {
   UserController,
   RoleController,
@@ -15,4 +16,5 @@ module.exports = {
   TypeController,
   CategoryController,
   productDepotController,
+  TypeController,
 };
