@@ -61,8 +61,8 @@ const TableProduct = ({ productData, categories, tags }) => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add Depot</DialogTitle>
-              <DialogDescription>Add new depot for this product</DialogDescription>
+              <DialogTitle>Add Product</DialogTitle>
+              <DialogDescription>Add new product</DialogDescription>
             </DialogHeader>
             <FormAddProduct />
           </DialogContent>
