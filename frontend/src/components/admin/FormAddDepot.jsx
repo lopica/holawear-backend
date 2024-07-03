@@ -74,7 +74,7 @@ const FormAddDepot = ({ productDataById }) => {
 
   return (
     <>
-      <div className="flex justify-between">
+      <div className="flex justify-between border-t-2 border-gray-700 pt-3">
         <div>
           <p>
             <b>Product</b> : <i>{productDataById.title}</i>
@@ -104,19 +104,19 @@ const FormAddDepot = ({ productDataById }) => {
         <div className="flex flex-col">
           {/* importPrice: Giá tiền nhập của 1 sản phẩm */}
           <Label className="mb-2">Import Price:</Label>
-          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
+          <Input type="number" className="p-2 border border-gray-300 rounded-md " value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
         </div>
         <div className="flex flex-col">
           {/* stock: Tổng số lượng sản phẩm */}
           <Label className="mb-2">Total Stock:</Label>
-          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" value={stock} onChange={(e) => setStock(e.target.value)} required />
+          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={stock} onChange={(e) => setStock(e.target.value)} required />
         </div>
         <div className="flex flex-col">
           {/* Tổng tiền */}
-          <Label className="mb-2">Total Money:</Label>
-          <Input type="number" className="p-2 border border-gray-300 rounded-md w-1/2" readOnly />
+          <Label className="mb-2">Import Total :</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md " readOnly />
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 border-t-2 border-gray-700 pt-5">
           {stockDetails.map((stockDetail, index) => (
             <div key={index} className="border border-gray-300 rounded-md p-4">
               <div className="flex justify-between items-center space-x-4">
@@ -143,8 +143,8 @@ const FormAddDepot = ({ productDataById }) => {
                 </div>
                 <div className="flex space-x-2">
                   {["S", "M", "L", "XL", "2XL"].map((size) => (
-                    <div key={size} className="flex flex-col items-center mb-4">
-                      <Label>{size}</Label>
+                    <div key={size} className="flex flex-col items-center mb-6">
+                      <Label className="mb-2">{size}</Label>
                       <Input
                         type="number"
                         className="p-2 border border-gray-300 rounded-md w-20"

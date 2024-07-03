@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { format, parseISO } from "date-fns";
+import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ChevronDown, Pencil, Eye } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import FormAddDepot from "./FormAddDepot";
 import AdminProductDetail from "./AdminProductDetail";
+import FormAddProduct from "./FormAddProduct";
 
-const TableProduct = ({ productData, categories }) => {
+const truncateText = (text, maxLength) => {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength) + "...";
+};
+
+const TableProduct = ({ productData, categories, tags }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -24,7 +33,6 @@ const TableProduct = ({ productData, categories }) => {
     <div className="p-4">
       <div className="flex items-center justify-between space-x-4 mb-4">
         <input type="text" placeholder="Search by product name" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
-
         {/* categories dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
@@ -44,14 +52,30 @@ const TableProduct = ({ productData, categories }) => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+        {/* add product button */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <p>Add Product</p>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Depot</DialogTitle>
+              <DialogDescription>Add new depot for this product</DialogDescription>
+            </DialogHeader>
+            <FormAddProduct />
+          </DialogContent>
+        </Dialog>
       </div>
-
       <div className="overflow-x-auto border rounded-lg">
         <table className="min-w-full divide-y divide-gray-200 table-auto">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              {/* tag */}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tag</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -59,15 +83,34 @@ const TableProduct = ({ productData, categories }) => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
-
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredProducts.map((product) => (
               <tr key={product._id}>
                 <td className="px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">{product.title}</div>
+                  <div className="text-sm font-medium text-gray-900">{truncateText(product.title, 20)}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{product.category}</div>
+                  {categories.map((category) => {
+                    if (category._id === product.category) {
+                      return (
+                        <div key={category._id} className="text-sm text-gray-900">
+                          {category.name}
+                        </div>
+                      );
+                    }
+                  })}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {tags.map((tag) => {
+                    if (tag._id === product.tag) {
+                      return (
+                        <div key={tag._id} className="text-sm text-gray-900">
+                          {tag.name}
+                        </div>
+                      );
+                    }
+                  })}
+                  {/* <div className="text-sm text-gray-900">{product.tag}</div> */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{product.stock}</div>
@@ -85,7 +128,7 @@ const TableProduct = ({ productData, categories }) => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{product.createdAt ? format(parseISO(product.createdAt), "HH:mm:ss dd-MM-yyyy") : "N/A"}</div>
                 </td>
-                <td className="px-6 py-4 text-sm font-medium flex">
+                <td className="px-6 py-4 text-sm font-medium flex items-center">
                   {/* show detail product */}
                   <button className="bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Eye className="h-5 w-5 hover:opacity-85" />
