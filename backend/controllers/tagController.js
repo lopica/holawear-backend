@@ -1,4 +1,4 @@
-const Tag = require('../models/tag.model');
+const Tag = require("../models/tag.model");
 
 // GET all tags
 exports.getAllTags = async (req, res) => {
@@ -15,7 +15,7 @@ exports.getTagById = async (req, res) => {
   try {
     const tag = await Tag.findById(req.params.id);
     if (!tag) {
-      return res.status(404).json({ message: 'Tag not found' });
+      return res.status(404).json({ message: "Tag not found" });
     }
     res.status(200).json(tag);
   } catch (error) {
@@ -39,7 +39,7 @@ exports.updateTag = async (req, res) => {
   try {
     const tag = await Tag.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!tag) {
-      return res.status(404).json({ message: 'Tag not found' });
+      return res.status(404).json({ message: "Tag not found" });
     }
     res.status(200).json(tag);
   } catch (error) {
@@ -50,11 +50,11 @@ exports.updateTag = async (req, res) => {
 // DELETE delete a tag by ID
 exports.deleteTag = async (req, res) => {
   try {
-    const tag = await Tag.findByIdAndDelete(req.params.id);
+    const tag = await Tag.findByIdAndUpdate(req.params.id, { status: false }, { new: true });
     if (!tag) {
-      return res.status(404).json({ message: 'Tag not found' });
+      return res.status(404).json({ message: "Tag not found" });
     }
-    res.status(200).json({ message: 'Tag deleted successfully' });
+    res.status(200).json({ message: "Tag deleted successfully by set status to false" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
