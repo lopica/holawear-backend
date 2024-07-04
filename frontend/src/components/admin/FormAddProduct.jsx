@@ -70,10 +70,13 @@ const FormAddProduct = () => {
     };
 
     try {
-      //   await axios.post("http://localhost:9999/api/product/add", productData);
+      await axios.post("http://localhost:9999/api/product/create", productData);
       console.log(productData);
       toast.success("Product added successfully!");
-      navigate("/admin/products");
+      // Set time for reload page after 2 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       console.log(error);
       toast.error("Failed to add product.");
