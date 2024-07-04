@@ -24,6 +24,6 @@ productRouter.get("/get-product-by-category-id/:id", ProductController.getProduc
 productRouter.post("/import", ProductController.importProducts);
 
 //PUT update product status
-productRouter.put("/status", ProductController.updateProductStatus);
+productRouter.put("/status/:productId", ProductController.updateProductStatus);
 
 module.exports = productRouter;

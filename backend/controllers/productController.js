@@ -191,11 +191,13 @@ const getProductByCategoryId = async (req, res) => {
 // PUT update product status
 const updateProductStatus = async (req, res) => {
   try {
-    const { productId, status } = req.body;
+    const productId = req.params.productId;
+    const { status } = req.body;
+    console.log(productId, status);
 
     // Find the product by ID and update its status
     const product = await Product.findByIdAndUpdate(productId, { availabilityStatus: status }, { new: true });
-
+    // console.log(product);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }

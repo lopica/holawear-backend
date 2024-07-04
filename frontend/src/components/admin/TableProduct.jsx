@@ -20,7 +20,8 @@ import {
 import FormAddDepot from "./FormAddDepot";
 import AdminProductDetail from "./AdminProductDetail";
 import FormAddProduct from "./FormAddProduct";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) {
@@ -119,25 +120,18 @@ const TableProduct = ({ productData, categories, tags }) => {
   };
 
   const handleStatusUpdate = (productId, newStatus) => {
-    console.log(productId, newStatus);
-    // fetch("http://localhost:9999/api/product/status", {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ productId, status: newStatus }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     toast.success("Product status updated successfully");
-    //     setTimeout(() => {
-    //       window.location.reload();
-    //     }, 2000);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error updating product status:", error);
-    //     toast.error("Failed to update product status");
-    //   });
+    axios
+      .put(`http://localhost:9999/api/product/status/${productId}`, { status: newStatus })
+      .then((response) => {
+        toast.success("Product status updated successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Error updating product status:", error);
+        toast.error("Failed to update product status");
+      });
   };
 
   const filteredProducts = productData.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true));
