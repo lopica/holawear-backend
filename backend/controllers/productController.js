@@ -40,7 +40,7 @@ const getAllProducts = async (req, res) => {
 // GET a single product by ID
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate("category", "name").populate("brand", "name").populate("type", "name").populate("tag", "name");
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -53,8 +53,19 @@ const getProductById = async (req, res) => {
 const getProductByCategoryId = async (req, res) => {
   try {
     const categoryId = req.params.id;
-    console.log(`Category ID: ${categoryId}`);
-    const products = await Product.find({ category: categoryId });
+
+    // Kiểm tra xem categoryId có phải là ObjectId hợp lệ không
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({ message: "Invalid category ID" });
+    }
+
+    const categoryExists = await Category.findById(categoryId);
+    if (!categoryExists) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const products = await Product.find({ category: categoryId }).populate("category", "name").populate("brand", "name").populate("type", "name").populate("tag", "name");
+
     if (products.length === 0) {
       return res.status(404).json({ message: "Products not found" });
     }
@@ -68,10 +79,6 @@ const getProductByCategoryId = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const { title, description, category, importPrice, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
-    // const categoryObject = await Category.findOne({ name: category });
-    // const tagObject = await Tag.findOne({ name: tag });
-    // const brandObject = await Brand.findOne({ name: brand });
-    // const typeObject = await Type.findOne({ name: type });
 
     const stockdetails = req.body.stockDetails;
     // Create a new product instance

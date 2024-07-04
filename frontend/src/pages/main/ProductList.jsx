@@ -1,13 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProductCard from "../../components/ProductCard";
 import Sidebar from "../../components/SideBar";
+import axios from "axios";
 
-const ProductList = ({ products, category }) => {
+const ProductList = ({ category }) => {
+  const [products, setProducts] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([0, 1000000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [showSidebar, setShowSidebar] = useState(true);
-  const [sortOption, setSortOption] = useState("featured");
+  const [sortOption, setSortOption] = useState("newest");
+  const [categories, setCategories] = useState([]);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://localhost:9999/api/category/get-all");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch products when category or categories change
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const categoryObj = categories.find((cat) => cat.name.toLowerCase() === category.toLowerCase());
+        if (categoryObj) {
+          const response = await axios.get(`http://localhost:9999/api/product/get-product-by-category-id/${categoryObj._id}`);
+          setProducts(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    if (categories.length > 0) {
+      fetchProducts();
+    }
+  }, [category, categories]);
 
   const toggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -31,13 +67,13 @@ const ProductList = ({ products, category }) => {
   };
 
   const filteredProducts = products.filter((product) => {
+    console.log("Filtering product:", product); // Log từng product
     return (
-      product.category.toLowerCase() === category.toLowerCase() &&
-      (selectedColors.length === 0 ||
-        selectedColors.some((color) => Object.keys(product.stockDetails).includes(color))) &&
+      product.category?.name.toLowerCase() === category.toLowerCase() && // Check category
+      (selectedColors.length === 0 || selectedColors.some((color) => product.stockDetails.some((detail) => detail.colorCode === color))) &&
       product.price >= selectedPrices[0] &&
       product.price <= selectedPrices[1] &&
-      (selectedBrands.length === 0 || selectedBrands.includes(product.brand))
+      (selectedBrands.length === 0 || selectedBrands.includes(product.brand.name))
     );
   });
 
@@ -46,9 +82,7 @@ const ProductList = ({ products, category }) => {
   return (
     <div>
       <div className="container mx-auto p-6 flex">
-        <div
-          className={`transition-transform duration-300 ease-in-out ${showSidebar ? "w-64" : "w-0"} overflow-hidden`}
-        >
+        <div className={`transition-transform duration-300 ease-in-out ${showSidebar ? "w-64" : "w-0"} overflow-hidden`}>
           <Sidebar
             selectedColors={selectedColors}
             setSelectedColors={setSelectedColors}

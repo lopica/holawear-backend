@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import instance from "../../utils/index";
+import axios from "axios";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiHeart, CiShoppingCart } from "react-icons/ci";
 
@@ -14,14 +14,16 @@ const ProductDetail = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    (async () => {
+    const fetchProducts = async () => {
       try {
-        const { data } = await instance.get(`/products/${id}`);
-        setProduct(data);
+        const response = await axios.get(`http://localhost:9999/api/product/get-detail-product/${id}`);
+        setProduct(response.data);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching products:", error);
       }
-    })();
+    };
+
+    fetchProducts();
   }, [id]);
 
   if (!product) {
@@ -40,17 +42,13 @@ const ProductDetail = () => {
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
-    // Reset size selection when color changes
     setSelectedSize(null);
-    // Clear error when a color is selected
     setError("");
   };
 
   const handleSizeSelect = (size) => {
     setSelectedSize(size);
-    // Reset quantity when size changes
     setQuantity(1);
-    // Clear error when a size is selected
     setError("");
   };
 
@@ -60,7 +58,7 @@ const ProductDetail = () => {
       return;
     }
     const cartItem = {
-      productId: product.id,
+      productId: product._id,
       title: product.title,
       price: product.price,
       quantity,
@@ -68,7 +66,7 @@ const ProductDetail = () => {
       size: selectedSize,
       thumbnail: product.thumbnail,
       sku: product.sku,
-      brand: product.brand,
+      brand: product.brand.name, // Assuming you want to display brand name
     };
     console.log("Add to cart", cartItem);
     // Add to cart logic goes here
@@ -103,14 +101,10 @@ const ProductDetail = () => {
               {[...Array(5)].map((_, i) => (product.rating > i ? <FaStar key={i} className="text-yellow-500" /> : <FaRegStar key={i} className="text-gray-300" />))}
               <span className="text-gray-600 ml-2">({product.rating} rating)</span>
             </div>
-            <p className="text-gray-700 mb-4">{product.type}</p>
+            <p className="text-gray-700 mb-4">{product.type?.name}</p>
             <p className="text-gray-700 mb-4">{product.description}</p>
             <div className="flex items-center space-x-2 mb-4">
-              {product.tags.map((tag, index) => (
-                <span key={index} className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">
-                  {tag}
-                </span>
-              ))}
+              <span className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs">{product.tag?.name}</span>
             </div>
             <div className="flex space-x-2 mt-2">
               {Object.keys(product.stockDetails).map((color) => (

@@ -11,6 +11,8 @@ import NotFoundPage from "./pages/error/NotFoundPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 
 import UserProfile from "./pages/auth/UserProfile";
+import ProductList from "./pages/main/ProductList";
+import ProductDetail from "./pages/main/ProductDetail";
 
 export const UserContext = createContext({});
 
@@ -39,8 +41,11 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" />} />
+            <Route path="/men" element={<ProductList category="men" />} />
+            <Route path="/women" element={<ProductList category="women" />} />
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
             <Route path="/register" element={!userAuth.accessToken ? <RegisterPage /> : <Navigate to="/" />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/user/profile" element={userAuth.accessToken ? <UserProfile /> : <Navigate to="/login" />} />
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
             <Route path="*" element={<NotFoundPage />} />
