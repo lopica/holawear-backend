@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import TableType from "@/components/admin/TableType";
+import TableTag from "@/components/admin/TableTag";
 import axios from "axios";
 
-const ManageType = () => {
-  const [types, setTypes] = useState([]);
+const ManageTag = () => {
+  const [tags, setTags] = useState([]);
   //get data from api
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:9999/api/type/get-all");
-        console.log("types: ", res.data);
+        const res = await axios.get("http://localhost:9999/api/tag/get-all");
+        console.log("tags: ", res.data);
 
-        setTypes(res.data);
+        setTags(res.data);
       } catch (error) {
         console.log("error", error);
       }
@@ -22,17 +22,17 @@ const ManageType = () => {
 
   return (
     <div className="w-full h-full">
-      <Tabs defaultValue="type">
+      <Tabs defaultValue="tag">
         <TabsList>
-          <TabsTrigger value="type">Types</TabsTrigger>
+          <TabsTrigger value="tag">Tags</TabsTrigger>
         </TabsList>
-        {/* Type table */}
-        <TabsContent value="type">
-          <TableType typesData={types} />
+        {/* tag table */}
+        <TabsContent value="tag">
+          <TableTag tagsData={tags} />
         </TabsContent>
       </Tabs>
     </div>
   );
 };
 
-export default ManageType;
+export default ManageTag;
