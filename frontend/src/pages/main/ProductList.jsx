@@ -67,7 +67,7 @@ const ProductList = ({ category }) => {
   };
 
   const filteredProducts = products.filter((product) => {
-    console.log("Filtering product:", product); // Log từng product
+    // console.log("Filtering product:", product); // Log từng product
     return (
       product.category?.name.toLowerCase() === category.toLowerCase() && // Check category
       (selectedColors.length === 0 || selectedColors.some((color) => product.stockDetails.some((detail) => detail.colorCode === color))) &&

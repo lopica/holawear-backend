@@ -16,6 +16,8 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import UserProfile from "./pages/auth/UserProfile";
 import ProductList from "./pages/main/ProductList";
 import ProductDetail from "./pages/main/ProductDetail";
+import WishList from "./pages/main/Wishlist";
+import CartPage from "./pages/main/CartPage";
 
 //admin
 import AdminLayout from "./pages/admin/Layout";
@@ -66,6 +68,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" />} />
+            <Route path="/wishlist" element={userAuth.accessToken ? <WishList /> : <Navigate to="/login" />} />
+            <Route path="/cart" element={<CartPage />} />
             <Route path="/men" element={<ProductList category="men" />} />
             <Route path="/women" element={<ProductList category="women" />} />
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
