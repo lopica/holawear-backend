@@ -42,7 +42,7 @@ const getAllProducts = async (req, res) => {
 // GET a single product by ID
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).populate("category", "name").populate("brand", "name").populate("type", "name").populate("tag", "name");
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -51,16 +51,44 @@ const getProductById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// GET  product by category ID
+const getProductByCategoryId = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+
+    // Kiểm tra xem categoryId có phải là ObjectId hợp lệ không
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({ message: "Invalid category ID" });
+    }
+
+    const categoryExists = await Category.findById(categoryId);
+    if (!categoryExists) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    const products = await Product.find({ category: categoryId }).populate("category", "name").populate("brand", "name").populate("type", "name").populate("tag", "name");
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Products not found" });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // POST create a new product
 const createProduct = async (req, res) => {
   try {
+
     const { title, description, category, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
     const stockDetails = req.body.stockDetails;
     const categoryObject = await Category.findById(category);
     const tagObject = await Tag.findById(tag);
     const brandObject = await Brand.findById(brand);
     const typeObject = await Type.findById(type);
+
 
     // Create a new product instance
     const newProduct = new Product({
@@ -71,9 +99,9 @@ const createProduct = async (req, res) => {
       discountPercentage: 10,
       rating: 0,
       stock,
-      type: typeObject._id,
-      tag: tagObject._id,
-      brand: brandObject._id,
+      type: type,
+      tag: tag,
+      brand: brand,
       availabilityStatus,
       minimumOrderQuantity: 1,
       images,
