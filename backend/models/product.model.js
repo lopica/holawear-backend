@@ -17,25 +17,30 @@ const stockSchema = new mongoose.Schema({
   details: [stockDetailSchema],
 });
 
-const productSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
-  importPrice: { type: Number },
-  price: { type: Number, required: true },
-  discountPercentage: { type: Number, required: true },
-  rating: { type: Number, required: true },
-  stock: { type: Number, required: true },
-  type: { type: mongoose.Schema.Types.ObjectId, ref: "Type", required: true },
-  tag: { type: mongoose.Schema.Types.ObjectId, ref: "Tag" },
-  brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
-  availabilityStatus: { type: String, required: true },
-  reviews: [reviewSchema],
-  minimumOrderQuantity: { type: Number, required: true },
-  images: [{ type: String }],
-  thumbnail: { type: String },
-  stockDetails: [stockSchema],
-});
+const productSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+    price: { type: Number, required: true },
+    discountPercentage: { type: Number, required: true },
+    rating: { type: Number, required: true },
+    stock: { type: Number, required: true },
+    type: { type: mongoose.Schema.Types.ObjectId, ref: "Type", required: true },
+    tag: { type: mongoose.Schema.Types.ObjectId, ref: "Tag" },
+    brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand" },
+    availabilityStatus: { type: String, required: true },
+    reviews: [reviewSchema],
+    minimumOrderQuantity: { type: Number, required: true },
+    images: [{ type: String }],
+    thumbnail: { type: String },
+    stockDetails: [stockSchema],
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
+);
 
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

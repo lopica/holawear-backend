@@ -3,20 +3,7 @@ import { Link } from "react-router-dom";
 import { FaGithub } from "react-icons/fa";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 // Adjust this import according to your project structure
-import {
-  Gauge,
-  FolderKanban,
-  Settings,
-  PackageSearch,
-  ClipboardType,
-  BadgeCheck,
-  PackageOpen,
-  PaintBucket,
-  UsersRound,
-  NotebookText,
-  BaggageClaim,
-  Home,
-} from "lucide-react";
+import { Gauge, FolderKanban, Settings, PackageSearch, ClipboardType, BadgeCheck, PackageOpen, PaintBucket, UsersRound, NotebookText, BaggageClaim, Home, Tags } from "lucide-react";
 
 const SideBarAdmin = () => {
   return (
@@ -36,18 +23,12 @@ const SideBarAdmin = () => {
             </Link>
           </AccordionItem>
           <AccordionItem value="dashboard">
-            <Link
-              to="/admin1/dashboard"
-              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
-            >
+            <Link to="/admin/dashboard" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
               <Gauge size={20} className="mr-3" /> Dashboard
             </Link>
           </AccordionItem>
           <AccordionItem value="orders">
-            <Link
-              to="/admin1/orders"
-              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
-            >
+            <Link to="/admin/orders" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
               <BaggageClaim size={20} className="mr-3" /> Orders
             </Link>
           </AccordionItem>
@@ -58,35 +39,37 @@ const SideBarAdmin = () => {
             <AccordionContent>
               <ul className="pl-8 space-y-2">
                 <li>
-                  <Link to="/admin1/users" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/users" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <UsersRound size={20} className="mr-3" /> Users
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin1/products" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/products" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <PackageSearch size={20} className="mr-3" /> Products
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin1/types" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/types" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <ClipboardType size={20} className="mr-3" /> Types
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin1/brands" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/tags" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                    <Tags size={20} className="mr-3" /> Tags
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/brands" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <BadgeCheck size={20} className="mr-3" /> Brands
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/admin1/categories"
-                    className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded"
-                  >
+                  <Link to="/admin/categories" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <PackageOpen size={20} className="mr-3" /> Categories
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin1/colors" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/colors" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     <PaintBucket size={20} className="mr-3" /> Colors
                   </Link>
                 </li>
@@ -94,10 +77,7 @@ const SideBarAdmin = () => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="settings">
-            <Link
-              to="/admin1/settings"
-              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium"
-            >
+            <Link to="/admin/settings" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded font-medium">
               <Settings size={20} className="mr-3" /> Settings
             </Link>
           </AccordionItem>
@@ -108,12 +88,12 @@ const SideBarAdmin = () => {
             <AccordionContent>
               <ul className="pl-8 space-y-2">
                 <li>
-                  <Link to="/admin1/about" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/about" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin1/contact" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
+                  <Link to="/admin/contact" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
                     Contact
                   </Link>
                 </li>
@@ -121,12 +101,7 @@ const SideBarAdmin = () => {
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="github">
-            <a
-              href="https://github.com/dnthchung/HolaWear"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded"
-            >
+            <a href="https://github.com/dnthchung/HolaWear" target="_blank" rel="noopener noreferrer" className="flex items-center text-gray-700 hover:bg-gray-200 p-2 rounded">
               <FaGithub className="mr-3" /> GitHub Repository
             </a>
           </AccordionItem>

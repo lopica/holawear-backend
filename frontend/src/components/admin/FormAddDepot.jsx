@@ -1,138 +1,205 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { CircleHelp } from "lucide-react";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
-const FormAddDepot = ({ initialFormData, onSubmit }) => {
-  const [formData, setFormData] = useState(initialFormData);
+const colors = [
+  { code: "#FF0000", name: "Red" },
+  { code: "#008000", name: "Green" },
+  { code: "#0000FF", name: "Blue" },
+  { code: "#FFFF00", name: "Yellow" },
+  { code: "#FFA500", name: "Orange" },
+  { code: "#800080", name: "Purple" },
+  { code: "#FFC0CB", name: "Pink" },
+  { code: "#A52A2A", name: "Brown" },
+  { code: "#808080", name: "Grey" },
+  { code: "#000000", name: "Black" },
+];
 
-  // Handle form change for size quantities
-  const handleFormChange = (index, size, value) => {
-    const newColors = [...formData.colors];
-    newColors[index].sizes[size] = value === "" ? 0 : Math.max(parseInt(value, 10), 0);
-    setFormData({ ...formData, colors: newColors });
+const FormAddDepot = ({ productDataById }) => {
+  const productId = productDataById._id;
+  const [importPrice, setImportPrice] = useState(0);
+  const [stock, setStock] = useState(0);
+  const [importTotal, setImportTotal] = useState(0);
+  const [stockDetails, setStockDetails] = useState([{ colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
+
+  useEffect(() => {
+    const price = parseFloat(importPrice) || 0;
+    const quantity = parseInt(stock) || 0;
+    setImportTotal(price * quantity);
+  }, [importPrice, stock]);
+
+  const handleColorChange = (index, newColor) => {
+    const updatedStockDetails = [...stockDetails];
+    updatedStockDetails[index].colorCode = newColor;
+    setStockDetails(updatedStockDetails);
   };
 
-  // Handle color input change
-  const handleColorChange = (index, value) => {
-    const newColors = [...formData.colors];
-    newColors[index].color = value;
-    setFormData({ ...formData, colors: newColors });
+  const handleSizeChange = (index, size, quantity) => {
+    const updatedStockDetails = [...stockDetails];
+    updatedStockDetails[index].details[size] = parseInt(quantity) || 0;
+    setStockDetails(updatedStockDetails);
   };
 
-  // Add a new color field
-  const addColorField = () => {
-    setFormData({
-      ...formData,
-      colors: [...formData.colors, { color: "", sizes: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }],
-    });
-  };
-
-  // Remove a color field
-  const removeColorField = (index) => {
-    const newColors = formData.colors.filter((_, i) => i !== index);
-    setFormData({ ...formData, colors: newColors });
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Check for any color where all sizes are 0 or color is empty
-    for (let i = 0; i < formData.colors.length; i++) {
-      const colorSizes = formData.colors[i].sizes;
-      const totalSize = Object.values(colorSizes).reduce((sum, qty) => sum + qty, 0);
-      if (formData.colors[i].color.trim() === "") {
-        // alert("Please enter a color for all entries.");
-        return;
-      }
-      if (totalSize === 0) {
-        alert("A color has all sizes set to 0. Please provide at least one size quantity for each color.");
-        return;
-      }
+  const addColor = () => {
+    if (stockDetails.length < 10) {
+      setStockDetails([...stockDetails, { colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
     }
+  };
 
-    const totalStock = formData.colors.reduce((total, color) => total + Object.values(color.sizes).reduce((sum, qty) => sum + qty, 0), 0);
+  const removeColor = (index) => {
+    if (stockDetails.length > 1) {
+      const updatedStockDetails = stockDetails.filter((_, i) => i !== index);
+      setStockDetails(updatedStockDetails);
+    }
+  };
 
-    if (totalStock !== formData.stock) {
-      alert("Total sizes quantity must equal the total stock");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const parsedImportPrice = parseFloat(importPrice);
+    const parsedStock = parseInt(stock);
+
+    if (parsedImportPrice <= 0) {
+      toast.error("Import price must be greater than 0");
       return;
     }
 
-    onSubmit(formData);
+    const totalStock = stockDetails.reduce((acc, curr) => {
+      return acc + Object.values(curr.details).reduce((sum, q) => sum + parseInt(q), 0);
+    }, 0);
+
+    if (totalStock !== parsedStock) {
+      toast.error("Total stock must be equal to sum of all sizes");
+      return;
+    }
+
+    const colorCodes = stockDetails.map((detail) => detail.colorCode);
+    if (new Set(colorCodes).size !== colorCodes.length) {
+      toast.error("Color must be unique");
+      return;
+    }
+
+    const productData = {
+      productId,
+      importPrice: parsedImportPrice,
+      importTotal,
+      stock: parsedStock,
+      stockDetails,
+    };
+
+    console.log(productData);
+
+    try {
+      const response = await axios.post("http://localhost:9999/api/depotProduct/create", productData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      toast.success("Product data submitted successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error("Error submitting product data:", error);
+      toast.error("Failed to submit product data");
+    }
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>Add Depot</CardTitle>
-        <CardDescription>Fill in the details to add product quantities.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="stock">Stock</Label>
-              <Input
-                id="stock"
-                type="number"
-                min="0"
-                value={formData.stock}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    stock: e.target.value === "" ? 0 : Math.max(parseInt(e.target.value, 10), 0),
-                  })
-                }
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="importPrice">Import Price</Label>
-              <Input
-                id="importPrice"
-                type="number"
-                min="0"
-                value={formData.importPrice}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    importPrice: e.target.value === "" ? 0 : Math.max(parseInt(e.target.value, 10), 0),
-                  })
-                }
-              />
-            </div>
-            {formData.colors.map((color, index) => (
-              <div key={index} className="flex flex-col space-y-1.5">
-                <div className="flex justify-between items-center">
-                  <Label htmlFor={`color-${index}`}>Color</Label>
-                  {formData.colors.length > 1 && (
-                    <Button variant="outline" onClick={() => removeColorField(index)}>
-                      Delete Color
+    <>
+      <div className="flex justify-between border-t-2 border-gray-700 pt-3">
+        <div>
+          <p>
+            <b>Product</b> : <i>{productDataById.title}</i>
+          </p>
+          <p>
+            <b>Stock available</b>: <i>{productDataById.stock}</i>
+          </p>
+          <p>
+            <b>Price</b> : <i>{productDataById.price} vnd</i>
+          </p>
+        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" className="border-none mr-20">
+                <CircleHelp size={25} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Import price : Giá tiền nhập của 1 sản phẩm</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="flex flex-col">
+          <Label className="mb-2">Import Price:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={importPrice} onChange={(e) => setImportPrice(e.target.value)} required />
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Total Stock:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={stock} onChange={(e) => setStock(e.target.value)} required />
+        </div>
+        <div className="flex flex-col">
+          <Label className="mb-2">Import Total:</Label>
+          <Input type="number" className="p-2 border border-gray-300 rounded-md" value={importTotal} readOnly />
+        </div>
+        <div className="space-y-4 border-t-2 border-gray-700 pt-5">
+          {stockDetails.map((stockDetail, index) => (
+            <div key={index} className="border border-gray-300 rounded-md p-4">
+              <div className="flex justify-between items-center space-x-4">
+                <div className="flex items-center space-x-2 justify-center">
+                  <Label>Color:</Label>
+                  <select
+                    className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow w-1/2"
+                    value={stockDetail.colorCode}
+                    onChange={(e) => handleColorChange(index, e.target.value)}
+                  >
+                    {colors.map((color) => (
+                      <option key={color.code} value={color.code}>
+                        {color.name}
+                      </option>
+                    ))}
+                  </select>
+                  {stockDetails.length > 1 && (
+                    <Button variant="outline" type="button" onClick={() => removeColor(index)}>
+                      Remove
                     </Button>
                   )}
                 </div>
-                <Input id={`color-${index}`} type="text" value={color.color} onChange={(e) => handleColorChange(index, e.target.value)} />
-                <div className="grid grid-cols-5 gap-4 mt-2">
-                  {Object.keys(color.sizes).map((size) => (
-                    <div key={size} className="flex flex-col space-y-1.5">
-                      <Label htmlFor={`size-${index}-${size}`}>{size}</Label>
-                      <Input id={`size-${index}-${size}`} type="number" min="0" value={color.sizes[size]} onChange={(e) => handleFormChange(index, size, e.target.value)} />
+                <div className="flex space-x-2">
+                  {["S", "M", "L", "XL", "2XL"].map((size) => (
+                    <div key={size} className="flex flex-col items-center mb-6">
+                      <Label className="mb-2">{size}</Label>
+                      <Input
+                        type="number"
+                        className="p-2 border border-gray-300 rounded-md w-20"
+                        value={stockDetail.details[size]}
+                        onChange={(e) => handleSizeChange(index, size, e.target.value)}
+                        min="0"
+                      />
                     </div>
                   ))}
                 </div>
               </div>
-            ))}
-            <Button variant="outline" onClick={addColorField}>
-              Add Color
-            </Button>
-          </div>
-          <CardFooter className="flex justify-end space-x-4 mt-4">
-            <Button type="submit">Submit</Button>
-          </CardFooter>
-        </form>
-      </CardContent>
-    </Card>
+            </div>
+          ))}
+        </div>
+        {stockDetails.length < 10 && (
+          <Button type="button" className="bg-blue-500 text-white rounded-md" onClick={addColor}>
+            Add Color
+          </Button>
+        )}
+        <div className="flex justify-end">
+          <Button type="submit" className="bg-green-500 text-white rounded-md">
+            Submit
+          </Button>
+        </div>
+      </form>
+    </>
   );
 };
 

@@ -14,4 +14,8 @@ userRouter.post("/add-address/:id", UserController.addShippingAddress);
 userRouter.delete("/delete-address/:id", UserController.deleteShippingAddress);
 
 userRouter.post("/change-password/:id", UserController.changePassword);
+
+//get all users
+userRouter.get("/all", UserController.getAllUsers);
+
 module.exports = userRouter;
