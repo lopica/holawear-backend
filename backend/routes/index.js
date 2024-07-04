@@ -6,7 +6,6 @@ const categoryRouter = require("./categoryRoute");
 const tagRouter = require("./tagRoute");
 const typeRouter = require("./typeRoute");
 const productDepotRouter = require("./productDepotRoute");
-const typeRouter = require("./typeRoute");
 module.exports = {
   roleRouter,
   userRouter,
