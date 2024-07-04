@@ -110,7 +110,7 @@ const TableProduct = ({ productData, categories, tags }) => {
           // Set time for reload page after 2 seconds
           setTimeout(() => {
             window.location.reload();
-          }, 2000);
+          }, 1500);
         })
         .catch((error) => {
           console.error("Error deleting product:", error);
@@ -126,7 +126,7 @@ const TableProduct = ({ productData, categories, tags }) => {
         toast.success("Product status updated successfully");
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 1500);
       })
       .catch((error) => {
         console.error("Error updating product status:", error);
@@ -299,10 +299,10 @@ const TableProduct = ({ productData, categories, tags }) => {
                   )}
                   {(product.availabilityStatus === "Sold Out" || product.availabilityStatus === "InActive") && (
                     <button
-                      className="ml-4 bg-white hover:bg-gray-50 text-green-600 hover:text-green-900 py-1 px-2 border border-gray-200 rounded shadow"
+                      className=" ml-4 bg-white hover:bg-gray-50 text-green-600 hover:text-green-900 py-1 px-2 border border-gray-200 rounded shadow"
                       onClick={() => handleStatusUpdate(product._id, "In Stock")}
                     >
-                      <p className="text-sm">In Stock</p>
+                      <p className="text-xs">In Stock</p>
                     </button>
                   )}
                 </td>
