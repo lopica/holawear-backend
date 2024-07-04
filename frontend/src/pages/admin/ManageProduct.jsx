@@ -48,7 +48,7 @@ const ManageProduct = () => {
         </TabsContent>
         {/* product depot table */}
         <TabsContent value="depot">
-          <TableDepot depotData={depotData} />
+          <TableDepot depotData={depotData} productData={products} />
         </TabsContent>
       </Tabs>
     </div>

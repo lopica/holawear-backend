@@ -6,6 +6,7 @@ const Brand = db.brand;
 const Type = db.type;
 const mongoose = require("mongoose");
 
+// GET all products
 const getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -51,6 +52,7 @@ const getProductById = async (req, res) => {
   }
 };
 
+// POST create a new product
 const createProduct = async (req, res) => {
   try {
     const { title, description, category, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
@@ -90,6 +92,7 @@ const createProduct = async (req, res) => {
   }
 };
 
+// POST import products
 const importProducts = async (req, res) => {
   try {
     const products = req.body.products;
@@ -158,6 +161,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// GET products by category ID
 const getProductByCategoryId = async (req, res) => {
   try {
     const categoryId = req.params.id;
@@ -184,4 +188,22 @@ const getProductByCategoryId = async (req, res) => {
   }
 };
 
-module.exports = { getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };
+// PUT update product status
+const updateProductStatus = async (req, res) => {
+  try {
+    const { productId, status } = req.body;
+
+    // Find the product by ID and update its status
+    const product = await Product.findByIdAndUpdate(productId, { availabilityStatus: status }, { new: true });
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json({ message: "Product status updated successfully", product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { updateProductStatus, getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };

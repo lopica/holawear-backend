@@ -77,7 +77,6 @@ const TableProduct = ({ productData, categories, tags }) => {
         })
           .then((response) => response.json())
           .then((data) => {
-            // Handle response from the server
             toast.success("Products imported successfully");
             // Set time for reload page after 2 seconds
             setTimeout(() => {
@@ -107,7 +106,6 @@ const TableProduct = ({ productData, categories, tags }) => {
         .then((data) => {
           toast.success("Product deleted successfully");
           setProductToDelete(null);
-
           // Set time for reload page after 2 seconds
           setTimeout(() => {
             window.location.reload();
@@ -118,6 +116,28 @@ const TableProduct = ({ productData, categories, tags }) => {
           toast.error("Failed to delete product");
         });
     }
+  };
+
+  const handleStatusUpdate = (productId, newStatus) => {
+    console.log(productId, newStatus);
+    // fetch("http://localhost:9999/api/product/status", {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ productId, status: newStatus }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     toast.success("Product status updated successfully");
+    //     setTimeout(() => {
+    //       window.location.reload();
+    //     }, 2000);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error updating product status:", error);
+    //     toast.error("Failed to update product status");
+    //   });
   };
 
   const filteredProducts = productData.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true));
@@ -276,13 +296,19 @@ const TableProduct = ({ productData, categories, tags }) => {
                     </DialogContent>
                   </Dialog>
                   {product.availabilityStatus === "In Stock" && (
-                    <button className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow">
+                    <button
+                      className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow"
+                      onClick={() => handleStatusUpdate(product._id, "InActive")}
+                    >
                       <p className="text-sm">InActive</p>
                     </button>
                   )}
-                  {(product.availabilityStatus === "Sold Out" || product.availabilityStatus === "Inactive") && (
-                    <button className="ml-4 bg-white hover:bg-gray-50 text-green-600 hover:text-green-900 py-1 px-2 border border-gray-200 rounded shadow">
-                      <p className="text-sm">Active</p>
+                  {(product.availabilityStatus === "Sold Out" || product.availabilityStatus === "InActive") && (
+                    <button
+                      className="ml-4 bg-white hover:bg-gray-50 text-green-600 hover:text-green-900 py-1 px-2 border border-gray-200 rounded shadow"
+                      onClick={() => handleStatusUpdate(product._id, "In Stock")}
+                    >
+                      <p className="text-sm">In Stock</p>
                     </button>
                   )}
                 </td>
