@@ -24,7 +24,7 @@ const TableCategory = ({ productsData }) => {
 
   return (
     <div className="bg-white shadow-md rounded-lg p-6">
-      <div className="flex flex ">
+      <div className="flex ">
         <h2 className="text-xl font-bold mb-4">Categories</h2>
         <button type="button" className="btn btn-primary ml-auto mb-2.5">
           Add new category
