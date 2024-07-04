@@ -1,7 +1,8 @@
 import React from "react";
 import { format, parseISO } from "date-fns";
 
-const TableDepot = ({ depotData }) => {
+const TableDepot = ({ depotData, productData }) => {
+  console.log(productData);
   return (
     <div className="p-4">
       <div className="overflow-x-auto border rounded-lg">
@@ -9,18 +10,31 @@ const TableDepot = ({ depotData }) => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Import Price</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Import Total</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
             </tr>
           </thead>
+          {/* body */}
           <tbody className="bg-white divide-y divide-gray-200">
             {depotData.map((depot) => (
               <tr key={depot._id}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{depot.productId}</div>
                 </td>
+                {productData.map((product) => {
+                  if (product._id === depot.productId) {
+                    return (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{product.title}</div>
+                      </td>
+                    );
+                  }
+                  return null;
+                })}
+
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{depot.importPrice} vnd</div>
                 </td>
