@@ -31,10 +31,10 @@ const ProductCard = ({ product }) => {
       <div className="cursor-pointer absolute top-2 right-2 bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded-full shadow flex items-center">
         <FaHeart className="text-red-500 h-7 w-5 opacity-75 hover:opacity-100" />
       </div>
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/product/${product._id}`}>
         <img src={product.thumbnail} alt={product.title} className="w-full h-60 object-cover rounded-t-lg" />
         <div className="p-4">
-          <p className="text-gray-700 mb-4">{product.type}</p>
+          <p className="text-gray-700 mb-4">{product.type.name}</p>
           <h3 className="text-lg font-bold text-gray-900 truncate">{product.title}</h3>
           <div className="flex items-center">
             {renderStars(product.rating)}
