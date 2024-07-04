@@ -1,18 +1,64 @@
 const createHttpError = require("http-errors");
 const db = require("../models");
 const ProductDepot = db.productDepot;
+const Product = db.product;
 // Create a new ProductDepot
 const createProductDepot = async (req, res) => {
   try {
+    const { productId, importPrice, stock, stockDetails, importTotal } = req.body;
+
+    // Transform stockDetails to match the required schema
+    const transformedStockDetails = stockDetails.map((detail) => ({
+      colorCode: detail.colorCode,
+      details: Object.keys(detail.details).map((size) => ({
+        size,
+        quantity: detail.details[size],
+      })),
+    }));
+
+    // Create a new ProductDepot instance
     const newProductDepot = new ProductDepot({
-      productId: req.body.productId,
-      importPrice: req.body.importPrice,
-      stock: req.body.stock,
-      stockDetails: req.body.stockDetails,
-      importTotal: req.body.importTotal,
+      productId,
+      importPrice,
+      stock,
+      stockDetails: transformedStockDetails,
+      importTotal,
     });
-    const savedProductDepot = await newProductDepot.save();
-    res.status(201).json(savedProductDepot);
+
+    // Save the new ProductDepot instance to the database
+    await newProductDepot.save();
+    console.log(newProductDepot);
+
+    // Update the stock and stock details in the Product model
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw createHttpError(404, "Product not found");
+    }
+
+    // Update the stock in the Product model
+    product.stock += stock;
+
+    // Update the stock details in the Product model
+    transformedStockDetails.forEach((detail) => {
+      const existingDetail = product.stockDetails.find((d) => d.colorCode === detail.colorCode);
+      if (existingDetail) {
+        detail.details.forEach((sizeDetail) => {
+          const existingSizeDetail = existingDetail.details.find((sd) => sd.size === sizeDetail.size);
+          if (existingSizeDetail) {
+            existingSizeDetail.quantity += sizeDetail.quantity;
+          } else {
+            existingDetail.details.push(sizeDetail);
+          }
+        });
+      } else {
+        product.stockDetails.push(detail);
+      }
+    });
+
+    // Save the updated product
+    await product.save();
+    console.log(product);
+    res.status(201).json({ message: "Product depot created and product stock updated successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
