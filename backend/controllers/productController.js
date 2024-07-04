@@ -4,6 +4,7 @@ const Category = db.category;
 const Tag = db.tag;
 const Brand = db.brand;
 const Type = db.type;
+const mongoose = require("mongoose");
 
 const getAllProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -52,40 +53,82 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const { title, description, category, importPrice, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
-    const categoryObject = await Category.findOne({ name: category });
-    const tagObject = await Tag.findOne({ name: tag });
-    const brandObject = await Brand.findOne({ name: brand });
-    const typeObject = await Type.findOne({ name: type });
+    const { title, description, category, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
+    const stockDetails = req.body.stockDetails;
+    const categoryObject = await Category.findById(category);
+    const tagObject = await Tag.findById(tag);
+    const brandObject = await Brand.findById(brand);
+    const typeObject = await Type.findById(type);
 
-    const stockdetails = req.body.stockDetails;
     // Create a new product instance
     const newProduct = new Product({
       title,
       description,
       category: categoryObject._id,
-      importPrice,
       price: 0,
-      discountPercentage,
-      rating,
+      discountPercentage: 10,
+      rating: 0,
       stock,
       type: typeObject._id,
       tag: tagObject._id,
       brand: brandObject._id,
       availabilityStatus,
-      minimumOrderQuantity,
+      minimumOrderQuantity: 1,
       images,
       thumbnail,
-      stockDetails: stockdetails,
-      reviews,
+      stockDetails: stockDetails,
+      reviews: [],
     });
 
+    console.log(newProduct);
     // Save the product to the database
-    const savedProduct = await newProduct.save();
 
+    const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+const importProducts = async (req, res) => {
+  try {
+    const products = req.body.products;
+    const importedProducts = [];
+    for (const productData of products) {
+      const { title, description, category, price, discountPercentage, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, tag, brand, stockDetails } = productData;
+
+      const categoryObject = await Category.findOne({ name: category });
+      const tagObject = await Tag.findOne({ name: tag });
+      const brandObject = await Brand.findOne({ name: brand });
+      const typeObject = await Type.findOne({ name: type });
+
+      const newProduct = new Product({
+        title,
+        description,
+        category: categoryObject ? categoryObject._id : null,
+        price,
+        discountPercentage,
+        rating: 0,
+        stock,
+        type: typeObject ? typeObject._id : null,
+        tag: tagObject ? tagObject._id : null,
+        brand: brandObject ? brandObject._id : null,
+        availabilityStatus,
+        minimumOrderQuantity,
+        images,
+        thumbnail,
+        reviews: [],
+        stockDetails,
+      });
+
+      const savedProduct = await newProduct.save();
+      importedProducts.push(savedProduct);
+      // importedProducts.push(newProduct);
+      // console.log(importedProducts);
+    }
+    res.status(201).json({ message: "Products imported successfully", products: importedProducts });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -116,26 +159,29 @@ const deleteProduct = async (req, res) => {
 };
 
 const getProductByCategoryId = async (req, res) => {
-  const categoryId = req.params.categoryId;
-
   try {
-    // Log the categoryId and the query being executed
-    console.log(`Fetching products for category ID: ${categoryId}`);
+    const categoryId = req.params.id;
 
-    // Find products by category ID without pagination
-    const products = await Product.find({ category: categoryId });
+    // Kiểm tra xem categoryId có phải là ObjectId hợp lệ không
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({ message: "Invalid category ID" });
+    }
 
-    // Log the number of products found
-    console.log(`Found ${products.length} products for category ID: ${categoryId}`);
+    const categoryExists = await Category.findById(categoryId);
+    if (!categoryExists) {
+      return res.status(404).json({ message: "Category not found" });
+    }
 
-    res.status(200).json({
-      products,
-      totalProducts: products.length,
-    });
+    const products = await Product.find({ category: categoryId }).populate("category", "name");
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Products not found" });
+    }
+
+    res.status(200).json(products);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct };
+module.exports = { getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };
