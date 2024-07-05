@@ -59,13 +59,22 @@ const TableProduct = ({ productData, categories, tags }) => {
         const headers = rows[0];
         const data = rows.slice(1).map((row) => {
           let product = {};
+
           headers.forEach((header, index) => {
             let value = row[index];
-            if (header === "images" || header === "reviews" || header === "stockDetails") {
-              value = JSON.parse(value); // Parse JSON fields
+            // Only handle double-dash-separated values for images field
+            if (header === "images") {
+              if (typeof value === "string") {
+                if (value.includes("--")) {
+                  value = value.split("--").map((url) => url.trim());
+                } else {
+                  value = [value.trim()]; // Single URL in an array
+                }
+              }
             }
             product[header] = value;
           });
+
           return product;
         });
         // Send the data to the server

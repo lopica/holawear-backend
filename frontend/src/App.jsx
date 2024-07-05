@@ -2,6 +2,8 @@ import React, { useState, useEffect, createContext } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import "react-day-picker/dist/style.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./App.scss";
 //instance
 import instance from "./utils/index";
