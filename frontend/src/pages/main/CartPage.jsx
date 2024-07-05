@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
+  const navigate = useNavigate();
   const shippingRate = 35000; // Shipping rate in VND
   const initialProducts = [
     {
+      productTitle: "Gucci Cotton Piquet Polo",
       productId: "6680487e6980cbef1d1b1fa4",
       thumbnail:
         "https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2024/06/ao-polo-nam-gucci-cotton-piquet-737667-xjfgk-6429-mau-do-size-xs-6663d493a9568-08062024104835.jpg",
@@ -14,6 +17,7 @@ const CartPage = () => {
       price: 5000000,
     },
     {
+      productTitle: "Gucci Cotton Piquet Polo",
       productId: "6680487e6980cbef1d1b1fa4",
       thumbnail:
         "https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2024/06/ao-polo-nam-gucci-cotton-piquet-737667-xjfgk-6429-mau-do-size-xs-6663d493a8d0c-08062024104835.jpg",
@@ -72,6 +76,12 @@ const CartPage = () => {
   const subtotal = calculateSubtotal();
   const total = calculateTotal(subtotal);
 
+  const handleCheckout = () => {
+    const cartInfo = { productItems: products, subtotal: subtotal, shipping: shippingRate, total: total };
+    console.log(cartInfo);
+    navigate("/checkout", { state: { products, subtotal, shipping: shippingRate, total } });
+  };
+
   return (
     <div className="container mx-auto mt-10">
       <h1 className="text-2xl font-semibold">Shopping Cart</h1>
@@ -86,16 +96,16 @@ const CartPage = () => {
           <label className="col-span-2">Remove</label>
           <label className="col-span-1 text-right">Total</label>
         </div>
+
         {products.map((product) => (
           <div key={`${product.productId}-${product.size}`} className="grid grid-cols-12 gap-4 items-center mb-4 border-b pb-2">
             {/* Image */}
             <div className="col-span-2">
-              <img src={product.thumbnail} alt={product.title} className="w-16" />
+              <img src={product.thumbnail} alt={product.productTitle} className="w-16" />
             </div>
-            {/* Title */}
+            {/* productTitle */}
             <div className="col-span-2">
-              <div className="font-semibold">{product.title || "Product Title"}</div>
-              <p className="text-sm text-gray-500">{product.description || "Product description"}</p>
+              <div className="font-semibold">{product.productTitle || "Product Title"}</div>
             </div>
             {/* Color */}
             <div className="col-span-1">
@@ -107,7 +117,7 @@ const CartPage = () => {
             <div className="col-span-2">{product.price.toLocaleString("en-US")}</div>
             {/* Quantity */}
             <div className="col-span-1">
-              <input type="number" value={product.quantity} min="1" onChange={(e) => handleQuantityChange(product.productId, product.size, e.target.value)} className="w-16 border rounded p-1" />
+              <input type="number" value={product.quantity} min="1" onChange={(e) => handleQuantityChange(product.productId, product.size, e.target.value)} className="w-16 border rounded p-1 " />
             </div>
             {/* Remove */}
             <div className="col-span-2">
@@ -119,6 +129,7 @@ const CartPage = () => {
             <div className="col-span-1 text-right">{(product.price * product.quantity).toLocaleString("en-US")}</div>
           </div>
         ))}
+
         <div className="flex justify-end">
           <div className="mt-6 w-1/3  ">
             <div className="flex justify-between border-t pt-2">
@@ -133,7 +144,9 @@ const CartPage = () => {
               <span>Grand Total</span>
               <span>{total}</span>
             </div>
-            <Button className="mt-8 w-full">Checkout</Button>
+            <Button className="mt-8 w-full" onClick={handleCheckout}>
+              Checkout
+            </Button>
           </div>
         </div>
       </div>

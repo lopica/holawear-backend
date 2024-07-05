@@ -18,6 +18,8 @@ import ProductList from "./pages/main/ProductList";
 import ProductDetail from "./pages/main/ProductDetail";
 import WishList from "./pages/main/Wishlist";
 import CartPage from "./pages/main/CartPage";
+import Checkout from "./pages/main/Checkout";
+import OrderSuccess from "./components/OrderSuccess";
 
 //admin
 import AdminLayout from "./pages/admin/Layout";
@@ -69,7 +71,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" />} />
             <Route path="/wishlist" element={userAuth.accessToken ? <WishList /> : <Navigate to="/login" />} />
-            <Route path="/cart" element={<CartPage />} />
+            <Route path="/cart" element={!userAuth.accessToken ? <Navigate to="/login" /> : <CartPage />} />
+            <Route path="/checkout" element={!userAuth.accessToken ? <Navigate to="/login" /> : <Checkout />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
+
             <Route path="/men" element={<ProductList category="men" />} />
             <Route path="/women" element={<ProductList category="women" />} />
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
@@ -77,6 +82,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/user/profile" element={userAuth.accessToken ? <UserProfile /> : <Navigate to="/login" />} />
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
+
             {/* Admin Routes */}
             <Route element={<ProtectedRouteAdmin />}>
               <Route element={<AdminLayout />}>
