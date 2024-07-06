@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import { format, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Pencil, Trash2, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 
-const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
+const UserTable = ({ users, roles, loginTypes, onDelete, onEdit, onDetail }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedType, setSelectedType] = useState("");
@@ -33,8 +26,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
 
   const filteredUsers = users.filter(
     (user) =>
-      (user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.phone.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (user.email.toLowerCase().includes(searchTerm.toLowerCase()) || user.phone.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (selectedRole ? user.role === selectedRole : true) &&
       (selectedType ? user.loginType === selectedType : true),
   );
@@ -66,11 +58,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
           <li key={number}>
             <button
               onClick={() => paginate(number)}
-              className={`px-3 py-1 border border-gray-300 rounded ${
-                currentPage === number
-                  ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+              className={`px-3 py-1 border border-gray-300 rounded ${currentPage === number ? "bg-gray-200 text-gray-800 hover:bg-gray-300" : "bg-white text-gray-700 hover:bg-gray-50"}`}
             >
               {number}
             </button>
@@ -83,11 +71,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
           <li key={1}>
             <button
               onClick={() => paginate(1)}
-              className={`px-3 py-1 border border-gray-300 rounded ${
-                currentPage === 1
-                  ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+              className={`px-3 py-1 border border-gray-300 rounded ${currentPage === 1 ? "bg-gray-200 text-gray-800 hover:bg-gray-300" : "bg-white text-gray-700 hover:bg-gray-50"}`}
             >
               1
             </button>
@@ -95,11 +79,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
           <li key={2}>
             <button
               onClick={() => paginate(2)}
-              className={`px-3 py-1 border border-gray-300 rounded ${
-                currentPage === 2
-                  ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+              className={`px-3 py-1 border border-gray-300 rounded ${currentPage === 2 ? "bg-gray-200 text-gray-800 hover:bg-gray-300" : "bg-white text-gray-700 hover:bg-gray-50"}`}
             >
               2
             </button>
@@ -110,11 +90,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
           <li key={totalPages - 1}>
             <button
               onClick={() => paginate(totalPages - 1)}
-              className={`px-3 py-1 border border-gray-300 rounded ${
-                currentPage === totalPages - 1
-                  ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+              className={`px-3 py-1 border border-gray-300 rounded ${currentPage === totalPages - 1 ? "bg-gray-200 text-gray-800 hover:bg-gray-300" : "bg-white text-gray-700 hover:bg-gray-50"}`}
             >
               {totalPages - 1}
             </button>
@@ -122,11 +98,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
           <li key={totalPages}>
             <button
               onClick={() => paginate(totalPages)}
-              className={`px-3 py-1 border border-gray-300 rounded ${
-                currentPage === totalPages
-                  ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+              className={`px-3 py-1 border border-gray-300 rounded ${currentPage === totalPages ? "bg-gray-200 text-gray-800 hover:bg-gray-300" : "bg-white text-gray-700 hover:bg-gray-50"}`}
             >
               {totalPages}
             </button>
@@ -142,13 +114,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
     <div className="p-4">
       <div className="flex items-center justify-between space-x-4 mb-4">
         {/* Search input */}
-        <input
-          type="text"
-          placeholder="Search by email or phone"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3"
-        />
+        <input type="text" placeholder="Search by email or phone" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
         {/* Dropdowns for Role and Type */}
         <div className="flex space-x-4">
           {/* Role dropdown */}
@@ -161,7 +127,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleRoleSelect("")}>All</DropdownMenuItem>
               {roles.map((role) => (
-                <DropdownMenuItem key={role.id} onClick={() => handleRoleSelect(role.name)}>
+                <DropdownMenuItem key={role._id} onClick={() => handleRoleSelect(role.name)}>
                   {role.name}
                 </DropdownMenuItem>
               ))}
@@ -176,11 +142,6 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
               <DropdownMenuLabel className="flex items-center">Type</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleTypeSelect("")}>All</DropdownMenuItem>
-              {loginTypes.map((loginType) => (
-                <DropdownMenuItem key={loginType.id} onClick={() => handleTypeSelect(loginType.name)}>
-                  {loginType.name}
-                </DropdownMenuItem>
-              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -194,14 +155,9 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Create At
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Create At</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           {/* Table body */}
@@ -209,7 +165,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
             {currentUsers.map((user) => (
               <tr key={user.email}>
                 <td className="px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">{user.username}</div>
+                  <div className="text-sm font-medium text-gray-900">{user.name}</div>
                   {/* <div className="text-sm text-gray-500">{user.email}</div> */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -219,25 +175,16 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
                   <div className="text-sm text-gray-900">{user.phone}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{user.loginType}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{format(parseISO(user.createdAt), "HH:mm:ss dd-MM-yyyy")}</div>
+                  <div className="text-sm text-gray-900">{user.createdAt ? format(parseISO(user.createdAt), "HH:mm:ss dd-MM-yyyy") : "N/A"}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Badge variant="outline">{user.role}</Badge>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium">
-                  <button
-                    onClick={() => onEdit(user.id)}
-                    className=" bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow"
-                  >
+                  <button onClick={() => onDetail(user.id)} className=" bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Eye className="h-5 w-5 hover:opacity-85" />
                   </button>
-                  <button
-                    onClick={() => onEdit(user.id)}
-                    className="ml-4 bg-white hover:bg-gray-50 text-indigo-600 hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow"
-                  >
+                  <button onClick={() => onEdit(user.id)} className="ml-4 bg-white hover:bg-gray-50 text-indigo-600 hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Pencil className="h-5 w-5 opacity-55 hover:opacity-85" />
                   </button>
                   {/* <button
@@ -257,11 +204,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
         {/* Rows per page dropdown */}
         <div className="flex items-center">
           <span className="mr-2">Rows per page:</span>
-          <select
-            value={usersPerPage}
-            onChange={handlePerPageChange}
-            className="focus:outline-none px-2 py-1 border border-gray-300 rounded"
-          >
+          <select value={usersPerPage} onChange={handlePerPageChange} className="focus:outline-none px-2 py-1 border border-gray-300 rounded">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>
@@ -273,21 +216,13 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit }) => {
         <nav className="block">
           <ul className="flex pl-0 rounded list-none flex-wrap">
             <li>
-              <button
-                onClick={() => paginate(currentPage - 1)}
-                className="mr-3 px-3 py-1 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-50"
-                disabled={currentPage === 1}
-              >
+              <button onClick={() => paginate(currentPage - 1)} className="mr-3 px-3 py-1 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-50" disabled={currentPage === 1}>
                 <ChevronLeft color="#a8a5a5" />
               </button>
             </li>
             {renderPagination()}
             <li>
-              <button
-                onClick={() => paginate(currentPage + 1)}
-                className="ml-3 px-3 py-1 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-50"
-                disabled={currentPage === totalPages}
-              >
+              <button onClick={() => paginate(currentPage + 1)} className="ml-3 px-3 py-1 border border-gray-300 rounded bg-white text-gray-700 hover:bg-gray-50" disabled={currentPage === totalPages}>
                 <ChevronRight color="#a8a5a5" />
               </button>
             </li>
