@@ -37,7 +37,7 @@ const Checkout = () => {
     }
 
     const orderItems = products.map((product) => ({
-      productTitle: product.title,
+      productTitle: product.productTitle,
       productId: product.productId,
       color: product.color,
       size: product.size,
@@ -52,23 +52,26 @@ const Checkout = () => {
     console.log("Shipping address", shippingAddress);
     console.log("Total price: " + parseFloat(total.replace(/,/g, "")));
     console.log("orderStatus: " + "pending");
+    const totalPrice = parseFloat(total.replace(/,/g, ""));
 
     try {
-      const response = await axios.post("/api/orders/create", {
-        userId,
-        orderItems,
-        shippingAddress,
-        totalPrice: parseFloat(total.replace(/,/g, "")),
-        orderStatus,
+      const response = await axios.post("http://localhost:9999/api/order/create-order", {
+        userId: userId,
+        orderItems: orderItems,
+        shippingAddress: shippingAddress,
+        totalPrice: totalPrice,
+        orderStatus: orderStatus,
       });
       if (response.status === 201) {
-        alert("Order created successfully");
-        navigate("/order-success");
+        toast.success("Order created successfully");
         // Redirect or clear cart here
+        setTimeout(() => {
+          navigate("/order-success");
+        }, 2000);
       }
     } catch (error) {
       console.error("Error creating order", error);
-      alert("Failed to create order");
+      toast.error("An error occurred while creating the order");
     }
   };
 
@@ -128,10 +131,10 @@ const Checkout = () => {
           {products.map((product) => (
             <div key={`${product.productId}-${product.size}`} className="grid grid-cols-12 gap-4 items-center mb-4 border-b pb-2">
               <div className="col-span-2">
-                <img src={product.thumbnail} alt={product.title} className="w-16" />
+                <img src={product.thumbnail} alt={product.productTitle} className="w-16" />
               </div>
               <div className="col-span-2">
-                <div className="font-semibold">{product.title || "Product Title"}</div>
+                <div className="font-semibold">{product.productTitle || "Product Title"}</div>
               </div>
               <div className="col-span-1">
                 <div className="w-6 h-6 rounded-full" style={{ backgroundColor: product.color }}></div>

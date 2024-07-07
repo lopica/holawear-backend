@@ -6,11 +6,15 @@ const TypeController = require("./typeController");
 const TagController = require("./tagController");
 const CategoryController = require("./categoryController");
 const productDepotController = require("./productDepotController");
-const brandController = require("./brandController");
-const colorController = require("./colorController");
+const BrandController = require("./brandController");
+const ColorController = require("./colorController");
+const CartController = require("./cartController");
+const OrderController = require("./orderController");
 module.exports = {
-  colorController,
-  brandController,
+  OrderController,
+  CartController,
+  ColorController,
+  BrandController,
   UserController,
   RoleController,
   AuthController,
