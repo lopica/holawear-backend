@@ -2,6 +2,8 @@ import React, { useState, useEffect, createContext } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import "react-day-picker/dist/style.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./App.scss";
 //instance
 import instance from "./utils/index";
@@ -16,6 +18,10 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import UserProfile from "./pages/auth/UserProfile";
 import ProductList from "./pages/main/ProductList";
 import ProductDetail from "./pages/main/ProductDetail";
+import WishList from "./pages/main/Wishlist";
+import CartPage from "./pages/main/CartPage";
+import Checkout from "./pages/main/Checkout";
+import OrderSuccess from "./components/OrderSuccess";
 
 //admin
 import AdminLayout from "./pages/admin/Layout";
@@ -67,6 +73,11 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<Navigate to="/" />} />
+            <Route path="/wishlist" element={userAuth.accessToken ? <WishList /> : <Navigate to="/login" />} />
+            <Route path="/cart" element={!userAuth.accessToken ? <Navigate to="/login" /> : <CartPage />} />
+            <Route path="/checkout" element={!userAuth.accessToken ? <Navigate to="/login" /> : <Checkout />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
+
             <Route path="/men" element={<ProductList category="men" />} />
             <Route path="/women" element={<ProductList category="women" />} />
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
@@ -74,6 +85,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/user/profile" element={userAuth.accessToken ? <UserProfile /> : <Navigate to="/login" />} />
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
+
             {/* Admin Routes */}
             <Route element={<ProtectedRouteAdmin />}>
               <Route element={<AdminLayout />}>
