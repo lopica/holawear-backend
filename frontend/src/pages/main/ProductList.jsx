@@ -7,7 +7,7 @@ const ProductList = ({ category }) => {
   const [products, setProducts] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([0, 1000000]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]); // Ensure this is initialized as an array
   const [showSidebar, setShowSidebar] = useState(true);
   const [sortOption, setSortOption] = useState("newest");
   const [categories, setCategories] = useState([]);
@@ -70,9 +70,10 @@ const ProductList = ({ category }) => {
     const matchesColor = selectedColors.length === 0 || selectedColors.some((color) => product.stockDetails.some((detail) => detail.colorCode === color));
     const matchesPrice = product.price >= selectedPrices[0] && product.price <= selectedPrices[1];
     const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand.name);
-    const matchesSearchQuery = product.title.toLowerCase().includes(searchQuery.toLowerCase()); // Add search query matching
+    const matchesSearchQuery = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = product.availabilityStatus?.toLowerCase() === "in stock"; // Use availabilityStatus
 
-    return matchesCategory && matchesColor && matchesPrice && matchesBrand && matchesSearchQuery;
+    return matchesCategory && matchesColor && matchesPrice && matchesBrand && matchesSearchQuery && matchesStatus;
   });
 
   const sortedProducts = sortProducts(filteredProducts);

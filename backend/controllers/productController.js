@@ -208,4 +208,31 @@ const updateProductStatus = async (req, res) => {
   }
 };
 
-module.exports = { updateProductStatus, getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };
+//PUT update product price by product id
+const updateProductPrice = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const newPrice = req.body.newPrice;
+
+    // Find the product by ID
+    const productFound = await Product.findById(productId);
+
+    // If the product is not found, throw an error
+    if (!productFound) {
+      throw new Error("Product not found");
+    }
+
+    // Update the price if newPrice is not undefined or null
+    if (newPrice !== undefined && newPrice !== null) {
+      //line 227 : check xem cái input người dùng có phải là số || null không, ko thì mới update
+      productFound.price = newPrice ? newPrice : productFound.price;
+    }
+
+    const updatedProduct = await productFound.save();
+    res.status(200).json({ message: "Product price updated successfully", updatedProduct });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { updateProductPrice, updateProductStatus, getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };

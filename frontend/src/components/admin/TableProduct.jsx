@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ChevronDown, Pencil, Eye, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import readXlsxFile from "read-excel-file";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,10 +17,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "react-hot-toast";
 import FormAddDepot from "./FormAddDepot";
 import AdminProductDetail from "./AdminProductDetail";
 import FormAddProduct from "./FormAddProduct";
-import { toast } from "react-hot-toast";
+import AddStockProduct from "./AddStockProduct";
+
+import readXlsxFile from "read-excel-file";
 import axios from "axios";
 
 const truncateText = (text, maxLength) => {
@@ -263,9 +266,32 @@ const TableProduct = ({ productData, categories, tags }) => {
                   <button className="bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Eye className="h-5 w-5 hover:opacity-85" />
                   </button>
-                  <button className="ml-4 bg-white hover:bg-gray-50 text-[#6E44FF] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
-                    <Pencil className="h-5 w-5 opacity-55 hover:opacity-85" />
-                  </button>
+
+                  {/* edit price */}
+                  <Dialog>
+                    <DialogTrigger className="ml-4 bg-white hover:bg-gray-50 text-[#6E44FF] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Pencil className="h-5 w-5 opacity-55 hover:opacity-85" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit Price</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Edit Product Price</DialogTitle>
+                        <DialogDescription>Add new price for: {product.title} </DialogDescription>
+                      </DialogHeader>
+                      <AddStockProduct productDataById={product} />
+                    </DialogContent>
+                  </Dialog>
+                  {/*  */}
+
+                  {/*  */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <button
@@ -286,9 +312,19 @@ const TableProduct = ({ productData, categories, tags }) => {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
+                  {/* add depot */}
                   <Dialog>
                     <DialogTrigger className="ml-4 bg-white hover:bg-gray-50 text-[#FB5012] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
-                      <ArrowDownToLine className="h-5 w-5 opacity-55 hover:opacity-85" />
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <ArrowDownToLine className="h-5 w-5 opacity-55 hover:opacity-85" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Import Depot</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
