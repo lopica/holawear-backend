@@ -35,7 +35,6 @@ const Checkout = () => {
       toast.error("Please select a delivery address");
       return;
     }
-
     const orderItems = products.map((product) => ({
       productTitle: product.productTitle,
       productId: product.productId,
@@ -44,27 +43,27 @@ const Checkout = () => {
       quantity: product.quantity,
       price: product.price,
     }));
-
     const shippingAddress = addresses.find((address) => address._id === selectedAddress);
-
-    console.log("user id : " + userId);
-    console.log("Order items", orderItems);
-    console.log("Shipping address", shippingAddress);
-    console.log("Total price: " + parseFloat(total.replace(/,/g, "")));
-    console.log("orderStatus: " + "pending");
     const totalPrice = parseFloat(total.replace(/,/g, ""));
 
     try {
-      const response = await axios.post("http://localhost:9999/api/order/create-order", {
+      const orderResponse = await axios.post("http://localhost:9999/api/order/create-order", {
         userId: userId,
         orderItems: orderItems,
         shippingAddress: shippingAddress,
         totalPrice: totalPrice,
         orderStatus: orderStatus,
       });
-      if (response.status === 201) {
+
+      if (orderResponse.status === 201) {
         toast.success("Order created successfully");
-        // Redirect or clear cart here
+
+        // Remove ordered items from cart
+        await axios.post("http://localhost:9999/api/cart/remove-ordered-items", {
+          userId: userId,
+          orderedItems: orderItems,
+        });
+
         setTimeout(() => {
           navigate("/order-success");
         }, 2000);
@@ -105,13 +104,16 @@ const Checkout = () => {
               </div>
               <div className="mb-4">
                 <p>
-                  Phone number: <i>{address.phone}</i>
+                  {" "}
+                  Phone number: <i>{address.phone}</i>{" "}
                 </p>
                 <p>
-                  Address: <i>{address.address}</i>
+                  {" "}
+                  Address: <i>{address.address}</i>{" "}
                 </p>
                 <p>
-                  Specific Address: <i>{address.specificAddress}</i>
+                  {" "}
+                  Specific Address: <i>{address.specificAddress}</i>{" "}
                 </p>
               </div>
             </label>

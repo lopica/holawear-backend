@@ -113,4 +113,26 @@ const deleteOneItemFromCart = async (req, res, next) => {
   }
 };
 
-module.exports = { addProductToCart, getCartByUserId, createCart };
+// POST remove ordered items from cart
+const removeOrderedItemsFromCart = async (req, res, next) => {
+  try {
+    const { userId, orderedItems } = req.body;
+    console.log(orderedItems + " " + userId);
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+    // Remove ordered items from cart
+    cart.cartItems = cart.cartItems.filter(
+      (cartItem) => !orderedItems.some((orderedItem) => orderedItem.productId === cartItem.productId && orderedItem.color === cartItem.color && orderedItem.size === cartItem.size),
+    );
+    // Recalculate total price
+    cart.totalPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const updatedCart = await cart.save();
+    res.status(200).json(updatedCart);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { addProductToCart, getCartByUserId, createCart, removeOrderedItemsFromCart };
