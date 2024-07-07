@@ -1,16 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Pencil, Trash2, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const UserTable = ({ users, roles, loginTypes, onDelete, onEdit, onDetail }) => {
+const UserTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedType, setSelectedType] = useState("");
-
+  const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage, setUsersPerPage] = useState(10); // Default to 10 users per page
+
+  const navigate = useNavigate();
+
+  const onDetail = (userId) => {
+    navigate(`/admin/user/${userId}`);
+  };
+  const onEdit = async (userId) => {
+    try {
+      const response = await axios.put(`http://localhost:9999/api/user/change-status/${userId}`);
+      const updatedUser = response.data;
+      const updatedUsers = users.map((user) => (user.id === userId ? { ...user, status: updatedUser.userFound.status } : user));
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error("Error updating user status:", error);
+    }
+  };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -23,6 +42,29 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit, onDetail }) => 
   const handleTypeSelect = (type) => {
     setSelectedType(type);
   };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:9999/api/user/all");
+        setUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get("http://localhost:9999/api/role/getAll");
+        setRoles(response.data);
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      }
+    };
+
+    // Call fetch functions
+    fetchUsers();
+    fetchRoles();
+  }, []);
 
   const filteredUsers = users.filter(
     (user) =>
@@ -154,7 +196,6 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit, onDetail }) => 
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Create At</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -172,9 +213,6 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit, onDetail }) => 
                   <div className="text-sm text-gray-900">{user.email}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{user.phone}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{user.createdAt ? format(parseISO(user.createdAt), "HH:mm:ss dd-MM-yyyy") : "N/A"}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -185,7 +223,7 @@ const UserTable = ({ users, roles, loginTypes, onDelete, onEdit, onDetail }) => 
                     <Eye className="h-5 w-5 hover:opacity-85" />
                   </button>
                   <button onClick={() => onEdit(user.id)} className="ml-4 bg-white hover:bg-gray-50 text-indigo-600 hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
-                    <Pencil className="h-5 w-5 opacity-55 hover:opacity-85" />
+                    {user.status === true ? "Active" : "InActive"}
                   </button>
                   {/* <button
                     onClick={() => onDelete(user.id)}
