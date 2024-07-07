@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ChangePassword from "../../components/auth/ChangePassword";
 import ChangeGeneral from "../../components/auth/ChangeGeneral";
 import ShippingAddress from "../../components/auth/ShippingAddress";
+import YourOrder from "../../components/auth/YourOrder";
 import { UserContext } from "@/App";
 const UserProfile = () => {
   const { userAuth, setUserAuth } = useContext(UserContext);
@@ -29,13 +30,16 @@ const UserProfile = () => {
               <Tabs defaultValue="general">
                 <TabsList>
                   <TabsTrigger className="mr-5" value="general">
+                    {" "}
                     General
                   </TabsTrigger>
                   <TabsTrigger className="mr-5" value="password">
                     Change Password
                   </TabsTrigger>
                   <TabsTrigger value="address">Shipping Address</TabsTrigger>
+                  <TabsTrigger value="order">Your Orders</TabsTrigger>
                 </TabsList>
+                {/* tab content */}
                 <TabsContent value="general" className="w-full">
                   <ChangeGeneral />
                 </TabsContent>
@@ -44,6 +48,9 @@ const UserProfile = () => {
                 </TabsContent>
                 <TabsContent value="address">
                   <ShippingAddress />
+                </TabsContent>
+                <TabsContent value="order">
+                  <YourOrder />
                 </TabsContent>
               </Tabs>
             </div>
