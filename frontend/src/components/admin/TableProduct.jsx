@@ -33,11 +33,16 @@ const truncateText = (text, maxLength) => {
   return text.substring(0, maxLength) + "...";
 };
 
-const TableProduct = ({ productData, categories, tags }) => {
+const TableProduct = ({ productData, categories, tags, types, brands }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedTag, setSelectedTag] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(8);
+
   const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
@@ -46,6 +51,10 @@ const TableProduct = ({ productData, categories, tags }) => {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+  };
+
+  const handleTagSelect = (tag) => {
+    setSelectedTag(tag);
   };
 
   const handleFileChange = (event) => {
@@ -146,7 +155,23 @@ const TableProduct = ({ productData, categories, tags }) => {
       });
   };
 
-  const filteredProducts = productData.filter((product) => product.title.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true));
+  const filteredProducts = productData.filter(
+    (product) =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) && (selectedCategory ? product.category === selectedCategory : true) && (selectedTag ? product.tag === selectedTag : true),
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  const currentProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="p-4">
@@ -185,6 +210,7 @@ const TableProduct = ({ productData, categories, tags }) => {
             <FormAddProduct />
           </DialogContent>
         </Dialog>
+
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
             {selectedCategory || "Category"}
@@ -203,7 +229,27 @@ const TableProduct = ({ productData, categories, tags }) => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
+            {selectedTag || "Tag"}
+            <ChevronDown size={18} color="#c8c8cf" className="inline-block ml-2" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel className="flex items-center">Tag</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem key="all" onClick={() => handleTagSelect("")}>
+              All
+            </DropdownMenuItem>
+            {tags.map((tag) => (
+              <DropdownMenuItem key={tag._id} onClick={() => handleTagSelect(tag.name)}>
+                {tag.name} - {tag._id}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
       <div className="overflow-x-auto border rounded-lg">
         <table className="min-w-full divide-y divide-gray-200 table-auto">
           <thead className="bg-gray-50">
@@ -219,7 +265,7 @@ const TableProduct = ({ productData, categories, tags }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredProducts.map((product) => (
+            {currentProducts.map((product) => (
               <tr key={product._id}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{truncateText(product.title, 20)}</div>
@@ -355,6 +401,36 @@ const TableProduct = ({ productData, categories, tags }) => {
             ))}
           </tbody>
         </table>
+
+        <div className="flex justify-between items-center mt-4 text-sm text-gray-600">
+          <span>
+            Showing {currentProducts.length} of {filteredProducts.length} data
+          </span>
+          <div className="flex space-x-1">
+            <button onClick={() => handleChangePage(currentPage - 1)} disabled={currentPage === 1} className="px-2 py-1 border rounded">
+              Previous
+            </button>
+            {[...Array(totalPages).keys()].map((page) => (
+              <button key={page + 1} onClick={() => handleChangePage(page + 1)} className={`px-2 py-1 border rounded ${currentPage === page + 1 ? "bg-blue-500 text-white" : ""}`}>
+                {page + 1}
+              </button>
+            ))}
+            <button onClick={() => handleChangePage(currentPage + 1)} disabled={currentPage === totalPages} className="px-2 py-1 border rounded">
+              Next
+            </button>
+          </div>
+        </div>
+        <div className="mt-4">
+          <label htmlFor="itemsPerPage" className="mr-2">
+            Items per page:
+          </label>
+          <select id="itemsPerPage" value={itemsPerPage} onChange={handleItemsPerPageChange} className="p-2 border rounded">
+            <option value={5}>8</option>
+            <option value={15}>16</option>
+            <option value={20}>30</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
       </div>
     </div>
   );
