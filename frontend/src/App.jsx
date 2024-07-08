@@ -5,11 +5,9 @@ import "react-day-picker/dist/style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./App.scss";
-
 // Instance import
 import instance from "./utils/index";
 
-// Page imports
 import HomePage from "./pages/main/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -46,6 +44,7 @@ function App() {
   const [userAuth, setUserAuth] = useState({});
   const isAdminRoute = location.pathname.includes("/admin");
   const isUserRoute = location.pathname.includes("/user");
+
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -78,6 +77,7 @@ function App() {
             <Route path="/cart" element={!userAuth.accessToken ? <Navigate to="/login" /> : <CartPage />} />
             <Route path="/checkout" element={!userAuth.accessToken ? <Navigate to="/login" /> : <Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
+
             <Route path="/men" element={<ProductList category="men" />} />
             <Route path="/women" element={<ProductList category="women" />} />
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
@@ -85,6 +85,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/user/profile" element={userAuth.accessToken ? <UserProfile /> : <Navigate to="/login" />} />
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
+
             {/* Admin Routes */}
             <Route element={<ProtectedRouteAdmin />}>
               <Route element={<AdminLayout />}>
