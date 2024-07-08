@@ -86,19 +86,19 @@ function App() {
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
 
             {/* Admin Routes */}
-            <Route element={<ProtectedRouteAdmin />}>
-              <Route element={<AdminLayout />}>
-                <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/brands" element={<ManageBrand />} />
-                <Route path="/admin/categories" element={<ManageCategory />} />
-                <Route path="/admin/products" element={<ManageProduct />} />
-                <Route path="/admin/users" element={<ManageUser />} />
-                <Route path="/admin/orders" element={<ManageOrder />} />
-                <Route path="/admin/colors" element={<ManageColor />} />
-                <Route path="/admin/types" element={<ManageType />} />
-                <Route path="/admin/tags" element={<ManageTag />} />
-              </Route>
+            {/* <Route element={<ProtectedRouteAdmin />}> */}
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/admin/brands" element={<ManageBrand />} />
+              <Route path="/admin/categories" element={<ManageCategory />} />
+              <Route path="/admin/products" element={<ManageProduct />} />
+              <Route path="/admin/users" element={<ManageUser />} />
+              <Route path="/admin/orders" element={<ManageOrder />} />
+              <Route path="/admin/colors" element={<ManageColor />} />
+              <Route path="/admin/types" element={<ManageType />} />
+              <Route path="/admin/tags" element={<ManageTag />} />
             </Route>
+            {/* </Route> */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
