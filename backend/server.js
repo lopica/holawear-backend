@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const httpError = require("http-errors");
 const db = require("./models");
-const { userRouter, roleRouter, authRouter, productRouter, categoryRouter, typeRouter, tagRouter, productDepotRouter } = require("./routes");
+const { orderRouter, cartRouter, userRouter, roleRouter, authRouter, productRouter, categoryRouter, typeRouter, tagRouter, productDepotRouter } = require("./routes");
 
 require("dotenv").config();
 
@@ -28,7 +28,10 @@ app.use("/api/product", productRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/tag", tagRouter);
 app.use("/api/type", typeRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 app.use("/api/depotProduct", productDepotRouter);
+
 app.use(async (req, res, next) => {
   next(httpError.NotFound());
 });

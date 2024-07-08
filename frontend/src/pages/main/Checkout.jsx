@@ -35,40 +35,42 @@ const Checkout = () => {
       toast.error("Please select a delivery address");
       return;
     }
-
     const orderItems = products.map((product) => ({
-      productTitle: product.title,
+      productTitle: product.productTitle,
       productId: product.productId,
       color: product.color,
       size: product.size,
       quantity: product.quantity,
       price: product.price,
     }));
-
     const shippingAddress = addresses.find((address) => address._id === selectedAddress);
-
-    console.log("user id : " + userId);
-    console.log("Order items", orderItems);
-    console.log("Shipping address", shippingAddress);
-    console.log("Total price: " + parseFloat(total.replace(/,/g, "")));
-    console.log("orderStatus: " + "pending");
+    const totalPrice = parseFloat(total.replace(/,/g, ""));
 
     try {
-      const response = await axios.post("/api/orders/create", {
-        userId,
-        orderItems,
-        shippingAddress,
-        totalPrice: parseFloat(total.replace(/,/g, "")),
-        orderStatus,
+      const orderResponse = await axios.post("http://localhost:9999/api/order/create-order", {
+        userId: userId,
+        orderItems: orderItems,
+        shippingAddress: shippingAddress,
+        totalPrice: totalPrice,
+        orderStatus: orderStatus,
       });
-      if (response.status === 201) {
-        alert("Order created successfully");
-        navigate("/order-success");
-        // Redirect or clear cart here
+
+      if (orderResponse.status === 201) {
+        toast.success("Order created successfully");
+
+        // Remove ordered items from cart
+        await axios.post("http://localhost:9999/api/cart/remove-ordered-items", {
+          userId: userId,
+          orderedItems: orderItems,
+        });
+
+        setTimeout(() => {
+          navigate("/order-success");
+        }, 2000);
       }
     } catch (error) {
       console.error("Error creating order", error);
-      alert("Failed to create order");
+      toast.error("An error occurred while creating the order");
     }
   };
 
@@ -102,13 +104,16 @@ const Checkout = () => {
               </div>
               <div className="mb-4">
                 <p>
-                  Phone number: <i>{address.phone}</i>
+                  {" "}
+                  Phone number: <i>{address.phone}</i>{" "}
                 </p>
                 <p>
-                  Address: <i>{address.address}</i>
+                  {" "}
+                  Address: <i>{address.address}</i>{" "}
                 </p>
                 <p>
-                  Specific Address: <i>{address.specificAddress}</i>
+                  {" "}
+                  Specific Address: <i>{address.specificAddress}</i>{" "}
                 </p>
               </div>
             </label>
@@ -128,10 +133,10 @@ const Checkout = () => {
           {products.map((product) => (
             <div key={`${product.productId}-${product.size}`} className="grid grid-cols-12 gap-4 items-center mb-4 border-b pb-2">
               <div className="col-span-2">
-                <img src={product.thumbnail} alt={product.title} className="w-16" />
+                <img src={product.thumbnail} alt={product.productTitle} className="w-16" />
               </div>
               <div className="col-span-2">
-                <div className="font-semibold">{product.title || "Product Title"}</div>
+                <div className="font-semibold">{product.productTitle || "Product Title"}</div>
               </div>
               <div className="col-span-1">
                 <div className="w-6 h-6 rounded-full" style={{ backgroundColor: product.color }}></div>
