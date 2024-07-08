@@ -57,7 +57,7 @@ const createOrder = async (req, res, next) => {
   }
 };
 
-// POST approve order (change status from pending to shipped)
+// POST approve order (change status from pending to shipped) - for admin/seller
 const approveOrder = async (req, res, next) => {
   try {
     const { orderId } = req.body;
@@ -93,7 +93,7 @@ const cancelOrder = async (req, res, next) => {
   }
 };
 
-// POST user payment (mark order as completed)
+// POST user payment (mark order as completed) - Confirm Received
 const userPayment = async (req, res, next) => {
   try {
     const { orderId } = req.body;
@@ -106,7 +106,7 @@ const userPayment = async (req, res, next) => {
     order.orderStatus = "completed";
     order.isPayment = true;
     const updatedOrder = await order.save();
-    res.status(200).json(updatedOrder);
+    res.status(201).json(updatedOrder);
   } catch (error) {
     next(error);
   }
