@@ -87,27 +87,26 @@ const addProductToCart = async (req, res, next) => {
   }
 };
 
-// Remove 1 item from cart
+// POST: remove 1 item from cart
 const deleteOneItemFromCart = async (req, res, next) => {
   try {
     const { userId, productId, color, size } = req.body;
     const cart = await Cart.findOne({ userId });
+
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
-    const productIndex = cart.cartItems.findIndex((item) => item.productId.toString() === productId && item.color === color && item.size === size);
-    if (productIndex === -1) {
-      return res.status(404).json({ message: "Product not found in cart" });
-    }
-    const product = cart.cartItems[productIndex];
-    if (product.quantity === 1) {
-      cart.cartItems.splice(productIndex, 1);
+
+    const itemIndex = cart.cartItems.findIndex((item) => item.productId.toString() === productId && item.color === color && item.size === size);
+
+    if (itemIndex > -1) {
+      const [removedItem] = cart.cartItems.splice(itemIndex, 1);
+      cart.totalPrice -= removedItem.price * removedItem.quantity;
+      const updatedCart = await cart.save();
+      res.status(200).json(updatedCart);
     } else {
-      product.quantity -= 1;
+      return res.status(404).json({ message: "Item not found in cart" });
     }
-    cart.totalPrice -= product.price;
-    const savedCart = await cart.save();
-    res.status(200).json(savedCart);
   } catch (error) {
     next(error);
   }
@@ -124,7 +123,7 @@ const removeOrderedItemsFromCart = async (req, res, next) => {
     }
     // Remove ordered items from cart
     cart.cartItems = cart.cartItems.filter(
-      (cartItem) => !orderedItems.some((orderedItem) => orderedItem.productId === cartItem.productId && orderedItem.color === cartItem.color && orderedItem.size === cartItem.size),
+      (cartItem) => !orderedItems.some((orderedItem) => orderedItem.productId === cartItem.productId.toString() && orderedItem.color === cartItem.color && orderedItem.size === cartItem.size),
     );
     // Recalculate total price
     cart.totalPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -135,4 +134,4 @@ const removeOrderedItemsFromCart = async (req, res, next) => {
   }
 };
 
-module.exports = { addProductToCart, getCartByUserId, createCart, removeOrderedItemsFromCart };
+module.exports = { addProductToCart, getCartByUserId, createCart, removeOrderedItemsFromCart, deleteOneItemFromCart };

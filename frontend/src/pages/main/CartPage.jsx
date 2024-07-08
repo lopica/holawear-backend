@@ -40,11 +40,8 @@ const CartPage = () => {
     setProducts(updatedProducts);
 
     // Update selectedProducts if the product is selected
-    const productIndex = selectedProducts.findIndex((product) => product.productId === productId && product.size === size);
-    if (productIndex > -1) {
-      const updatedSelectedProducts = selectedProducts.map((product) => (product.productId === productId && product.size === size ? { ...product, quantity: quantity } : product));
-      setSelectedProducts(updatedSelectedProducts);
-    }
+    const updatedSelectedProducts = selectedProducts.map((product) => (product.productId === productId && product.size === size ? { ...product, quantity: quantity } : product));
+    setSelectedProducts(updatedSelectedProducts);
   };
 
   const handleQuantityChange = (productId, size, value) => {
@@ -52,13 +49,24 @@ const CartPage = () => {
     updateQuantity(productId, size, quantity);
   };
 
-  const removeItem = (productId, size) => {
-    const updatedProducts = products.filter((product) => product.productId !== productId || product.size !== size);
-    setProducts(updatedProducts);
-
-    // Remove item from selectedProducts if it's selected
-    const updatedSelectedProducts = selectedProducts.filter((product) => product.productId !== productId || product.size !== size);
-    setSelectedProducts(updatedSelectedProducts);
+  const removeItem = async (productId, color, size) => {
+    // Call API backend to remove item from cart
+    const userId = userAuth?.user?.id;
+    // console.log("Removing item from cart:", productId, color, size, userId);
+    try {
+      await axios.post(`http://localhost:9999/api/cart/remove-item`, {
+        userId,
+        productId,
+        color,
+        size,
+      });
+      setProducts((prev) => prev.filter((product) => !(product.productId === productId && product.size === size)));
+      setSelectedProducts((prev) => prev.filter((product) => !(product.productId === productId && product.size === size)));
+      toast.success("Item removed from cart.");
+    } catch (error) {
+      // console.error("Error removing item from cart:", error);
+      toast.error("An error occurred while removing the item from cart.");
+    }
   };
 
   const handleCheckboxChange = (productId, size) => {
@@ -90,8 +98,14 @@ const CartPage = () => {
       shipping: shippingRate,
       total: total,
     };
-    console.log(cartInfo);
-    navigate("/checkout", { state: { products: selectedProducts, subtotal, shipping: shippingRate, total } });
+    navigate("/checkout", {
+      state: {
+        products: selectedProducts,
+        subtotal,
+        shipping: shippingRate,
+        total,
+      },
+    });
   };
 
   if (isLoading) {
@@ -145,7 +159,7 @@ const CartPage = () => {
             </div>
             {/* Remove */}
             <div className="col-span-1">
-              <Button variant="outline" onClick={() => removeItem(product.productId, product.size)}>
+              <Button variant="outline" onClick={() => removeItem(product.productId, product.color, product.size)}>
                 Remove
               </Button>
             </div>
