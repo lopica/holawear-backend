@@ -30,7 +30,6 @@ const UserProfile = () => {
               <Tabs defaultValue="general">
                 <TabsList>
                   <TabsTrigger className="mr-5" value="general">
-                    {" "}
                     General
                   </TabsTrigger>
                   <TabsTrigger className="mr-5" value="password">
