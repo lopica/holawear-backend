@@ -5,9 +5,11 @@ import "react-day-picker/dist/style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./App.scss";
-//instance
+
+// Instance import
 import instance from "./utils/index";
 
+// Page imports
 import HomePage from "./pages/main/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -23,7 +25,7 @@ import CartPage from "./pages/main/CartPage";
 import Checkout from "./pages/main/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 
-//admin
+// Admin imports
 import AdminLayout from "./pages/admin/Layout";
 import ProtectedRouteAdmin from "./components/admin/ProtectedRouteAdmin";
 import Dashboard from "./pages/admin/Dashboard";
@@ -44,7 +46,6 @@ function App() {
   const [userAuth, setUserAuth] = useState({});
   const isAdminRoute = location.pathname.includes("/admin");
   const isUserRoute = location.pathname.includes("/user");
-
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -77,7 +78,6 @@ function App() {
             <Route path="/cart" element={!userAuth.accessToken ? <Navigate to="/login" /> : <CartPage />} />
             <Route path="/checkout" element={!userAuth.accessToken ? <Navigate to="/login" /> : <Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
-
             <Route path="/men" element={<ProductList category="men" />} />
             <Route path="/women" element={<ProductList category="women" />} />
             <Route path="/login" element={!userAuth.accessToken ? <LoginPage /> : <Navigate to="/" />} />
@@ -85,21 +85,7 @@ function App() {
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/user/profile" element={userAuth.accessToken ? <UserProfile /> : <Navigate to="/login" />} />
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
-
             {/* Admin Routes */}
-
-            {/* <Route element={<ProtectedRouteAdmin />}> */}
-            <Route element={<AdminLayout />}>
-              <Route path="/admin/dashboard" element={<Dashboard />} />
-              <Route path="/admin/brands" element={<ManageBrand />} />
-              <Route path="/admin/categories" element={<ManageCategory />} />
-              <Route path="/admin/products" element={<ManageProduct />} />
-              <Route path="/admin/users" element={<ManageUser />} />
-              <Route path="/admin/orders" element={<ManageOrder />} />
-              <Route path="/admin/colors" element={<ManageColor />} />
-              <Route path="/admin/types" element={<ManageType />} />
-              <Route path="/admin/tags" element={<ManageTag />} />
-            </Route>
             <Route element={<ProtectedRouteAdmin />}>
               <Route element={<AdminLayout />}>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
@@ -114,7 +100,6 @@ function App() {
                 <Route path="/admin/tags" element={<ManageTag />} />
               </Route>
             </Route>
-            {/* </Route> */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
