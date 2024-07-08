@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
     phone: { type: String },
     shippingAddress: { type: [shippingAddressSchema], default: [] },
     refreshToken: { type: String },
+    status: { type: Boolean, default: true },
   },
   {
     timestamps: true,

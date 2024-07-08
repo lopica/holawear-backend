@@ -35,6 +35,7 @@ import ManageOrder from "./pages/admin/ManageOrder";
 import ManageColor from "./pages/admin/ManageColor";
 import ManageType from "./pages/admin/ManageType";
 import ManageTag from "./pages/admin/ManageTag";
+import ManageUserDetail from "./pages/admin/ManageUserDetail";
 
 export const UserContext = createContext({});
 
@@ -92,6 +93,7 @@ function App() {
                 <Route path="/admin/brands" element={<ManageBrand />} />
                 <Route path="/admin/categories" element={<ManageCategory />} />
                 <Route path="/admin/products" element={<ManageProduct />} />
+                <Route path="/admin/user/:id" element={<ManageUserDetail />} />
                 <Route path="/admin/users" element={<ManageUser />} />
                 <Route path="/admin/orders" element={<ManageOrder />} />
                 <Route path="/admin/colors" element={<ManageColor />} />
