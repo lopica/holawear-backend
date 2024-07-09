@@ -2,7 +2,7 @@ import React from "react";
 import { format, parseISO } from "date-fns";
 
 const TableDepot = ({ depotData, productData }) => {
-  console.log(productData);
+  // console.log(productData);
   return (
     <div className="p-4">
       <div className="overflow-x-auto border rounded-lg">
