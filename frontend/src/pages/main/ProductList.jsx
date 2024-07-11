@@ -8,10 +8,14 @@ const ProductList = ({ category }) => {
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedPrices, setSelectedPrices] = useState([0, 1000000]);
   const [selectedBrands, setSelectedBrands] = useState([]); // Ensure this is initialized as an array
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const [showSidebar, setShowSidebar] = useState(true);
   const [sortOption, setSortOption] = useState("newest");
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // Add state for search query
+
+  console.log(selectedTypes);
 
   // Fetch categories
   useEffect(() => {
@@ -69,11 +73,13 @@ const ProductList = ({ category }) => {
     const matchesCategory = product.category?.name.toLowerCase() === category.toLowerCase();
     const matchesColor = selectedColors.length === 0 || selectedColors.some((color) => product.stockDetails.some((detail) => detail.colorCode === color));
     const matchesPrice = product.price >= selectedPrices[0] && product.price <= selectedPrices[1];
-    const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand.name);
+    const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
+    const matchesTag = selectedTags.length === 0 || selectedTags.includes(product.tag);
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(product.type);
     const matchesSearchQuery = product.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = product.availabilityStatus?.toLowerCase() === "in stock"; // Use availabilityStatus
-
-    return matchesCategory && matchesColor && matchesPrice && matchesBrand && matchesSearchQuery && matchesStatus;
+    // console.log({ matchesCategory, matchesColor, matchesPrice, matchesBrand, matchesTag, matchesType, matchesSearchQuery, matchesStatus });
+    return matchesCategory && matchesColor && matchesPrice && matchesBrand && matchesType && matchesTag && matchesSearchQuery && matchesStatus;
   });
 
   const sortedProducts = sortProducts(filteredProducts);
@@ -89,6 +95,10 @@ const ProductList = ({ category }) => {
             setSelectedPrices={setSelectedPrices}
             selectedBrands={selectedBrands}
             setSelectedBrands={setSelectedBrands}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            selectedTypes={selectedTypes}
+            setSelectedTypes={setSelectedTypes}
             priceRange={selectedPrices}
             setPriceRange={setSelectedPrices}
           />
