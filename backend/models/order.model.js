@@ -13,6 +13,7 @@ const shippingAddressSchema = new Schema(
 
 const orderItemSchema = new Schema(
   {
+    thumbnail: { type: String },
     productTitle: { type: String, required: true },
     productId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
     color: { type: String, required: true },
@@ -29,7 +30,7 @@ const orderSchema = new Schema(
     orderItems: [orderItemSchema],
     shippingAddress: shippingAddressSchema,
     totalPrice: { type: Number, required: true },
-    orderStatus: { type: String, enum: ["pending", "completed", "shipped", "cancelled"], default: "pending" },
+    orderStatus: { type: String, enum: ["pending", "completed", "shipping", "cancelled"], default: "pending" },
     isPayment: { type: Boolean, default: false },
   },
   { timestamps: true },
