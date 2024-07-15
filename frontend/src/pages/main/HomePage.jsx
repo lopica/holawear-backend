@@ -290,7 +290,7 @@ const HomePage = () => {
       <SaleBanner />
       {/* Brands list */}
       <div className="bg-gray-200 min-h-screen p-8">
-        <section className="mb-8">
+        {/* <section className="mb-8">
           <h2 className="text-3xl font-bold mb-10 flex justify-center">Brands</h2>
           <div className="flex space-x-4 justify-center">
             {brands.map((brand) => (
@@ -299,10 +299,10 @@ const HomePage = () => {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* Trending products */}
-        <section>
+        {/* <section>
           <h2 className="text-3xl font-bold mb-4">Trending Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {products.map((product) => (
@@ -315,7 +315,7 @@ const HomePage = () => {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );

@@ -15,8 +15,6 @@ const ProductList = ({ category }) => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState(""); // Add state for search query
 
-  console.log(selectedTypes);
-
   // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
@@ -116,7 +114,7 @@ const ProductList = ({ category }) => {
               </select>
             </div>
           </div>
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-4 w-1/4">
             <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by product title" className="bg-gray-200 p-2 rounded w-full" />
           </div>
           <h1 className="text-3xl font-bold mb-4">

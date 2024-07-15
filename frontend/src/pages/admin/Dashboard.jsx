@@ -230,7 +230,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="my-4 border-t-2"></div>
+        {/* <div className="my-4 border-t-2"></div> */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
           {/* Orders */}
           <div className="bg-white shadow-sm rounded-lg p-4 flex flex-col justify-between">
