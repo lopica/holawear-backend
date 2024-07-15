@@ -8,6 +8,9 @@ orderRouter.post("/create-order", OrderController.createOrder);
 // Get orders by user ID
 orderRouter.get("/user-orders/:id", OrderController.getOrdersByUserId);
 
+// Get all orders
+orderRouter.get("/all-orders", OrderController.getAllOrders);
+
 // Get all users (for admin/seller)
 orderRouter.get("/all-users", OrderController.getAllUsers);
 

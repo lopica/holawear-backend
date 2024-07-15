@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/App";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiShoppingCart } from "react-icons/ci";
 import Slider from "react-slick";
@@ -17,7 +17,8 @@ const ProductDetail = () => {
   const [filter, setFilter] = useState(null);
   const [error, setError] = useState("");
   const { userAuth, setUserAuth } = useContext(UserContext);
-
+  const navigate = useNavigate();
+  // const location = useLocation();
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -77,7 +78,17 @@ const ProductDetail = () => {
     const userId = userAuth?.user?.id;
 
     if (userId === undefined) {
+      localStorage.setItem(
+        "productSelection",
+        JSON.stringify({
+          productId: id,
+          selectedColor,
+          selectedSize,
+          quantity,
+        }),
+      );
       toast.error("Please login to add items to your cart.");
+      navigate("/login");
       return;
     }
 

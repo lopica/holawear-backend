@@ -16,9 +16,13 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const savedProductSelectionString = localStorage.getItem("productSelection");
+      const savedProductSelection = savedProductSelectionString ? JSON.parse(savedProductSelectionString) : null;
+      console.log(savedProductSelection);
       const response = await axios.post("http://localhost:9999/api/auth/signin", {
         email,
         password,
+        productSelection: savedProductSelection,
       });
       if (response.status === 201) {
         toast.success(response.data.message);
@@ -33,7 +37,16 @@ const LoginPage = () => {
         }
 
         setUserAuth({ accessToken, user }); // Update context
-        navigate("/");
+
+        // Clear the saved product selection after login
+        localStorage.removeItem("productSelection");
+        // Redirect to the product detail page if product selection is available
+        if (savedProductSelection) {
+          const { productId, selectedColor, selectedSize, quantity } = savedProductSelection;
+          navigate(`/product/${productId}`, { state: { selectedColor, selectedSize, quantity } });
+        } else {
+          navigate("/"); // Redirect to home if no product selection
+        }
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);

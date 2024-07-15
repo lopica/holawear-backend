@@ -20,7 +20,20 @@ const getOrdersByUserId = async (req, res, next) => {
     next(error);
   }
 };
+const getAllOrders = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const orders = await Order.find().populate("userId", "name");
 
+    if (!orders.length) {
+      return res.status(404).json({ message: "No orders found" });
+    }
+
+    res.status(200).json(orders);
+  } catch (error) {
+    next(error);
+  }
+};
 // GET all users (for admin/seller)
 const getAllUsers = async (req, res, next) => {
   try {
@@ -119,4 +132,5 @@ module.exports = {
   approveOrder,
   cancelOrder,
   userPayment,
+  getAllOrders,
 };
