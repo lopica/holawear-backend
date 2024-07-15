@@ -15,6 +15,7 @@ const stockDetailSchema = new mongoose.Schema({
 const stockSchema = new mongoose.Schema({
   colorCode: { type: String, required: true },
   details: [stockDetailSchema],
+  imageLink: { type: String },
 });
 
 const productSchema = new mongoose.Schema(

@@ -39,7 +39,6 @@ const CartPage = () => {
     const updatedProducts = products.map((product) => (product.productId === productId && product.size === size ? { ...product, quantity: quantity } : product));
     setProducts(updatedProducts);
 
-    // Update selectedProducts if the product is selected
     const updatedSelectedProducts = selectedProducts.map((product) => (product.productId === productId && product.size === size ? { ...product, quantity: quantity } : product));
     setSelectedProducts(updatedSelectedProducts);
   };
@@ -50,9 +49,7 @@ const CartPage = () => {
   };
 
   const removeItem = async (productId, color, size) => {
-    // Call API backend to remove item from cart
     const userId = userAuth?.user?.id;
-    // console.log("Removing item from cart:", productId, color, size, userId);
     try {
       await axios.post(`http://localhost:9999/api/cart/remove-item`, {
         userId,
@@ -64,7 +61,7 @@ const CartPage = () => {
       setSelectedProducts((prev) => prev.filter((product) => !(product.productId === productId && product.size === size)));
       toast.success("Item removed from cart.");
     } catch (error) {
-      // console.error("Error removing item from cart:", error);
+      console.error("Error removing item from cart:", error);
       toast.error("An error occurred while removing the item from cart.");
     }
   };
@@ -92,12 +89,6 @@ const CartPage = () => {
   const total = calculateTotal(subtotal);
 
   const handleCheckout = () => {
-    const cartInfo = {
-      productItems: selectedProducts,
-      subtotal: subtotal,
-      shipping: shippingRate,
-      total: total,
-    };
     navigate("/checkout", {
       state: {
         products: selectedProducts,
@@ -110,6 +101,20 @@ const CartPage = () => {
 
   if (isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="container mx-auto mt-10">
+        <h1 className="text-2xl font-semibold">Shopping Cart</h1>
+        <div className="p-4 mt-6 text-center">
+          <p>Your cart is empty.</p>
+          <Button variant="outline" className="mt-4 bg-blue-100 w-40" onClick={() => navigate(-1)}>
+            Back
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (

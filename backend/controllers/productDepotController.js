@@ -9,6 +9,7 @@ const createProductDepot = async (req, res) => {
 
     // Transform stockDetails to match the required schema
     const transformedStockDetails = stockDetails.map((detail) => ({
+      imageLink: detail.imageLink,
       colorCode: detail.colorCode,
       details: Object.keys(detail.details).map((size) => ({
         size,

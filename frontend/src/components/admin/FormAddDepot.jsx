@@ -25,7 +25,7 @@ const FormAddDepot = ({ productDataById }) => {
   const [importPrice, setImportPrice] = useState(0);
   const [stock, setStock] = useState(0);
   const [importTotal, setImportTotal] = useState(0);
-  const [stockDetails, setStockDetails] = useState([{ colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
+  const [stockDetails, setStockDetails] = useState([{ colorCode: colors[0].code, imageLink: "", details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
 
   useEffect(() => {
     const price = parseFloat(importPrice) || 0;
@@ -39,6 +39,12 @@ const FormAddDepot = ({ productDataById }) => {
     setStockDetails(updatedStockDetails);
   };
 
+  const handleImageLinkChange = (index, newLink) => {
+    const updatedStockDetails = [...stockDetails];
+    updatedStockDetails[index].imageLink = newLink;
+    setStockDetails(updatedStockDetails);
+  };
+
   const handleSizeChange = (index, size, quantity) => {
     const updatedStockDetails = [...stockDetails];
     updatedStockDetails[index].details[size] = parseInt(quantity) || 0;
@@ -47,7 +53,7 @@ const FormAddDepot = ({ productDataById }) => {
 
   const addColor = () => {
     if (stockDetails.length < 10) {
-      setStockDetails([...stockDetails, { colorCode: colors[0].code, details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
+      setStockDetails([...stockDetails, { colorCode: colors[0].code, imageLink: "", details: { S: 0, M: 0, L: 0, XL: 0, "2XL": 0 } }]);
     }
   };
 
@@ -149,12 +155,12 @@ const FormAddDepot = ({ productDataById }) => {
         </div>
         <div className="space-y-4 border-t-2 border-gray-700 pt-5">
           {stockDetails.map((stockDetail, index) => (
-            <div key={index} className="border border-gray-300 rounded-md p-4">
-              <div className="flex justify-between items-center space-x-4">
-                <div className="flex items-center space-x-2 justify-center">
-                  <Label>Color:</Label>
+            <div key={index} className="border border-gray-300 rounded-md p-4 flex gap-11">
+              <div>
+                <div className="mb-4">
+                  <Label className="mr-6">Color:</Label>
                   <select
-                    className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow w-1/2"
+                    className="mr-6 focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow w-1/3"
                     value={stockDetail.colorCode}
                     onChange={(e) => handleColorChange(index, e.target.value)}
                   >
@@ -165,10 +171,14 @@ const FormAddDepot = ({ productDataById }) => {
                     ))}
                   </select>
                   {stockDetails.length > 1 && (
-                    <Button variant="outline" type="button" onClick={() => removeColor(index)}>
+                    <Button className="bg-red-200" variant="outline" type="button" onClick={() => removeColor(index)}>
                       Remove
                     </Button>
                   )}
+                </div>
+                <div className="flex items-center justify-around mb-4">
+                  <Label>Image Link:</Label>
+                  <Input type="text" className="p-2 border border-gray-300 rounded-md" value={stockDetail.imageLink} onChange={(e) => handleImageLinkChange(index, e.target.value)} />
                 </div>
                 <div className="flex space-x-2">
                   {["S", "M", "L", "XL", "2XL"].map((size) => (
@@ -185,6 +195,7 @@ const FormAddDepot = ({ productDataById }) => {
                   ))}
                 </div>
               </div>
+              <div>{stockDetail.imageLink && <img src={stockDetail.imageLink} alt={`Preview of ${stockDetail.colorCode}`} className="w-fit object-cover border border-gray-300 rounded-md" />}</div>
             </div>
           ))}
         </div>

@@ -431,7 +431,7 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
                         </Tooltip>
                       </TooltipProvider>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="w-auto h-auto">
                       <DialogHeader>
                         <DialogTitle>Add Depot</DialogTitle>
                         <DialogDescription>Add new depot for this product</DialogDescription>
