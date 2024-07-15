@@ -1,6 +1,3 @@
-
-a chung
-Đoàn Chung
 const createHttpError = require("http-errors");
 const db = require("../models");
 const Cart = db.cart;
@@ -58,17 +55,17 @@ const createOrder = async (req, res, next) => {
     for (const item of orderItems) {
       const product = products.find((p) => p._id.toString() === item.productId);
       if (!product) {
-        return res.status(404).json({ message: Product not found for item ${item.productTitle} });
+        return res.status(404).json({ message: `Product not found for item ${item.productTitle}` });
       }
 
       const stockDetail = product.stockDetails.find((stock) => stock.colorCode === item.color);
       if (!stockDetail) {
-        return res.status(400).json({ message: Color ${item.color} not available for product ${item.productTitle} });
+        return res.status(400).json({ message: `Color ${item.color} not available for product ${item.productTitle}` });
       }
 
       const sizeDetail = stockDetail.details.find((detail) => detail.size === item.size);
       if (!sizeDetail || sizeDetail.quantity < item.quantity) {
-        return res.status(400).json({ message: Insufficient stock for size ${item.size} of product ${item.productTitle}, just have ${sizeDetail ? sizeDetail.quantity : 0} in stock. });
+        return res.status(400).json({ message: `Insufficient stock for size ${item.size} of product ${item.productTitle}, just have ${sizeDetail ? sizeDetail.quantity : 0} in stock.` });
       }
     }
 
@@ -236,7 +233,7 @@ const getTopProducts = async (req, res, next) => {
     orders.forEach((order) => {
       order.orderItems.forEach((item) => {
         const productId = item.productId._id.toString();
-        const key = ${productId}_${item.color}_${item.size};
+        const key = `${productId}_${item.color}_${item.size}`;
 
         if (!productSales[key]) {
           productSales[key] = {
@@ -271,15 +268,4 @@ module.exports = {
   completedOrder,
   statusOrder,
   getTopProducts,
-};
-
-module.exports = {
-  getTopProducts,
-  createOrder,
-  getOrdersByUserId,
-  getAllOrders,
-  approveOrder,
-  cancelOrder,
-  completedOrder,
-  statusOrder,
 };
