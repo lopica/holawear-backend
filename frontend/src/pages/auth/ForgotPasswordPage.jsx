@@ -14,7 +14,10 @@ const ForgotPasswordPage = () => {
         email,
       });
       if (response.status === 200) {
-        toast.success("Verification code sent to your email.");
+        toast.success("Verification code sent to your email. Please check your email.");
+        setTimeout(() => {
+          navigate("/");
+        }, 5000);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
