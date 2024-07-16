@@ -2,9 +2,8 @@ const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
-const fs = require("fs");
-const path = require("path");
-
+const Cart = db.cart;
+const cartController = require("./cartController");
 //gọi ra các đối tượng từ db
 const User = db.user;
 const Role = db.role;
@@ -87,8 +86,18 @@ async function signup(req, res, next) {
         newUser.role = defaultRole._id;
       }
 
-      await newUser.save();
-      res.status(201).json({ message: "ok", user: newUser });
+      const saveUser = await newUser.save();
+      if (saveUser) {
+        //create cart
+        const userId = newUser._id.toString();
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        const newCart = new Cart({ userId, cartItems: [], totalPrice: 0 });
+        await newCart.save();
+        res.status(201).json({ message: "ok" });
+      }
     }
   } catch (error) {
     next(error);
