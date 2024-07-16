@@ -5,7 +5,7 @@ import "react-day-picker/dist/style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./App.scss";
-// Instance import
+//instance
 import instance from "./utils/index";
 
 import HomePage from "./pages/main/HomePage";
@@ -13,7 +13,6 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import NotFoundPage from "./pages/error/NotFoundPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import UserProfile from "./pages/auth/UserProfile";
 import ProductList from "./pages/main/ProductList";
@@ -23,7 +22,10 @@ import CartPage from "./pages/main/CartPage";
 import Checkout from "./pages/main/Checkout";
 import OrderSuccess from "./components/OrderSuccess";
 
-// Admin imports
+import NotFoundPage from "./pages/error/NotFoundPage";
+import ComingSoon from "./pages/error/ComingSoon";
+
+//admin
 import AdminLayout from "./pages/admin/Layout";
 import ProtectedRouteAdmin from "./components/admin/ProtectedRouteAdmin";
 import Dashboard from "./pages/admin/Dashboard";
@@ -77,6 +79,7 @@ function App() {
             <Route path="/cart" element={!userAuth.accessToken ? <Navigate to="/login" /> : <CartPage />} />
             <Route path="/checkout" element={!userAuth.accessToken ? <Navigate to="/login" /> : <Checkout />} />
             <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/coming-soon" element={<ComingSoon />} />
 
             <Route path="/men" element={<ProductList category="men" />} />
             <Route path="/women" element={<ProductList category="women" />} />
@@ -87,6 +90,7 @@ function App() {
             <Route path="/forgot-password" element={!userAuth.accessToken ? <ForgotPasswordPage /> : <Navigate to="/" />} />
 
             {/* Admin Routes */}
+
             <Route element={<ProtectedRouteAdmin />}>
               <Route element={<AdminLayout />}>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
