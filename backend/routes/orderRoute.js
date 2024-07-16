@@ -12,7 +12,7 @@ orderRouter.get("/user-orders/:id", OrderController.getOrdersByUserId);
 orderRouter.get("/all-orders", OrderController.getAllOrders);
 
 // Get all users (for admin/seller)
-orderRouter.get("/all-users", OrderController.getAllUsers);
+// orderRouter.get("/all-users", OrderController.getAllUsers);
 
 // Approve order (change status from pending to shipped)
 orderRouter.post("/approve-order", OrderController.approveOrder);
