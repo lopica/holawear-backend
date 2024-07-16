@@ -269,14 +269,3 @@ module.exports = {
   statusOrder,
   getTopProducts,
 };
-
-module.exports = {
-  getTopProducts,
-  createOrder,
-  getOrdersByUserId,
-  getAllOrders,
-  approveOrder,
-  cancelOrder,
-  completedOrder,
-  statusOrder,
-};
