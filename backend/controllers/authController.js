@@ -95,7 +95,7 @@ async function signup(req, res, next) {
 // Sign in action
 async function signin(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email, password, productSelection } = req.body;
     const user = await User.findOne({ email }).populate("role").exec();
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -114,7 +114,7 @@ async function signin(req, res, next) {
       path: "/",
     });
 
-    res.status(201).json({
+    const responsePayload = {
       message: "Logged in successfully",
       accessToken,
       user: {
@@ -126,7 +126,14 @@ async function signin(req, res, next) {
         gender: user.gender,
         shippingAddress: user.shippingAddress,
       },
-    });
+    };
+
+    // Include productSelection in the response payload if available
+    if (productSelection == null) {
+      responsePayload.productSelection = productSelection;
+    }
+
+    res.status(201).json(responsePayload);
   } catch (error) {
     next(error);
   }

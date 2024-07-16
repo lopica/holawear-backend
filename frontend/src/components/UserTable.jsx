@@ -156,7 +156,7 @@ const UserTable = () => {
     <div className="p-4">
       <div className="flex items-center justify-between space-x-4 mb-4">
         {/* Search input */}
-        <input type="text" placeholder="Search by email or phone" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
+        <input type="text" placeholder="Search by email" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
         {/* Dropdowns for Role and Type */}
         <div className="flex space-x-4">
           {/* Role dropdown */}
@@ -167,23 +167,11 @@ const UserTable = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel className="flex items-center">Role</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleRoleSelect("")}>All</DropdownMenuItem>
               {roles.map((role) => (
                 <DropdownMenuItem key={role._id} onClick={() => handleRoleSelect(role.name)}>
                   {role.name}
                 </DropdownMenuItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {/* Type dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="focus:outline-none bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
-              {selectedType || "Type"} <ChevronDown size={18} color="#c8c8cf" className="inline-block ml-2" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel className="flex items-center">Type</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleTypeSelect("")}>All</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -198,7 +186,8 @@ const UserTable = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Create At</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">View Details</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
             </tr>
           </thead>
           {/* Table body */}
@@ -222,15 +211,11 @@ const UserTable = () => {
                   <button onClick={() => onDetail(user.id)} className=" bg-white hover:bg-gray-50 text-[#7D4600] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     <Eye className="h-5 w-5 hover:opacity-85" />
                   </button>
+                </td>
+                <td>
                   <button onClick={() => onEdit(user.id)} className="ml-4 bg-white hover:bg-gray-50 text-indigo-600 hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                     {user.status === true ? "Active" : "InActive"}
                   </button>
-                  {/* <button
-                    onClick={() => onDelete(user.id)}
-                    className="ml-4 bg-white hover:bg-gray-50 text-red-600 hover:text-red-900 py-1 px-2 border border-gray-200 rounded shadow"
-                  >
-                    <Trash2 className="h-5 w-5 opacity-55 hover:opacity-85" />
-                  </button> */}
                 </td>
               </tr>
             ))}

@@ -45,7 +45,7 @@ const OrderTable = ({ orders }) => {
 
   const handleStatusUpdate = () => {
     axios
-      .put(`http://localhost:9999/api/order/status/${selectedOrderId}`, { status: selectedStatus })
+      .put(http://localhost:9999/api/order/status/${selectedOrderId}, { status: selectedStatus })
       .then(() => {
         toast.success("Order status updated successfully");
         setTimeout(() => {
