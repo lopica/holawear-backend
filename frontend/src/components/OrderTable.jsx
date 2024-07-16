@@ -95,6 +95,10 @@ const OrderTable = ({ orders }) => {
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+  };
+
   const renderPagination = () => {
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -128,7 +132,7 @@ const OrderTable = ({ orders }) => {
           <div className="grid grid-cols-3">
             <div className="col-span-2">
               <div>
-                <p className="text-xl font-semibold">{totalRevenue}₫</p>
+                <p className="text-xl font-semibold">{formatCurrency(totalRevenue)}</p>
                 <h2 className="text-base font-normal mt-2">Total Revenue</h2>
               </div>
             </div>
