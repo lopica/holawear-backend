@@ -59,7 +59,6 @@ const createCart = async (req, res, next) => {
 const addProductToCart = async (req, res, next) => {
   try {
     const { cartItem, userId, totalPrice } = req.body;
-    console.log(cartItem); // For debugging
 
     // Find the cart by userId
     let cart = await Cart.findOne({ userId });
