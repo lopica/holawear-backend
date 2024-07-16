@@ -9,6 +9,34 @@ const Category = db.category;
 const Brand = db.brand;
 
 // GET cart by user ID
+// const getCartByUserId = async (req, res, next) => {
+//   try {
+//     const userId = req.params.id;
+//     const cart = await Cart.findOne({ userId }).populate("cartItems.productId");
+//     if (!cart) {
+//       return res.status(404).json({ message: "Cart not found" });
+//     }
+//     const data = {
+//       id: cart._id,
+//       userId: cart.userId,
+//       cartItems: cart.cartItems.map((item) => ({
+//         id: item._id,
+//         productTitle: item.productId.title,
+//         productId: item.productId._id,
+//         thumbnail: item.productId.thumbnail,
+//         color: item.color,
+//         size: item.size,
+//         quantity: item.quantity,
+//         price: item.price,
+//       })),
+//       totalPrice: cart.totalPrice,
+//     };
+//     res.status(200).json(data);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+// GET cart by user ID
 const getCartByUserId = async (req, res, next) => {
   try {
     const userId = req.params.id;
@@ -16,19 +44,27 @@ const getCartByUserId = async (req, res, next) => {
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
+
     const data = {
       id: cart._id,
       userId: cart.userId,
-      cartItems: cart.cartItems.map((item) => ({
-        id: item._id,
-        productTitle: item.productId.title,
-        productId: item.productId._id,
-        thumbnail: item.productId.thumbnail,
-        color: item.color,
-        size: item.size,
-        quantity: item.quantity,
-        price: item.price,
-      })),
+      cartItems: cart.cartItems.map((item) => {
+        // Find the color detail for the selected color
+        const colorDetail = item.productId.stockDetails.find((detail) => detail.colorCode === item.color);
+        // Determine the correct thumbnail
+        const thumbnail = colorDetail && colorDetail.imageLink ? colorDetail.imageLink : item.productId.thumbnail;
+
+        return {
+          id: item._id,
+          productTitle: item.productId.title,
+          productId: item.productId._id,
+          thumbnail: thumbnail, // Use the determined thumbnail
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.price,
+        };
+      }),
       totalPrice: cart.totalPrice,
     };
     res.status(200).json(data);
@@ -57,10 +93,10 @@ const createCart = async (req, res, next) => {
 const addProductToCart = async (req, res, next) => {
   try {
     const { cartItem, userId, totalPrice } = req.body;
+    console.log(cartItem); // For debugging
 
     // Find the cart by userId
     let cart = await Cart.findOne({ userId });
-
     if (cart) {
       // Update existing cart
       const productIndex = cart.cartItems.findIndex((item) => item.productId.toString() === cartItem.productId && item.color === cartItem.color && item.size === cartItem.size);
