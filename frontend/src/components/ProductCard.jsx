@@ -25,6 +25,9 @@ const ProductCard = ({ product }) => {
       </>
     );
   };
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4 max-w-xs relative">
@@ -40,7 +43,7 @@ const ProductCard = ({ product }) => {
             {renderStars(product.rating)}
             <span className="text-gray-600 ml-2">({product.reviews.length} reviews)</span>
           </div>
-          <p className="text-xl font-bold text-gray-800">{product.price} đ</p>
+          <p className="text-xl font-bold text-gray-800">{formatCurrency(product.price)}</p>
         </div>
       </Link>
     </div>
