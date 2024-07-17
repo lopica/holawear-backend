@@ -21,8 +21,8 @@ const getAllProducts = async (req, res) => {
       query.brand = filters.brand;
     }
 
-    const products = await Product.find(query);
-    res.status(200).json({ products });
+    const products = await Product.find(query).populate("category", "name");
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
