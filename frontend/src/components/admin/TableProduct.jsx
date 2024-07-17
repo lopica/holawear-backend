@@ -70,19 +70,61 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
     }
   };
 
+  // const handleImportClick = () => {
+  //   if (selectedFile) {
+  //     readXlsxFile(selectedFile).then((rows) => {
+  //       const headers = rows[0];
+  //       const data = rows.slice(1).map((row) => {
+  //         let product = {};
+  //         headers.forEach((header, index) => {
+  //           let value = row[index];
+  //           if (header === "images" && typeof value === "string") {
+  //             value = value.includes("--") ? value.split("--").map((url) => url.trim()) : [value.trim()];
+  //           }
+  //           product[header] = value;
+  //         });
+  //         return product;
+  //       });
+  //       fetch("http://localhost:9999/api/product/import", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ products: data }),
+  //       })
+  //         .then((response) => response.json())
+  //         .then(() => {
+  //           toast.success("Products imported successfully");
+  //           setTimeout(() => {
+  //             window.location.reload();
+  //           }, 2000);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error importing products:", error);
+  //           toast.error("Failed to import products");
+  //         });
+  //     });
+  //   } else {
+  //     toast.error("No file selected");
+  //   }
+  // };
+
   const handleImportClick = () => {
     if (selectedFile) {
       readXlsxFile(selectedFile).then((rows) => {
         const headers = rows[0];
         const data = rows.slice(1).map((row) => {
           let product = {};
+          let imagesArray = [];
           headers.forEach((header, index) => {
             let value = row[index];
-            if (header === "images" && typeof value === "string") {
-              value = value.includes("--") ? value.split("--").map((url) => url.trim()) : [value.trim()];
+            if (header.startsWith("image") && typeof value === "string") {
+              imagesArray.push(value.trim());
+            } else {
+              product[header] = value;
             }
-            product[header] = value;
           });
+          if (imagesArray.length > 0) {
+            product["images"] = imagesArray.join("--");
+          }
           return product;
         });
         fetch("http://localhost:9999/api/product/import", {
