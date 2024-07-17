@@ -1,54 +1,36 @@
-import React from "react";
-import TopProductsSold from "../../components/admin/TopProductsSold";
+import React, { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TableBrand from "@/components/admin/TableBrand";
-
-const productsData = [
-  {
-    name: "Men Grey Hoodie",
-    brandId: 1,
-    imageUrl: "https://cf.shopee.vn/file/2a4f82caa336f18c42447958f25c88cf",
-  },
-  {
-    name: "Women Striped T-Shirt",
-    brandId: 2,
-    imageUrl: "https://mochanstore.com/wp-content/uploads/2023/08/mochanstore.com-AO-HOOODIE-NAM-NU-FORM-RONG-VAI-NI-BONG-IN-HINH-DAU-LAU-TP85-PHUONG-STORE.jpg",
-  },
-  {
-    name: "Women White T-Shirt",
-    brandId: 3,
-    imageUrl: "https://product.hstatic.net/200000521439/product/1692802006_h_23_4_look_042_e09_gh.jpg_5e7adfb8cbde4ff4847cec4cbe08052c.jpg",
-  },
-  {
-    name: "Men White T-Shirt",
-    brandId: 4,
-    imageUrl: "https://owen.cdn.vccloud.vn/media/catalog/product/cache/d52d7e242fac6dae82288d9a793c0676/t/s/tsn231431_12.jpg",
-  },
-  {
-    name: "Men White T-Shirt",
-    brandId: 5,
-    imageUrl: "https://owen.cdn.vccloud.vn/media/catalog/product/cache/d52d7e242fac6dae82288d9a793c0676/t/s/tsn231431_12.jpg",
-  },
-  {
-    name: "Men White T-Shirt",
-    brandId: 6,
-    imageUrl: "https://owen.cdn.vccloud.vn/media/catalog/product/cache/d52d7e242fac6dae82288d9a793c0676/t/s/tsn231431_12.jpg",
-  },
-  {
-    name: "Men White T-Shirt",
-    brandId: 7,
-    imageUrl: "https://owen.cdn.vccloud.vn/media/catalog/product/cache/d52d7e242fac6dae82288d9a793c0676/t/s/tsn231431_12.jpg",
-  },
-  {
-    name: "Men White T-Shirt",
-    brandId: 8,
-    imageUrl: "https://owen.cdn.vccloud.vn/media/catalog/product/cache/d52d7e242fac6dae82288d9a793c0676/t/s/tsn231431_12.jpg",
-  },
-];
+import axios from "axios";
 
 const ManageBrand = () => {
+  const [tags, setTags] = useState([]);
+  //get data from api
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://localhost:9999/api/brand/get-all");
+        console.log("tags: ", res.data);
+
+        setTags(res.data);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
-    <div>
-      <TableBrand productsData={productsData} />
+    <div className="w-full h-full">
+      <Tabs defaultValue="tag">
+        <TabsList>
+          <TabsTrigger value="tag">Tags</TabsTrigger>
+        </TabsList>
+        {/* tag table */}
+        <TabsContent value="tag">
+          <TableBrand tagsData={tags} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
