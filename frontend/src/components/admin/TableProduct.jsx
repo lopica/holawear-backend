@@ -37,12 +37,12 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [productToDelete, setProductToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
   const navigate = useNavigate();
 
   const handleSearchChange = (e) => {
@@ -60,7 +60,13 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file);
+      if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+        setSelectedFile(file);
+        setErrorMessage("");
+      } else {
+        setSelectedFile(null);
+        setErrorMessage("Only .xlsx files are allowed");
+      }
     }
   };
 
@@ -175,6 +181,7 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
     <div className="p-4">
       <div className="flex items-center justify-start space-x-4 mb-4">
         <input type="text" placeholder="Search by product name" value={searchTerm} onChange={handleSearchChange} className="px-4 py-2 border rounded-lg w-full sm:w-1/2 lg:w-1/3" />
+        {/* import file */}
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline">
@@ -186,9 +193,10 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
               <DialogTitle>Import Product</DialogTitle>
               <DialogDescription>Import product from excel file</DialogDescription>
             </DialogHeader>
-            <div className="flex justify-center items-center">
-              <input type="file" className="border border-gray-300 rounded-md p-2" onChange={handleFileChange} />
-              <Button variant="outline" className="ml-4" onClick={handleImportClick}>
+            <div className="flex flex-col justify-center items-center">
+              <input type="file" className="border border-gray-300 rounded-md p-2" onChange={handleFileChange} accept=".xlsx" />
+              {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+              <Button variant="outline" className="ml-4 mt-2" onClick={handleImportClick} disabled={!selectedFile}>
                 Import
               </Button>
             </div>
@@ -329,7 +337,6 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
                                 <p>{selectedProduct.createdAt ? format(parseISO(selectedProduct.createdAt), "HH:mm:ss dd-MM-yyyy") : "N/A"}</p>
                               </div>
                             </div>
-
                             {/* Stock Details */}
                             <div>
                               <strong>Stock Details:</strong>
@@ -348,7 +355,14 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
                                   <tbody>
                                     {selectedProduct.stockDetails.map((stockDetail) => (
                                       <tr key={stockDetail._id}>
-                                        <td className="border border-gray-300 p-2" style={{ backgroundColor: stockDetail.colorCode, color: "#fff", textAlign: "center" }}></td>
+                                        <td
+                                          className="border border-gray-300 p-2"
+                                          style={{
+                                            backgroundColor: stockDetail.colorCode,
+                                            color: "#fff",
+                                            textAlign: "center",
+                                          }}
+                                        ></td>
                                         {stockDetail.details.map((detail) => (
                                           <td key={detail._id} className="border border-gray-300 p-2 text-center">
                                             {detail.quantity}
@@ -363,7 +377,6 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
                               )}
                             </div>
                           </div>
-
                           {/* Thumbnail */}
                           <div className="flex items-center justify-center">
                             <div>
@@ -393,7 +406,7 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Edit Product Price</DialogTitle>
-                        <DialogDescription>Add new price for: {product.title} </DialogDescription>
+                        <DialogDescription>Add new price for: {product.title}</DialogDescription>
                       </DialogHeader>
                       <AddStockProduct productDataById={product} />
                     </DialogContent>

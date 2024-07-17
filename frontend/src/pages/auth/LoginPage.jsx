@@ -18,7 +18,7 @@ const LoginPage = () => {
     try {
       const savedProductSelectionString = localStorage.getItem("productSelection");
       const savedProductSelection = savedProductSelectionString ? JSON.parse(savedProductSelectionString) : null;
-      console.log(savedProductSelection);
+      // console.log(savedProductSelection);
       const response = await axios.post("http://localhost:9999/api/auth/signin", {
         email,
         password,
