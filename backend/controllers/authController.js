@@ -107,6 +107,7 @@ async function signup(req, res, next) {
 async function signin(req, res, next) {
   try {
     const { email, password, productSelection } = req.body;
+
     const user = await User.findOne({ email }).populate("role").exec();
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -115,7 +116,9 @@ async function signin(req, res, next) {
     if (!validPassword) return res.status(401).json({ message: "Wrong password" });
 
     //check status account
-    if (user.status === "false") {
+    if (user.status === false) {
+      console.log("Account is locked by system");
+      //send mail notify user
       return res.status(401).json({ message: "Your account is locked by system." });
     }
 

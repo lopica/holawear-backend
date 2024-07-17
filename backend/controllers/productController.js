@@ -6,6 +6,8 @@ const Brand = db.brand;
 const Type = db.type;
 const mongoose = require("mongoose");
 
+// product status : InActive, In Stock
+
 // GET all products
 const getAllProducts = async (req, res) => {
   const filters = req.query;
@@ -98,15 +100,15 @@ const importProducts = async (req, res) => {
         title,
         description,
         category: categoryObject ? categoryObject._id : null,
-        price,
-        discountPercentage,
+        price: 0,
+        discountPercentage: 0,
         rating: 0,
         stock,
         type: typeObject ? typeObject._id : null,
         tag: tagObject ? tagObject._id : null,
         brand: brandObject ? brandObject._id : null,
-        availabilityStatus,
-        minimumOrderQuantity,
+        availabilityStatus: "InActive",
+        minimumOrderQuantity: 1,
         images,
         thumbnail,
         reviews: [],
@@ -120,7 +122,7 @@ const importProducts = async (req, res) => {
     }
     res.status(201).json({ message: "Products imported successfully", products: importedProducts });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

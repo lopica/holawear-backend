@@ -2,7 +2,7 @@ import { useState } from "react";
 import { format, parseISO } from "date-fns";
 import { Pencil } from "lucide-react";
 
-const TableTag = ({ tagsData }) => {
+const TableColor = ({ tagsData }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (e) => {
@@ -14,7 +14,7 @@ const TableTag = ({ tagsData }) => {
     console.log("Form submitted successfully:", formData);
   };
 
-  const filteredTags = tagsData.filter((tag) => tag.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredTags = tagsData.filter((tag) => tag.code.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
     <div className="p-4">
@@ -25,7 +25,7 @@ const TableTag = ({ tagsData }) => {
         <table className="min-w-full divide-y divide-gray-200 table-auto">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Created Date</th>
               <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
@@ -35,8 +35,12 @@ const TableTag = ({ tagsData }) => {
             {filteredTags.map((tag) => (
               <tr key={tag._id}>
                 <td className="px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">{tag.name}</div>
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 rounded-full" style={{ backgroundColor: tag.code }}></div>
+                    <span className="ml-2 text-sm font-medium text-gray-900">{tag.code}</span>
+                  </div>
                 </td>
+
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${tag.status === true ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                     {tag.status === true ? "Active" : "Inactive"}
@@ -70,4 +74,4 @@ const TableTag = ({ tagsData }) => {
 };
 // không cho phép submit nếu như màu sắc nào đó có các size đều = 0 (tức là không có sản phẩm, hiện alert thông báo thừa màu sắc
 
-export default TableTag;
+export default TableColor;

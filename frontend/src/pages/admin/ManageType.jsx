@@ -10,7 +10,6 @@ const ManageType = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get("http://localhost:9999/api/type/get-all");
-        console.log("types: ", res.data);
 
         setTypes(res.data);
       } catch (error) {
