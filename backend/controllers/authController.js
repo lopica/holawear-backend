@@ -93,9 +93,9 @@ async function signup(req, res, next) {
         to: newUser.email,
         subject: "Welcome to HolaWear",
         html: `
-          <h1 style="color: green">WELCOME to HolaWear 
+          <p style="color: green; font-size: 30px">WELCOME <strong>${newUser.name}</strong> to HolaWear 
           <a href="http://localhost:5173/">(holawear.com)</a>
-          </h1>
+          </p>
           <p>You have successfully registered an account on HolaWear. Enjoy shopping with us!</p>
         `,
       };
