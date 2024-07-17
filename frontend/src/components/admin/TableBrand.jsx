@@ -33,7 +33,7 @@ const TableBrand = ({ tagsData }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredTags.map((tag) => (
-              <tr key={tag.id}>
+              <tr key={tag._id}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{tag.name}</div>
                 </td>

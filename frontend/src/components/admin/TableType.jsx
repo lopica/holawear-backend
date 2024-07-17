@@ -34,7 +34,7 @@ const TableType = ({ typesData }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredTypes.map((type) => (
-              <tr key={type.id}>
+              <tr key={type._id}>
                 <td className="px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{type.name}</div>
                 </td>
@@ -72,6 +72,5 @@ const TableType = ({ typesData }) => {
     </div>
   );
 };
-// không cho phép submit nếu như màu sắc nào đó có các size đều = 0 (tức là không có sản phẩm, hiện alert thông báo thừa màu sắc
 
 export default TableType;
