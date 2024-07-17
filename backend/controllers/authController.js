@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodeMailer = require("nodemailer");
 const Cart = db.cart;
-const cartController = require("./cartController");
 //gọi ra các đối tượng từ db
 const User = db.user;
 const Role = db.role;
@@ -87,8 +86,8 @@ async function signup(req, res, next) {
       }
 
       const saveUser = await newUser.save();
+      //create cart
       if (saveUser) {
-        //create cart
         const userId = newUser._id.toString();
         const user = await User.findById(userId);
         if (!user) {
@@ -111,10 +110,14 @@ async function signin(req, res, next) {
     const user = await User.findOne({ email }).populate("role").exec();
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    //check status account
-
+    //validate password
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(401).json({ message: "Wrong password" });
+
+    //check status account
+    if (user.status === "false") {
+      return res.status(401).json({ message: "Your account is locked by system." });
+    }
 
     const accessToken = generateAccessToken(user);
     const refreshToken = await generateRefreshToken(user);

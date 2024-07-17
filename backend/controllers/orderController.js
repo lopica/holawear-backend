@@ -12,13 +12,25 @@ const Order = db.order;
 const getOrdersByUserId = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const orders = await Order.find({ userId }).populate("orderItems.productId");
+    // const orders = await Order.find({ userId }).populate("orderItems.productId");
+    const orders2 = await Order.find({ userId });
+    // // console.log(orders);
+    // console.log("=====================================");
+    // // console.log(orders2);
 
-    if (!orders.length) {
+    // const image1 = orders2.map((order) => {
+    //   return order.orderItems.map((item) => {
+    //     return item.thumbnail;
+    //   });
+    // });
+    // console.log("=====================================");
+
+    // console.log(image1);
+    if (!orders2.length) {
       return res.status(404).json({ message: "No orders found" });
     }
 
-    res.status(200).json(orders);
+    res.status(200).json(orders2);
   } catch (error) {
     next(error);
   }
@@ -42,6 +54,7 @@ const createOrder = async (req, res, next) => {
   try {
     const { userId, orderItems, shippingAddress, totalPrice, orderStatus } = req.body;
 
+    // console.log(orderItems);
     // Find the user by ID
     const user = await User.findById(userId);
     if (!user) {
@@ -81,7 +94,8 @@ const createOrder = async (req, res, next) => {
     });
 
     const savedOrder = await newOrder.save();
-
+    // console.log("====================");
+    // console.log(savedOrder);
     // Update stock details
     for (const item of orderItems) {
       const product = await Product.findById(item.productId);

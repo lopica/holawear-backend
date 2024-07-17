@@ -119,6 +119,7 @@ async function updateStatuslUserById(req, res, next) {
     next(error);
   }
 }
+
 // Get user by email
 async function getUserByEmail(req, res, next) {
   try {
