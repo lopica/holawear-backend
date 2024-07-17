@@ -159,6 +159,7 @@ const OrderTable = ({ orders }) => {
           </div>
         </div>
       </div>
+      {/* =========================================== TABLE ===========================*/}
       <div className="p-4 bg-white shadow-sm rounded-lg">
         <div className="grid grid-cols-5">
           <div className="col-span-2 flex justify-between items-center bg-gray-100 p-1 rounded-lg shadow-sm">
