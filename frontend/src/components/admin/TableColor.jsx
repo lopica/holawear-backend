@@ -33,7 +33,7 @@ const TableColor = ({ tagsData }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredTags.map((tag) => (
-              <tr key={tag.id}>
+              <tr key={tag._id}>
                 <td className="px-6 py-4">
                   <div className="flex items-center">
                     <div className="w-6 h-6 rounded-full" style={{ backgroundColor: tag.code }}></div>
