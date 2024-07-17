@@ -10,8 +10,6 @@ const ManageColor = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get("http://localhost:9999/api/color/get-all");
-        console.log("tags: ", res.data);
-
         setTags(res.data);
       } catch (error) {
         console.log("error", error);
