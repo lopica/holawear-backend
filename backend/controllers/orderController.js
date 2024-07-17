@@ -5,6 +5,9 @@ const Product = db.product;
 const User = db.user;
 const Order = db.order;
 
+//người dùng tạo đơn mua thành công thì tiến hành trừ luôn số lượng sản phẩm trong kho
+//cancel order thì trả lại số lượng sản phẩm trong kho
+
 // GET all orders by user ID
 const getOrdersByUserId = async (req, res, next) => {
   try {
@@ -46,10 +49,10 @@ const createOrder = async (req, res, next) => {
     }
 
     // Get product IDs from order items
-    const productId = orderItems.map((item) => item.productId);
+    const productIds = orderItems.map((item) => item.productId);
 
     // Find products by IDs
-    const products = await Product.find({ _id: { $in: productId } });
+    const products = await Product.find({ _id: { $in: productIds } });
 
     // Check stock availability for each product item
     for (const item of orderItems) {
@@ -57,19 +60,15 @@ const createOrder = async (req, res, next) => {
       if (!product) {
         return res.status(404).json({ message: `Product not found for item ${item.productTitle}` });
       }
-
       const stockDetail = product.stockDetails.find((stock) => stock.colorCode === item.color);
       if (!stockDetail) {
         return res.status(400).json({ message: `Color ${item.color} not available for product ${item.productTitle}` });
       }
-
       const sizeDetail = stockDetail.details.find((detail) => detail.size === item.size);
       if (!sizeDetail || sizeDetail.quantity < item.quantity) {
         return res.status(400).json({ message: `Insufficient stock for size ${item.size} of product ${item.productTitle}, just have ${sizeDetail ? sizeDetail.quantity : 0} in stock.` });
       }
     }
-
-    console.log("Order is valid");
 
     // Create a new order
     const newOrder = new Order({
@@ -80,17 +79,16 @@ const createOrder = async (req, res, next) => {
       orderStatus: orderStatus || "pending",
       isPayment: false,
     });
+
     const savedOrder = await newOrder.save();
 
     // Update stock details
     for (const item of orderItems) {
       const product = await Product.findById(item.productId);
-
       const stockDetail = product.stockDetails.find((stock) => stock.colorCode === item.color);
       const sizeDetail = stockDetail.details.find((detail) => detail.size === item.size);
-
       sizeDetail.quantity -= item.quantity;
-
+      product.stock -= item.quantity; // Decrease total stock
       await product.save();
     }
 
@@ -99,7 +97,6 @@ const createOrder = async (req, res, next) => {
     next(error);
   }
 };
-
 // POST approve order (change status from pending to shipped) - for admin/seller
 const approveOrder = async (req, res, next) => {
   try {
@@ -172,35 +169,23 @@ const statusOrder = async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
     const order = await Order.findById(id);
-
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
-
     if (status === "shipping") {
       order.orderStatus = "shipping";
-      const updatedOrder = await order.save();
-      return res.status(200).json(updatedOrder);
-    }
-
-    if (status === "completed") {
+    } else if (status === "completed") {
       order.orderStatus = "completed";
       order.isPayment = true;
-      const updatedOrder = await order.save();
-      return res.status(200).json(updatedOrder);
-    }
-
-    if (status === "cancelled") {
+    } else if (status === "cancelled") {
       order.orderStatus = "cancelled";
-
       // Update stock details when an order is cancelled
       for (const item of order.orderItems) {
         const product = await Product.findById(item.productId);
-
         const stockDetail = product.stockDetails.find((stock) => stock.colorCode === item.color);
         const sizeDetail = stockDetail.details.find((detail) => detail.size === item.size);
-
         sizeDetail.quantity += item.quantity;
+        product.stock += item.quantity; // Restore total stock
 
         // Add back the size if it was removed (if applicable)
         if (!stockDetail.details.find((detail) => detail.size === item.size)) {
@@ -214,10 +199,9 @@ const statusOrder = async (req, res, next) => {
 
         await product.save();
       }
-
-      const updatedOrder = await order.save();
-      return res.status(200).json(updatedOrder);
     }
+    const updatedOrder = await order.save();
+    res.status(200).json(updatedOrder);
   } catch (error) {
     next(error);
   }

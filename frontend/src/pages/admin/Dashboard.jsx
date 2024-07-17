@@ -172,6 +172,10 @@ const Dashboard = () => {
   const activeSessions = usersData.length;
   const totalSessions = productsData.length;
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+  };
+
   return (
     <div className="p-4">
       <div className="p-4">
@@ -185,7 +189,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-3">
                 <div className="col-span-2">
                   <div>
-                    <p className="text-xl font-semibold">{totalRevenue}₫</p>
+                    <p className="text-xl font-semibold">{formatCurrency(totalRevenue)}</p>
                     <h2 className="text-base font-normal mt-2">Total Revenue</h2>
                   </div>
                 </div>
@@ -201,7 +205,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-3">
                 <div className="col-span-2">
                   <div>
-                    <p className="text-xl font-semibold">{totalImportPrice}₫</p>
+                    <p className="text-xl font-semibold">{formatCurrency(totalImportPrice)}</p>
                     <h2 className="text-base font-normal mt-2">Total Import Price</h2>
                   </div>
                 </div>
@@ -217,7 +221,7 @@ const Dashboard = () => {
               <div className="grid grid-cols-3">
                 <div className="col-span-2">
                   <div>
-                    <p className={`text-xl ${profitLossStyle}`}>{profitLoss}₫</p>
+                    <p className={`text-xl ${profitLossStyle}`}>{formatCurrency(profitLoss)}</p>
                     <h2 className="text-base font-normal mt-2">Profit/Loss</h2>
                   </div>
                 </div>

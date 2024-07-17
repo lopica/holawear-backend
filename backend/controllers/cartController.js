@@ -1,41 +1,7 @@
-const createHttpError = require("http-errors");
 const db = require("../models");
 const Cart = db.cart;
-const Product = db.product;
 const User = db.user;
-const Tag = db.tag;
-const Type = db.type;
-const Category = db.category;
-const Brand = db.brand;
 
-// GET cart by user ID
-// const getCartByUserId = async (req, res, next) => {
-//   try {
-//     const userId = req.params.id;
-//     const cart = await Cart.findOne({ userId }).populate("cartItems.productId");
-//     if (!cart) {
-//       return res.status(404).json({ message: "Cart not found" });
-//     }
-//     const data = {
-//       id: cart._id,
-//       userId: cart.userId,
-//       cartItems: cart.cartItems.map((item) => ({
-//         id: item._id,
-//         productTitle: item.productId.title,
-//         productId: item.productId._id,
-//         thumbnail: item.productId.thumbnail,
-//         color: item.color,
-//         size: item.size,
-//         quantity: item.quantity,
-//         price: item.price,
-//       })),
-//       totalPrice: cart.totalPrice,
-//     };
-//     res.status(200).json(data);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 // GET cart by user ID
 const getCartByUserId = async (req, res, next) => {
   try {
@@ -93,7 +59,6 @@ const createCart = async (req, res, next) => {
 const addProductToCart = async (req, res, next) => {
   try {
     const { cartItem, userId, totalPrice } = req.body;
-    console.log(cartItem); // For debugging
 
     // Find the cart by userId
     let cart = await Cart.findOne({ userId });

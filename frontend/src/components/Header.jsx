@@ -94,13 +94,14 @@ const Header = () => {
             </Link>
           )}
           {/* admin */}
-          {userAuth.user?.role === "admin" && (
+          {(userAuth.user?.role === "admin" || userAuth.user?.role === "seller") && (
             <Link to="/admin/dashboard" className="mr-4">
-              <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow ">
-                <AiOutlineDashboard className="h-5 w-5 opacity-55 hover:opacity-85 text-black" />
+              <button className="bg-white hover:bg-gray-50 text-gray-800 py-1 px-2 border border-gray-200 rounded shadow">
+                <AiOutlineDashboard className="h-5 w-5 opacity-75 hover:opacity-100 text-black" />
               </button>
             </Link>
           )}
+
           {/* user profile */}
           {userAuth.accessToken && (
             <Link to="/user/profile" className="mr-4">

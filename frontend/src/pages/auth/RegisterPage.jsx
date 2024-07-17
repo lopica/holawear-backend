@@ -28,6 +28,7 @@ const RegisterPage = () => {
         toast.error(response.data.message);
         return;
       }
+      console.log(response.user);
       toast.success("Account created successfully.");
       navigate("/login");
     } catch (error) {
