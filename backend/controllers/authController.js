@@ -86,6 +86,22 @@ async function signup(req, res, next) {
       }
 
       const saveUser = await newUser.save();
+
+      //send mail notify user
+      const mailOptions = {
+        from: '"HolaWear" <vanminhtuan2003@gmail.com>',
+        to: newUser.email,
+        subject: "Welcome to HolaWear",
+        html: `
+          <p style="color: green; font-size: 30px">WELCOME <strong>${newUser.name}</strong> to HolaWear 
+          <a href="http://localhost:5173/">(holawear.com)</a>
+          </p>
+          <p>You have successfully registered an account on HolaWear. Enjoy shopping with us!</p>
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+
       //create cart
       if (saveUser) {
         const userId = newUser._id.toString();
@@ -271,7 +287,9 @@ async function resetPassword(req, res) {
     to: user.email,
     subject: "Password Reset Confirmation",
     html: `
-      <h1 style="color: green">RESET PASSWORD in HolaWear (holawear.com)</h1>
+      <h1 style="color: green">RESET PASSWORD in HolaWear 
+      <a href="http://localhost:5173/">(holawear.com)</a>
+      </h1>
       <p>Your password has been successfully reset. Your new password is:</p>
       <p style="font-size: 30px"><strong>${newPassword}</strong></p>
       <p>If you did not initiate this request, please contact us immediately.</p>
