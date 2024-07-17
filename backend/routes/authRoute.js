@@ -13,4 +13,8 @@ authRouter.post("/signup", [verifySignUp.checkExistRole, verifySignUp.checkExist
 //sign in
 authRouter.post("/signin", AuthController.signin);
 authRouter.post("/logout", verifyJWT.verifyToken, AuthController.logout);
+
+//forgot/reset password
+authRouter.post("/forgot-password", AuthController.forgotPassword);
+authRouter.get("/reset-password", AuthController.resetPassword);
 module.exports = authRouter;

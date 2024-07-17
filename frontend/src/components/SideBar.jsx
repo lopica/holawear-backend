@@ -27,7 +27,6 @@ const SideBar = ({
     const fetchBrands = async () => {
       try {
         const response = await axios.get("http://localhost:9999/api/brand/get-all");
-        console.log(response.data); // Thêm dòng này để kiểm tra dữ liệu
         setBrands(response.data);
       } catch (error) {
         console.error("Error fetching brands:", error);
@@ -37,7 +36,6 @@ const SideBar = ({
     const fetchTags = async () => {
       try {
         const response = await axios.get("http://localhost:9999/api/tag/get-all");
-        console.log(response.data);
         setTags(response.data);
       } catch (error) {
         console.error("Error fetching tags:", error);
@@ -47,7 +45,6 @@ const SideBar = ({
     const fetchTypes = async () => {
       try {
         const response = await axios.get("http://localhost:9999/api/type/get-all");
-        console.log(response.data);
         setTypes(response.data);
       } catch (error) {
         console.error("Error fetching types:", error);

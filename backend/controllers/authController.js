@@ -1,7 +1,9 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const nodeMailer = require("nodemailer");
+const Cart = db.cart;
+const cartController = require("./cartController");
 //gọi ra các đối tượng từ db
 const User = db.user;
 const Role = db.role;
@@ -84,8 +86,18 @@ async function signup(req, res, next) {
         newUser.role = defaultRole._id;
       }
 
-      await newUser.save();
-      res.status(201).json({ message: "ok", user: newUser });
+      const saveUser = await newUser.save();
+      if (saveUser) {
+        //create cart
+        const userId = newUser._id.toString();
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+        const newCart = new Cart({ userId, cartItems: [], totalPrice: 0 });
+        await newCart.save();
+        res.status(201).json({ message: "ok" });
+      }
     }
   } catch (error) {
     next(error);
@@ -95,7 +107,7 @@ async function signup(req, res, next) {
 // Sign in action
 async function signin(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email, password, productSelection } = req.body;
     const user = await User.findOne({ email }).populate("role").exec();
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -106,6 +118,7 @@ async function signin(req, res, next) {
 
     const accessToken = generateAccessToken(user);
     const refreshToken = await generateRefreshToken(user);
+    await user.save();
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -114,7 +127,7 @@ async function signin(req, res, next) {
       path: "/",
     });
 
-    res.status(201).json({
+    const responsePayload = {
       message: "Logged in successfully",
       accessToken,
       user: {
@@ -126,7 +139,14 @@ async function signin(req, res, next) {
         gender: user.gender,
         shippingAddress: user.shippingAddress,
       },
-    });
+    };
+
+    // Include productSelection in the response payload if available
+    if (productSelection == null) {
+      responsePayload.productSelection = productSelection;
+    }
+
+    res.status(201).json(responsePayload);
   } catch (error) {
     next(error);
   }
@@ -153,9 +173,121 @@ async function logout(req, res, next) {
   }
 }
 
+const transporter = nodeMailer.createTransport({
+  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "vanminhtuan2003@gmail.com",
+    pass: "zubo aayv abtz kwsb",
+  },
+});
+
+//forgot password
+async function forgotPassword(req, res) {
+  // Find the user by email
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  // Generate a password reset token and set its expiration date
+  const token = jwt.sign({ id: user._id }, process.env.JWT_ACCESS_KEY, { expiresIn: "1h" });
+  user.passwordResetToken = token;
+  user.passwordResetExpires = Date.now() + 3600000; // 1 hour
+  await user.save();
+
+  // Send the password reset email
+  const resetUrl = `http://${req.headers.host}/api/auth/reset-password?token=${token}`;
+  const mailOptions = {
+    from: '"HolaWear" <vanminhtuan2003@gmail.com>',
+    to: user.email,
+    subject: "Password Reset Request",
+    html: `
+      <p>You requested a password reset. Click the link below to reset your password:</p>
+      <a href="${resetUrl}">${resetUrl}</a>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ message: "Password reset email sent" });
+  } catch (err) {
+    console.error("Failed to send password reset email:", err);
+    res.status(500).json({ error: "Failed to send password reset email" });
+  }
+}
+
+//generate random password
+function generateRandomPassword() {
+  const length = 16;
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!@#$%^&*()_+-=[]{}|;:,.<>?";
+  let randomPassword = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    randomPassword += charset[randomIndex];
+  }
+
+  return randomPassword;
+}
+
+async function resetPassword(req, res) {
+  // Validate the password reset token
+  const token = req.query.token;
+  const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_KEY);
+
+  // Find the user by their ID and token, and check if the token is still valid
+  const user = await User.findOne({
+    _id: decodedToken.id,
+    passwordResetToken: token,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return res.status(401).json({ error: "Invalid or expired password reset token" });
+  }
+
+  // Update the user's password and remove the reset token and its expiration date
+  const salt = await bcrypt.genSalt(10);
+
+  const newPassword = generateRandomPassword();
+  user.password = await bcrypt.hash(newPassword, salt);
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+
+  // Send a confirmation email
+  const mailOptions = {
+    from: '"HolaWear" <vanminhtuan2003@gmail.com>',
+    to: user.email,
+    subject: "Password Reset Confirmation",
+    html: `
+      <h1 style="color: green">RESET PASSWORD in HolaWear (holawear.com)</h1>
+      <p>Your password has been successfully reset. Your new password is:</p>
+      <p style="font-size: 30px"><strong>${newPassword}</strong></p>
+      <p>If you did not initiate this request, please contact us immediately.</p>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    // Redirect the user to the success page instead of returning a JSON response
+    res.redirect("http://localhost:5173/templates/reset-password-success.html");
+  } catch (err) {
+    console.log(err);
+    console.error("Failed to send password reset confirmation email:", err);
+    res.status(500).json({ error: "Failed to send password reset confirmation email" });
+  }
+}
+
 module.exports = {
   signup,
   signin,
   logout,
   requestRefreshToken,
+  forgotPassword,
+  resetPassword,
 };

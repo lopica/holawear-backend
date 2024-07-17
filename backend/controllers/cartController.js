@@ -1,12 +1,6 @@
-const createHttpError = require("http-errors");
 const db = require("../models");
 const Cart = db.cart;
-const Product = db.product;
 const User = db.user;
-const Tag = db.tag;
-const Type = db.type;
-const Category = db.category;
-const Brand = db.brand;
 
 // GET cart by user ID
 const getCartByUserId = async (req, res, next) => {
@@ -16,19 +10,27 @@ const getCartByUserId = async (req, res, next) => {
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
+
     const data = {
       id: cart._id,
       userId: cart.userId,
-      cartItems: cart.cartItems.map((item) => ({
-        id: item._id,
-        productTitle: item.productId.title,
-        productId: item.productId._id,
-        thumbnail: item.productId.thumbnail,
-        color: item.color,
-        size: item.size,
-        quantity: item.quantity,
-        price: item.price,
-      })),
+      cartItems: cart.cartItems.map((item) => {
+        // Find the color detail for the selected color
+        const colorDetail = item.productId.stockDetails.find((detail) => detail.colorCode === item.color);
+        // Determine the correct thumbnail
+        const thumbnail = colorDetail && colorDetail.imageLink ? colorDetail.imageLink : item.productId.thumbnail;
+
+        return {
+          id: item._id,
+          productTitle: item.productId.title,
+          productId: item.productId._id,
+          thumbnail: thumbnail, // Use the determined thumbnail
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.price,
+        };
+      }),
       totalPrice: cart.totalPrice,
     };
     res.status(200).json(data);
@@ -60,7 +62,6 @@ const addProductToCart = async (req, res, next) => {
 
     // Find the cart by userId
     let cart = await Cart.findOne({ userId });
-
     if (cart) {
       // Update existing cart
       const productIndex = cart.cartItems.findIndex((item) => item.productId.toString() === cartItem.productId && item.color === cartItem.color && item.size === cartItem.size);

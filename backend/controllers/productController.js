@@ -8,8 +8,6 @@ const mongoose = require("mongoose");
 
 // GET all products
 const getAllProducts = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
   const filters = req.query;
 
   try {
@@ -23,17 +21,8 @@ const getAllProducts = async (req, res) => {
       query.brand = filters.brand;
     }
 
-    const skip = (page - 1) * limit;
-    const products = await Product.find(query).skip(skip).limit(limit);
-
-    const totalProducts = await Product.countDocuments(query);
-    const totalPages = Math.ceil(totalProducts / limit);
-
-    res.status(200).json({
-      products,
-      currentPage: page,
-      totalPages,
-    });
+    const products = await Product.find(query);
+    res.status(200).json({ products });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

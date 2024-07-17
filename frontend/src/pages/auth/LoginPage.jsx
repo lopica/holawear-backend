@@ -16,9 +16,13 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const savedProductSelectionString = localStorage.getItem("productSelection");
+      const savedProductSelection = savedProductSelectionString ? JSON.parse(savedProductSelectionString) : null;
+      console.log(savedProductSelection);
       const response = await axios.post("http://localhost:9999/api/auth/signin", {
         email,
         password,
+        productSelection: savedProductSelection,
       });
       if (response.status === 201) {
         toast.success(response.data.message);
@@ -33,7 +37,16 @@ const LoginPage = () => {
         }
 
         setUserAuth({ accessToken, user }); // Update context
-        navigate("/");
+
+        // Clear the saved product selection after login
+        localStorage.removeItem("productSelection");
+        // Redirect to the product detail page if product selection is available
+        if (savedProductSelection) {
+          const { productId, selectedColor, selectedSize, quantity } = savedProductSelection;
+          navigate(`/product/${productId}`, { state: { selectedColor, selectedSize, quantity } });
+        } else {
+          navigate("/"); // Redirect to home if no product selection
+        }
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
@@ -81,9 +94,9 @@ const LoginPage = () => {
               <span className="mx-2 text-gray-600">or continue with</span>
               <hr className="flex-grow border-t border-gray-300" />
             </div>
-            <button className="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded flex items-center justify-center mt-4">
+            {/* <button className="w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded flex items-center justify-center mt-4">
               <FaGoogle className="mr-2" /> Google
-            </button>
+            </button> */}
           </div>
           <div>
             <img src={banner1} alt="Advertisement" className="w-full h-auto rounded-lg" />

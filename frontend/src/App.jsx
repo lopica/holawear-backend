@@ -27,7 +27,7 @@ import ComingSoon from "./pages/error/ComingSoon";
 
 //admin
 import AdminLayout from "./pages/admin/Layout";
-import ProtectedRouteAdmin from "./components/admin/ProtectedRouteAdmin";
+import ProtectedRouteByRole from "./components/admin/ProtectedRouteByRole";
 import Dashboard from "./pages/admin/Dashboard";
 import ManageBrand from "./pages/admin/ManageBrand";
 import ManageCategory from "./pages/admin/ManageCategory";
@@ -46,15 +46,6 @@ function App() {
   const [userAuth, setUserAuth] = useState({});
   const isAdminRoute = location.pathname.includes("/admin");
   const isUserRoute = location.pathname.includes("/user");
-
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [loginTypes, setLoginTypes] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [carts, setCarts] = useState([]);
 
   useEffect(() => {
     const user = sessionStorage.getItem("user");
@@ -91,7 +82,7 @@ function App() {
 
             {/* Admin Routes */}
 
-            <Route element={<ProtectedRouteAdmin />}>
+            <Route element={<ProtectedRouteByRole />}>
               <Route element={<AdminLayout />}>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/brands" element={<ManageBrand />} />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/App";
-
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { CiShoppingCart } from "react-icons/ci";
 import Slider from "react-slick";
@@ -16,7 +15,10 @@ const ProductDetail = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [filter, setFilter] = useState(null);
   const [error, setError] = useState("");
+  const [currentImage, setCurrentImage] = useState(null);
+  const [showSlider, setShowSlider] = useState(true); // State to manage slider visibility
   const { userAuth, setUserAuth } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -59,6 +61,13 @@ const ProductDetail = () => {
     setSelectedSize(null);
     setQuantity(1);
     setError("");
+    const colorDetail = product.stockDetails.find((detail) => detail.colorCode === color);
+    if (colorDetail && colorDetail.imageLink) {
+      setCurrentImage(colorDetail.imageLink);
+      setShowSlider(false); // Hide slider if specific image exists for the color
+    } else {
+      setShowSlider(true); // Show slider if no specific image exists for the color
+    }
   };
 
   const handleSizeSelect = (size) => {
@@ -72,32 +81,32 @@ const ProductDetail = () => {
       setError("Please select a color and a size.");
       return;
     }
-
     const totalPrice = quantity * product.price;
     const userId = userAuth?.user?.id;
-
     if (userId === undefined) {
+      localStorage.setItem("productSelection", JSON.stringify({ productId: id, selectedColor, selectedSize, quantity }));
       toast.error("Please login to add items to your cart.");
+      navigate("/login");
       return;
     }
-
+    const colorDetail = product.stockDetails.find((detail) => detail.colorCode === selectedColor);
+    const thumbnail = colorDetail && colorDetail.imageLink ? colorDetail.imageLink : product.thumbnail;
+    console.log("Thumbnail to be used:", thumbnail); // Debugging line to verify thumbnail selection
     const cartItem = {
       productTitle: product.title,
       productId: product._id,
-      thumbnail: product.thumbnail,
+      thumbnail: thumbnail,
       color: selectedColor,
       size: selectedSize,
       quantity: quantity,
       price: product.price,
     };
-
     try {
       const response = await axios.post(`http://localhost:9999/api/cart/add-product-to-cart`, {
         userId: userId,
         cartItem: cartItem,
         totalPrice: totalPrice,
       });
-
       if (response.status === 201) {
         toast.success("Product added to cart successfully!");
       } else {
@@ -132,44 +141,43 @@ const ProductDetail = () => {
         .map((d) => d.size)
     : [];
   const availableStock = selectedColor && selectedSize ? getStockForSelectedColorSize() : product.stock;
-
   // Filter out colors that have no available stock in any size
   const availableColors = product.stockDetails.filter((detail) => detail.details.some((sizeDetail) => sizeDetail.quantity > 0));
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(value);
+  };
+
   return (
     <>
-      <div className="container mx-auto p-6 bg-white rounded  mt-10">
-        {/* thông tin 1 */}
+      <div className="container mx-auto p-6 bg-white rounded mt-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* ảnh ọt */}
           <div className="flex justify-center">
             <div className="w-2/3">
-              {product.images && product.images.length > 0 ? (
+              {showSlider ? (
                 <Slider {...settings}>
                   {product.images.map((image, index) => (
                     <div key={index}>
-                      <div className="m-10">
-                        <img src={image} alt={`${product.title} - Image ${index + 1}`} className=" h-auto rounded-lg" />
+                      <div className="m-10 flex justify-center">
+                        <img src={image} alt={`${product.title} - Image ${index + 1}`} className="h-auto rounded-lg" />
                       </div>
                     </div>
                   ))}
                 </Slider>
               ) : (
-                <img src={product.thumbnail} alt={product.title} className="w-3/4 h-auto rounded-lg" />
+                <img src={currentImage} alt={product.title} className="w-3/4 h-auto rounded-lg" />
               )}
             </div>
           </div>
-          {/* thông tin sản phẩm */}
           <div className="flex-1">
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
             <div className="p-2 bg-gray-100 w-1/2 flex items-center">
-              <p className="text-xl  text-gray-800">₫{product.price}</p>
+              <p className="text-2xl text-red-500 font-semibold">{formatCurrency(product.price)}</p>
             </div>
             <div className="flex items-center mb-4">
               {[...Array(5)].map((_, i) => (product.rating > i ? <FaStar key={i} className="text-yellow-500" /> : <FaRegStar key={i} className="text-gray-300" />))}
               <span className="text-gray-600 ml-2">({product.rating} rating)</span>
             </div>
-            {/* status */}
             <div className="flex items-center mb-4">
               <span className="text-gray-700">Status:</span>
               <span className="text-green-500 font-bold ml-2">{product.availabilityStatus}</span>
@@ -220,9 +228,7 @@ const ProductDetail = () => {
             </div>
           </div>
         </div>
-
         <div className="mt-10 grid grid-cols-2 gap-5">
-          {/* thông tin 2 */}
           <div className="mt-10">
             <h2 className="text-2xl font-bold mb-2">Reviews</h2>
             <div className="flex space-x-2 mb-4">
@@ -251,8 +257,6 @@ const ProductDetail = () => {
               <p className="text-gray-700">No reviews for this rating.</p>
             )}
           </div>
-
-          {/* Product Description */}
           <div className="mt-10">
             <h2 className="text-2xl font-bold mb-2">Product Description</h2>
             <p>
@@ -264,7 +268,7 @@ const ProductDetail = () => {
               <div>
                 <p className="font-bold">Brand :</p>
                 <p className="font-bold mt-2">Category :</p>
-                <p className="font-bold mt-2">Type : </p>
+                <p className="font-bold mt-2">Type :</p>
                 <p className="font-bold mt-2">Tag :</p>
               </div>
               <div className="">
