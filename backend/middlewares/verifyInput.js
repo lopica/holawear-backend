@@ -35,8 +35,7 @@ async function checkExistRole(req, res, next) {
 }
 
 async function verifySignIn(req, res, next) {
-  //verify authentication
-  const data = req.headers;
+  //check status of user
 }
 
 module.exports = {

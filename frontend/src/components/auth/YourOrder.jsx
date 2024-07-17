@@ -183,7 +183,7 @@ const YourOrder = () => {
                       {selectedOrder.orderItems.map((item, index) => (
                         <div key={`${item.productId._id}-${index}`} className="grid grid-cols-12 gap-4 items-center mb-4 border-b pb-2">
                           <div className="col-span-2">
-                            <img src={item.productId.thumbnail} alt={item.productTitle} className="w-16" />
+                            <img src={item.thumbnail} alt={item.productTitle} className="w-16" />
                           </div>
                           <div className="col-span-3">
                             <div className="font-semibold">{item.productTitle || "Product Title"}</div>
