@@ -19,7 +19,10 @@ app.use(
 app.use(morgan("dev"));
 app.use(cors());
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 app.use("/api/user", userRouter);
 app.use("/api/role", roleRouter);
