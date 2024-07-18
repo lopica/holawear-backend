@@ -5,6 +5,8 @@ const { ProductController } = require("../controllers/index.js");
 
 productRouter.get("/get-all-product", ProductController.getAllProducts);
 
+productRouter.get("/get-all-product2", ProductController.getAllProducts2);
+
 // GET a single product by ID
 productRouter.get("/get-detail-product/:id", ProductController.getProductById);
 // GET  product by categoryId
