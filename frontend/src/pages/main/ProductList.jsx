@@ -32,18 +32,25 @@ const ProductList = ({ category }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const categoryObj = categories.find((cat) => cat.name.toLowerCase() === category.toLowerCase());
-        if (categoryObj) {
-          const response = await axios.get(`http://localhost:9999/api/product/get-product-by-category-id/${categoryObj._id}`);
-          setProducts(response.data);
+        let response;
+        const lowerCaseCategory = category?.toLowerCase();
+        if (lowerCaseCategory === "all") {
+          response = await axios.get(`http://localhost:9999/api/product/get-all-product`);
+          console.log(response.data);
+        } else {
+          const categoryObj = categories.find((cat) => cat.name.toLowerCase() === lowerCaseCategory);
+          if (categoryObj) {
+            response = await axios.get(`http://localhost:9999/api/product/get-product-by-category-id/${categoryObj._id}`);
+          } else {
+            response = await axios.get(`http://localhost:9999/api/product/get-all-product`);
+          }
         }
+        setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
-    if (categories.length > 0) {
-      fetchProducts();
-    }
+    fetchProducts();
   }, [category, categories]);
 
   const toggleSidebar = () => {
@@ -68,16 +75,15 @@ const ProductList = ({ category }) => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = product.category?.name.toLowerCase() === category.toLowerCase();
+    // const matchesCategory = product.category?.name?.toLowerCase() === category?.toLowerCase();
     const matchesColor = selectedColors.length === 0 || selectedColors.some((color) => product.stockDetails.some((detail) => detail.colorCode === color));
     const matchesPrice = product.price >= selectedPrices[0] && product.price <= selectedPrices[1];
     const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
     const matchesTag = selectedTags.length === 0 || selectedTags.includes(product.tag);
     const matchesType = selectedTypes.length === 0 || selectedTypes.includes(product.type);
     const matchesSearchQuery = product.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = product.availabilityStatus?.toLowerCase() === "in stock"; // Use availabilityStatus
-    // console.log({ matchesCategory, matchesColor, matchesPrice, matchesBrand, matchesTag, matchesType, matchesSearchQuery, matchesStatus });
-    return matchesCategory && matchesColor && matchesPrice && matchesBrand && matchesType && matchesTag && matchesSearchQuery && matchesStatus;
+    const matchesStatus = product.availabilityStatus?.toLowerCase() === "in stock";
+    return matchesColor && matchesPrice && matchesBrand && matchesType && matchesTag && matchesSearchQuery && matchesStatus;
   });
 
   const sortedProducts = sortProducts(filteredProducts);
