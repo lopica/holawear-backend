@@ -5,8 +5,11 @@ const Tag = db.tag;
 const Brand = db.brand;
 const Type = db.type;
 const mongoose = require("mongoose");
+const uploadToCloudinary = require("../configs/cloudinaryConfig");
+const crypto = require("crypto");
 
 // product status : InActive, In Stock
+("use strict");
 
 // GET all products
 const getAllProducts = async (req, res) => {
@@ -43,15 +46,48 @@ const getProductById = async (req, res) => {
   }
 };
 
+// Helper functions
+function splitImagesLink(imagesString) {
+  return imagesString.split("--").filter((image) => image !== "");
+}
+//function add image to images array
+function addImageToImagesArray(imagesArray, image) {
+  imagesArray.push(image);
+}
+
 // POST create a new product
 const createProduct = async (req, res) => {
   try {
-    const { title, description, category, price, discountPercentage, rating, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, reviews, tag, brand } = req.body;
-    const stockDetails = req.body.stockDetails;
+    const { title, description, category, price, type, images, thumbnail, tag, brand, availabilityStatus, stock } = req.body;
+
+    // Validate object IDs
+    if (!mongoose.Types.ObjectId.isValid(category) || !mongoose.Types.ObjectId.isValid(type) || (tag && !mongoose.Types.ObjectId.isValid(tag)) || (brand && !mongoose.Types.ObjectId.isValid(brand))) {
+      console.log("Invalid ID format for category, type, tag, or brand");
+      return res.status(400).json({ message: "Invalid ID format for category, type, tag, or brand" });
+    }
+
     const categoryObject = await Category.findById(category);
     const tagObject = await Tag.findById(tag);
     const brandObject = await Brand.findById(brand);
     const typeObject = await Type.findById(type);
+    console.log(categoryObject._id._id);
+    console.log(tagObject._id);
+    console.log(brandObject._id);
+    console.log(typeObject._id);
+
+    // if (!categoryObject || !typeObject || (tag && !tagObject) || (brand && !brandObject)) {
+    //   console.log("Related category, type, tag, or brand not found");
+    //   return res.status(400).json({ message: "Related category, type, tag, or brand not found" });
+    // }
+
+    // Generate a unique public_id for Cloudinary uploads
+    const public_id = "hlw" + crypto.randomBytes(8).toString("hex");
+
+    // Upload the thumbnail to Cloudinary
+    const thumbnailUrl = await uploadToCloudinary(thumbnail, public_id + "_thumbnail");
+
+    // Upload images to Cloudinary and get their URLs
+    const imagesUrl = await Promise.all(images.map((image, index) => uploadToCloudinary(image, public_id + "_image" + (index + 1))));
 
     // Create a new product instance
     const newProduct = new Product({
@@ -61,33 +97,77 @@ const createProduct = async (req, res) => {
       price: 0,
       discountPercentage: 10,
       rating: 0,
-      stock,
-      type: type,
-      tag: tag,
-      brand: brand,
+      stock: 0,
+      type: typeObject._id,
+      tag: tagObject?._id,
+      brand: brandObject?._id,
       availabilityStatus,
       minimumOrderQuantity: 1,
-      images,
-      thumbnail,
-      stockDetails: stockDetails,
+      images: imagesUrl,
+      thumbnail: thumbnailUrl,
+      stockDetails: [],
       reviews: [],
     });
 
-    console.log(newProduct);
-    // Save the product to the database
+    console.log("Saving new product:", newProduct);
 
+    // Save the product to the database
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
+    console.error("Error creating product:", error);
     res.status(400).json({ message: error.message });
   }
 };
 
 // POST import products
+// const importProducts = async (req, res) => {
+//   try {
+//     const products = req.body.products;
+//     const importedProducts = [];
+//     for (const productData of products) {
+//       const { title, description, category, price, discountPercentage, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, tag, brand, stockDetails } = productData;
+
+//       const categoryObject = await Category.findOne({ name: category });
+//       const tagObject = await Tag.findOne({ name: tag });
+//       const brandObject = await Brand.findOne({ name: brand });
+//       const typeObject = await Type.findOne({ name: type });
+
+//       const newProduct = new Product({
+//         title,
+//         description,
+//         category: categoryObject ? categoryObject._id : null,
+//         price: 0,
+//         discountPercentage: 0,
+//         rating: 0,
+//         stock,
+//         type: typeObject ? typeObject._id : null,
+//         tag: tagObject ? tagObject._id : null,
+//         brand: brandObject ? brandObject._id : null,
+//         availabilityStatus: "InActive",
+//         minimumOrderQuantity: 1,
+//         images,
+//         thumbnail,
+//         reviews: [],
+//         stockDetails,
+//       });
+
+//       const savedProduct = await newProduct.save();
+//       importedProducts.push(savedProduct);
+//       // importedProducts.push(newProduct);
+//       // console.log(importedProducts);
+//     }
+//     res.status(201).json({ message: "Products imported successfully", products: importedProducts });
+//   } catch (error) {
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
+
 const importProducts = async (req, res) => {
   try {
     const products = req.body.products;
     const importedProducts = [];
+
     for (const productData of products) {
       const { title, description, category, price, discountPercentage, stock, type, availabilityStatus, minimumOrderQuantity, images, thumbnail, tag, brand, stockDetails } = productData;
 
@@ -96,30 +176,43 @@ const importProducts = async (req, res) => {
       const brandObject = await Brand.findOne({ name: brand });
       const typeObject = await Type.findOne({ name: type });
 
+      // console.log(categoryObject);
+      // console.log(tagObject);
+      // console.log(brandObject);
+      // console.log(typeObject);
+      // console.log("==================");
+      // Generate a unique public_id for Cloudinary uploads
+      const public_id = "hlw" + crypto.randomBytes(8).toString("hex");
+
+      // Upload the thumbnail to Cloudinary
+      const thumbnailUrl = await uploadToCloudinary(thumbnail, public_id + "_thumbnail");
+
+      // Upload images to Cloudinary and get their URLs
+      const imagesUrl = await Promise.all(images.map((image, index) => uploadToCloudinary(image, public_id + "_image" + (index + 1))));
+
       const newProduct = new Product({
         title,
         description,
         category: categoryObject ? categoryObject._id : null,
-        price: 0,
-        discountPercentage: 0,
+        price: price || 0,
+        discountPercentage: discountPercentage || 0,
         rating: 0,
-        stock,
+        stock: stock || 0,
         type: typeObject ? typeObject._id : null,
         tag: tagObject ? tagObject._id : null,
         brand: brandObject ? brandObject._id : null,
-        availabilityStatus: "InActive",
-        minimumOrderQuantity: 1,
-        images,
-        thumbnail,
+        availabilityStatus: availabilityStatus || "InActive",
+        minimumOrderQuantity: minimumOrderQuantity || 1,
+        images: imagesUrl,
+        thumbnail: thumbnailUrl,
         reviews: [],
-        stockDetails,
+        stockDetails: stockDetails || [],
       });
 
       const savedProduct = await newProduct.save();
       importedProducts.push(savedProduct);
-      // importedProducts.push(newProduct);
-      // console.log(importedProducts);
     }
+
     res.status(201).json({ message: "Products imported successfully", products: importedProducts });
   } catch (error) {
     return res.status(500).json({ message: error.message });

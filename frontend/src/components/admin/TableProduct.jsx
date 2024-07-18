@@ -107,6 +107,48 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
   //   }
   // };
 
+  // const handleImportClick = () => {
+  //   if (selectedFile) {
+  //     readXlsxFile(selectedFile).then((rows) => {
+  //       const headers = rows[0];
+  //       const data = rows.slice(1).map((row) => {
+  //         let product = {};
+  //         let imagesArray = [];
+  //         headers.forEach((header, index) => {
+  //           let value = row[index];
+  //           if (header.startsWith("image") && typeof value === "string") {
+  //             imagesArray.push(value.trim());
+  //           } else {
+  //             product[header] = value;
+  //           }
+  //         });
+  //         if (imagesArray.length > 0) {
+  //           product["images"] = imagesArray.join("--");
+  //         }
+  //         return product;
+  //       });
+  //       fetch("http://localhost:9999/api/product/import", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ products: data }),
+  //       })
+  //         .then((response) => response.json())
+  //         .then(() => {
+  //           toast.success("Products imported successfully");
+  //           setTimeout(() => {
+  //             window.location.reload();
+  //           }, 2000);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error importing products:", error);
+  //           toast.error("Failed to import products");
+  //         });
+  //     });
+  //   } else {
+  //     toast.error("No file selected");
+  //   }
+  // };
+
   const handleImportClick = () => {
     if (selectedFile) {
       readXlsxFile(selectedFile).then((rows) => {
@@ -114,6 +156,7 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
         const data = rows.slice(1).map((row) => {
           let product = {};
           let imagesArray = [];
+
           headers.forEach((header, index) => {
             let value = row[index];
             if (header.startsWith("image") && typeof value === "string") {
@@ -122,11 +165,16 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
               product[header] = value;
             }
           });
+
           if (imagesArray.length > 0) {
-            product["images"] = imagesArray.join("--");
+            product["images"] = imagesArray;
           }
+
           return product;
         });
+        // log data
+        console.log(data);
+
         fetch("http://localhost:9999/api/product/import", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -244,6 +292,7 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
             </div>
           </DialogContent>
         </Dialog>
+        {/* ========================= ADD PRODUCT ========================= */}
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline">
@@ -473,6 +522,7 @@ const TableProduct = ({ productData, categories, tags, types, brands }) => {
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
+                  {/* import depot */}
                   <Dialog>
                     <DialogTrigger className="ml-4 bg-white hover:bg-gray-50 text-[#FB5012] hover:text-indigo-900 py-1 px-2 border border-gray-200 rounded shadow">
                       <TooltipProvider>
