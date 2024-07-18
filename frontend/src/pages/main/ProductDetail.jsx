@@ -19,7 +19,7 @@ const ProductDetail = () => {
   const [showSlider, setShowSlider] = useState(true); // State to manage slider visibility
   const { userAuth, setUserAuth } = useContext(UserContext);
   const navigate = useNavigate();
-
+  const shippingRate = 35000;
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -117,14 +117,55 @@ const ProductDetail = () => {
       toast.error("An error occurred while adding the product to cart.");
     }
   };
-
-  const handleBuyNow = () => {
+  const calculateTotal = (subtotal) => {
+    const subtotalNumber = parseFloat(subtotal.replace(/,/g, ""));
+    return (subtotalNumber + shippingRate).toLocaleString("en-US");
+  };
+  const handleBuyNow = async () => {
+    const userId = userAuth?.user?.id;
+    if (userId === undefined) {
+      localStorage.setItem("productSelection", JSON.stringify({ productId: id, selectedColor, selectedSize, quantity }));
+      toast.error("Please login to add items to your cart.");
+      navigate("/login");
+      return;
+    }
     if (!selectedColor || !selectedSize) {
       setError("Please select a color and a size.");
       return;
     }
-    // Buy now logic goes here
-    console.log("Buy now", { selectedColor, selectedSize, quantity });
+    const subtotal = (quantity * product.price).toLocaleString("en-US");
+    const total = calculateTotal(subtotal);
+    const colorDetail = product.stockDetails.find((detail) => detail.colorCode === selectedColor);
+    const thumbnail = colorDetail && colorDetail.imageLink ? colorDetail.imageLink : product.thumbnail;
+    console.log("Thumbnail to be used:", thumbnail); // Debugging line to verify thumbnail selection
+    const buyItem = {
+      productTitle: product.title,
+      productId: product._id,
+      thumbnail: thumbnail,
+      color: selectedColor,
+      size: selectedSize,
+      quantity: quantity,
+      price: product.price,
+    };
+
+    navigate("/checkout", {
+      state: {
+        products: [
+          {
+            productTitle: product.title,
+            productId: product._id,
+            thumbnail: thumbnail,
+            color: selectedColor,
+            size: selectedSize,
+            quantity: quantity,
+            price: product.price,
+          },
+        ],
+        subtotal,
+        shipping: shippingRate,
+        total,
+      },
+    });
   };
 
   const getStockForSelectedColorSize = () => {
