@@ -23,6 +23,29 @@ const getAllProducts = async (req, res) => {
       query.brand = filters.brand;
     }
 
+    // const products = await Product.find(query).populate("category", "name");
+    // res.status(200).json(products);
+    const products = await Product.find(query);
+    res.status(200).json({ products });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getAllProducts2 = async (req, res) => {
+  const filters = req.query;
+
+  try {
+    const query = {};
+
+    // Process filters
+    if (filters.category) {
+      query.category = filters.category;
+    }
+    if (filters.brand) {
+      query.brand = filters.brand;
+    }
+
     const products = await Product.find(query).populate("category", "name");
     res.status(200).json(products);
   } catch (error) {
@@ -226,4 +249,4 @@ const updateProductPrice = async (req, res) => {
   }
 };
 
-module.exports = { updateProductPrice, updateProductStatus, getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };
+module.exports = { getAllProducts2, updateProductPrice, updateProductStatus, getProductByCategoryId, getAllProducts, getProductById, createProduct, updateProduct, deleteProduct, importProducts };

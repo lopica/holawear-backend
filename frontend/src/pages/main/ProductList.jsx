@@ -35,14 +35,14 @@ const ProductList = ({ category }) => {
         let response;
         const lowerCaseCategory = category?.toLowerCase();
         if (lowerCaseCategory === "all") {
-          response = await axios.get(`http://localhost:9999/api/product/get-all-product`);
-          console.log(response.data);
+          response = await axios.get(`http://localhost:9999/api/product/get-all-product2`);
+          // console.log(response.data);
         } else {
           const categoryObj = categories.find((cat) => cat.name.toLowerCase() === lowerCaseCategory);
           if (categoryObj) {
             response = await axios.get(`http://localhost:9999/api/product/get-product-by-category-id/${categoryObj._id}`);
           } else {
-            response = await axios.get(`http://localhost:9999/api/product/get-all-product`);
+            response = await axios.get(`http://localhost:9999/api/product/get-all-product2`);
           }
         }
         setProducts(response.data);
