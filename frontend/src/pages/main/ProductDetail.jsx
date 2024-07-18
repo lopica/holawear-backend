@@ -91,7 +91,7 @@ const ProductDetail = () => {
     }
     const colorDetail = product.stockDetails.find((detail) => detail.colorCode === selectedColor);
     const thumbnail = colorDetail && colorDetail.imageLink ? colorDetail.imageLink : product.thumbnail;
-    console.log("Thumbnail to be used:", thumbnail); // Debugging line to verify thumbnail selection
+    // console.log("Thumbnail to be used:", thumbnail); // Debugging line to verify thumbnail selection
     const cartItem = {
       productTitle: product.title,
       productId: product._id,
