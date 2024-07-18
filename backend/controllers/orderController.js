@@ -1,4 +1,9 @@
 const createHttpError = require("http-errors");
+const fs = require("fs");
+const path = require("path");
+const handlebars = require("handlebars");
+const nodeMailer = require("nodemailer");
+
 const db = require("../models");
 const Cart = db.cart;
 const Product = db.product;
@@ -48,6 +53,57 @@ const getAllOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+async function sendOrderDetailsEmail(order) {
+  const transporter = nodeMailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "vanminhtuan2003@gmail.com",
+      pass: "zubo aayv abtz kwsb",
+    },
+  });
+
+  const user = await User.findById(order.userId);
+
+  const emailTemplate = fs.readFileSync(path.join(__dirname, "../templates/orderEmail.html"), "utf8");
+  const template = handlebars.compile(emailTemplate);
+  const html = template({
+    orderId: order._id,
+    userName: user.name,
+    shippingAddress: {
+      fullName: order.shippingAddress.fullName,
+      phone: order.shippingAddress.phone,
+      address: order.shippingAddress.address,
+      specificAddress: order.shippingAddress.specificAddress,
+    },
+    paymentMethod: order.paymentMethod,
+    orderItems: order.orderItems.map((item) => ({
+      productTitle: item.productTitle,
+      color: item.color,
+      size: item.size,
+      quantity: item.quantity,
+      price: item.price,
+    })),
+    total: order.totalPrice,
+  });
+
+  const mailOptions = {
+    from: '"HolaWear" <your-email@gmail.com>',
+    to: user.email,
+    subject: `Order #${order._id} - HolaWear`,
+    html,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Order details email sent successfully");
+  } catch (err) {
+    console.error("Failed to send order details email:", err);
+  }
+}
 
 // POST create order for user
 const createOrder = async (req, res, next) => {
@@ -105,6 +161,8 @@ const createOrder = async (req, res, next) => {
       product.stock -= item.quantity; // Decrease total stock
       await product.save();
     }
+
+    sendOrderDetailsEmail(savedOrder);
 
     res.status(201).json(savedOrder);
   } catch (error) {
