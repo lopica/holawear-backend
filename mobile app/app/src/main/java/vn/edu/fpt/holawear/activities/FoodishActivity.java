@@ -39,9 +39,11 @@ public class FoodishActivity extends AppCompatActivity {
         });
     }
 
+    // Fetch a random food image from the API
     private void fetchRandomFoodImage() {
         FoodishApiService.apiService.getRandomFoodImage().enqueue(new Callback<FoodImage>() {
             @Override
+            // Handle the response from the API
             public void onResponse(Call<FoodImage> call, Response<FoodImage> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String imageUrl = response.body().getImageUrl();
@@ -52,6 +54,7 @@ public class FoodishActivity extends AppCompatActivity {
             }
 
             @Override
+            // Handle the error when failed to fetch the image
             public void onFailure(Call<FoodImage> call, Throwable t) {
                 Toast.makeText(FoodishActivity.this, "Failed to load image", Toast.LENGTH_SHORT).show();
             }

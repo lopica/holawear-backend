@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/foodImageView"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="600dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
