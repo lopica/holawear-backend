@@ -33,8 +33,13 @@ android {
 
 dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    //converter-gson:2.9.0 -> giúp convert json sang object
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    //bumptech.glide:glide:4.12.0 -> thư viện load ảnh từ internet
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation ("com.google.code.gson:gson:2.11.0")
+
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

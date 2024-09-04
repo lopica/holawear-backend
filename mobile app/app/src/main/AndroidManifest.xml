@@ -13,7 +13,7 @@
         android:theme="@style/Theme.HolaWear"
         tools:targetApi="31">
         <activity
-            android:name=".FoodishActivity"
+            android:name=".activities.FoodishActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
