@@ -2,12 +2,17 @@ package vn.edu.fpt.holawear.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import vn.edu.fpt.holawear.R;
+import vn.edu.fpt.holawear.activities.main.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -16,26 +21,23 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Hide the status bar
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-
         TextView tvSignup = findViewById(R.id.tvSignup);
+        Button btnLogin = findViewById(R.id.btnLogin);
 
         tvSignup.setOnClickListener(v -> {
             // Navigate to SignUpActivity when the text view is clicked
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
+//            finish();
         });
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Ensure the status bar remains hidden when returning to this activity
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        btnLogin.setOnClickListener(v -> {
+            // Navigate to MainActivity when the button is clicked
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+
+        });
+
+
     }
 }
