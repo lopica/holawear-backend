@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <!--    navigation_items.xml not use-->
+
     <LinearLayout
         android:id="@+id/linearHome"
         android:layout_width="0dp"
@@ -86,7 +88,7 @@
             android:id="@+id/ivNotifi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/person_24px" />
+            android:src="@drawable/baseline_notifications_none_24" />
 
         <TextView
             android:id="@+id/tvNotifi"

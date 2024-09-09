@@ -14,6 +14,6 @@
         android:title="Cart" />
     <item
         android:id="@+id/nav_notifi"
-        android:icon="@drawable/person_24px"
+        android:icon="@drawable/baseline_notifications_none_24"
         android:title="Notifi" />
 </menu>

@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import vn.edu.fpt.holawear.activities.auth.LoginActivity;
 import vn.edu.fpt.holawear.activities.main.MainActivity;
 import vn.edu.fpt.holawear.R;
 
@@ -22,7 +23,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             //Hàm này sẽ được gọi sau khi đếm ngược kết thúc
             public void onFinish() {
                 //Chuyển màn hình từ WelcomeActivity sang LoginActivity
-                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         }.start();
