@@ -3,4 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="logoColor">#fffafa</color>
+    <color name="purple">#5b4cbd</color>
+    <color name="lightGrey">#EFEFEF</color>
+    <color name="darkGrey">#616161</color>
+
+    <color name="grey">#d2d2d2</color>
+    <color name="midDarkGreen">#648286</color>
 </resources>

@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/navigation_home"
-            android:icon="@drawable/cute_home_24px"
-            android:title="@string/title_home" />
-        <!--    <item-->
-        <!--        android:id="@+id/navigation_favorites"-->
-        <!--        android:icon="@drawable/ic_favorite"-->
-        <!--        android:title="@string/title_favorites" />-->
-        <item
-            android:id="@+id/navigation_cart"
-            android:icon="@drawable/cute_local_mall_24px"
-            android:title="@string/title_cart" />
-        <!--    <item-->
-        <!--        android:id="@+id/navigation_notifications"-->
-        <!--        android:icon="@drawable/ic_notifications"-->
-        <!--        android:title="@string/title_notifications" />-->
-    </group>
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/home_24px"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_wishlist"
+        android:icon="@drawable/favorite_24px"
+        android:title="Wishlist" />
+    <item
+        android:id="@+id/nav_cart"
+        android:icon="@drawable/shopping_bag_24px"
+        android:title="Cart" />
+    <item
+        android:id="@+id/nav_notifi"
+        android:icon="@drawable/person_24px"
+        android:title="Notifi" />
 </menu>
