@@ -1,12 +1,10 @@
-package vn.edu.fpt.holawear;
+package vn.edu.fpt.holawear.activities.auth;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import vn.edu.fpt.holawear.R;
 
 public class SignUpActivity extends AppCompatActivity {
 

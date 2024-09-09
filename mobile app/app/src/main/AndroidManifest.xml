@@ -16,10 +16,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".SignUpActivity"
+            android:name=".activities.SE1740.TeachTrungActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.auth.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.auth.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".activities.SplashScreenActivity"
@@ -35,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.TestLoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".activities.TestGetAPIActivity"
             android:exported="true" />
@@ -43,7 +46,7 @@
             android:name=".activities.FoodishActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.main.MainActivity"
             android:exported="true" />
     </application>
 
