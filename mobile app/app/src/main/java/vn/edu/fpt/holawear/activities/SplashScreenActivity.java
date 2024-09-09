@@ -23,7 +23,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             //Hàm này sẽ được gọi sau khi đếm ngược kết thúc
             public void onFinish() {
                 //Chuyển màn hình từ WelcomeActivity sang LoginActivity
-                Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         }.start();

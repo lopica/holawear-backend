@@ -44,8 +44,8 @@
               android:textColor="@color/lightGrey2"
               android:gravity="center"
               android:layout_marginTop="10dp"
-              android:layout_marginRight="40dp"
-              android:layout_marginLeft="40dp"
+              android:layout_marginRight="70dp"
+              android:layout_marginLeft="70dp"
               android:layout_marginBottom="20dp" />
 
           <!-- Login form -->
@@ -70,19 +70,42 @@
                   android:padding="10dp" />
 
               <!-- Password input -->
-              <EditText
+<!--              <EditText-->
+<!--                  android:id="@+id/etPassword"-->
+<!--                  android:layout_width="match_parent"-->
+<!--                  android:layout_height="50dp"-->
+<!--                  android:layout_margin="10dp"-->
+<!--                  android:background="@drawable/edittext_bg"-->
+<!--                  android:drawableStart="@drawable/baseline_lock_outline_24"-->
+<!--                  android:drawablePadding="8dp"-->
+<!--                  android:hint="@string/password_hint"-->
+<!--                  android:inputType="textPassword"-->
+<!--                  android:padding="10dp" />-->
+              <com.google.android.material.textfield.TextInputLayout
+                  android:id="@+id/textInputPassword"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp"
+                  app:endIconMode="password_toggle"
+                  app:endIconTint="@color/lightGrey2"
+                android:hint="@string/password_hint"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+              <com.google.android.material.textfield.TextInputEditText
                   android:id="@+id/etPassword"
                   android:layout_width="match_parent"
-                  android:layout_height="50dp"
-                  android:layout_margin="10dp"
+                  android:layout_height="wrap_content"
+                  android:inputType="textPassword"
                   android:background="@drawable/edittext_bg"
                   android:drawableStart="@drawable/baseline_lock_outline_24"
+                  android:paddingStart="8dp"
+                  android:paddingEnd="8dp"
                   android:drawablePadding="8dp"
-                  android:hint="@string/password_hint"
-                  android:inputType="textPassword"
-                  android:padding="10dp" />
+                  android:hint="@string/password_hint" />
+          </com.google.android.material.textfield.TextInputLayout>
 
-              <!-- Forgot password -->
+
+          <!-- Forgot password -->
               <TextView
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -228,6 +251,7 @@
                           />
 
                       <TextView
+                          android:id="@+id/tvSignup"
                           android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:layout_gravity="center"
