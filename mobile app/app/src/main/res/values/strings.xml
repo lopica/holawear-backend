@@ -15,7 +15,7 @@
     <string name="search_button">Search button</string>
     <string name="avatar_description">User avatar</string>
 
-<!--    login activity-->
+    <!--    login activity-->
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
 </resources>
