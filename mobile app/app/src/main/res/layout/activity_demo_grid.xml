@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SE1740.DemoGridActivity"
+    android:columnCount="2"
+    android:layout_marginTop="@dimen/grid_margin"
+    android:layout_marginLeft="@dimen/grid_margin"
+    android:layout_marginRight="@dimen/grid_margin"
+    android:layout_marginBottom="@dimen/grid_margin"
+    >
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount"
+        android:textSize="@dimen/text_size"
+        android:layout_marginTop="@dimen/grid_padding"
+        />
+
+    <EditText
+        android:id="@+id/et1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:layout_marginTop="@dimen/grid_padding"
+        android:hint="Enter amount"
+        android:textSize="@dimen/text_size" />
+
+    <TextView
+        android:id="@+id/customPercentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_marginTop="@dimen/grid_padding"
+        android:text="Custom %"
+        android:textSize="@dimen/text_size" />
+
+    <SeekBar
+        android:id="@+id/customPercentSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="1"
+        android:layout_column="1"
+        android:layout_marginTop="@dimen/grid_padding"
+        android:max="100"
+        android:progress="0"
+        android:layout_marginRight="@dimen/grid_padding"
+        android:layout_marginLeft="@dimen/grid_padding"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="2"
+        android:layout_column="1"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/grid_padding"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15%"
+            android:id="@+id/percent15TextView"
+            android:textSize="@dimen/text_size"
+            />
+
+        <TextView
+            android:id="@+id/percent18TipTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/grid_padding"
+            android:text="18%"
+            android:textSize="@dimen/text_size" />
+
+    </LinearLayout>
+
+
+
+</GridLayout>

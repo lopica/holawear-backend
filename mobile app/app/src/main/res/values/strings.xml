@@ -6,6 +6,9 @@
 
     <string name="forgot_password">Forgot Password?</string>
     <string name="sign_up">Sign Up</string>
+    <string name="lorem">
+        lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </string>
     <!--    <string name="no_account">Don&apos;t have an account?</string>-->
 
     <string name="hey_text">Hey 👋</string>
