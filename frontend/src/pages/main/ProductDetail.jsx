@@ -134,6 +134,7 @@ const ProductDetail = () => {
       setError("Please select a color and a size.");
       return;
     }
+
     const subtotal = (quantity * product.price).toLocaleString("en-US");
     const total = calculateTotal(subtotal);
     const colorDetail = product.stockDetails.find((detail) => detail.colorCode === selectedColor);

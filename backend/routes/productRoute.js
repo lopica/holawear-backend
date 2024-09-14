@@ -33,4 +33,9 @@ productRouter.put("/status/:productId", ProductController.updateProductStatus);
 
 //PUT update product price by product id
 productRouter.put("/update-price/:productId", ProductController.updateProductPrice);
+
+// ======================== PRODUCT API MOBILE ========================
+//get all product
+//get all product by category id
+
 module.exports = productRouter;

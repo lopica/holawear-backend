@@ -25,6 +25,7 @@
               android:layout_gravity="center"
               android:layout_marginTop="20dp"
               android:src="@mipmap/logo2" />
+
           <!-- Welcome text -->
           <TextView
               android:layout_width="match_parent"
