@@ -94,6 +94,7 @@
 <!--                    app:backgroundTint="@null"-->
 
                 <LinearLayout
+                    android:id="@+id/searchLayout"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"

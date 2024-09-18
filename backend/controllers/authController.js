@@ -88,26 +88,26 @@ async function signup(req, res, next) {
       const saveUser = await newUser.save();
 
       //send mail notify user
-      const mailOptions = {
-        from: '"HolaWear" <vanminhtuan2003@gmail.com>',
-        to: newUser.email,
-        subject: "Welcome to HolaWear",
-        html: `
-          <p style="color: green; font-size: 30px">WELCOME <strong>${newUser.name}</strong> to HolaWear 
-          <a href="http://localhost:5173/">(holawear.com)</a>
-          </p>
-          <p>You have successfully registered an account on HolaWear. Enjoy shopping with us!</p>
-        `,
-      };
+      // const mailOptions = {
+      //   from: '"HolaWear" <vanminhtuan2003@gmail.com>',
+      //   to: newUser.email,
+      //   subject: "Welcome to HolaWear",
+      //   html: `
+      //     <p style="color: green; font-size: 30px">WELCOME <strong>${newUser.name}</strong> to HolaWear
+      //     <a href="http://localhost:5173/">(holawear.com)</a>
+      //     </p>
+      //     <p>You have successfully registered an account on HolaWear. Enjoy shopping with us!</p>
+      //   `,
+      // };
 
-      await transporter.sendMail(mailOptions);
+      // await transporter.sendMail(mailOptions);
 
       //create cart
       if (saveUser) {
         const userId = newUser._id.toString();
         const user = await User.findById(userId);
         if (!user) {
-          return res.status(404).json({ message: "User not found" });
+          return res.status(404).json({ message: "Email and User not found." });
         }
         const newCart = new Cart({ userId, cartItems: [], totalPrice: 0 });
         await newCart.save();
@@ -125,7 +125,7 @@ async function signin(req, res, next) {
     const { email, password, productSelection } = req.body;
 
     const user = await User.findOne({ email }).populate("role").exec();
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ message: "Email and User not found." });
 
     //validate password
     const validPassword = await bcrypt.compare(password, user.password);

@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             // Call login logic
             login(email, password);
 
-            finish(); // Close LoginActivity
+
         });
     }
 
@@ -145,13 +145,22 @@ public class LoginActivity extends AppCompatActivity {
                             // Redirect to MainActivity
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(LoginActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        // Login failed
-                        Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                        // Login failed status code 400 - 499
+                        try {
+                            JSONObject jsonResponse = new JSONObject(responseData);
+                            String message = jsonResponse.getString("message");
+                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(LoginActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
             }

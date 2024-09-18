@@ -8,4 +8,8 @@
     <dimen name="grid_padding">20dp</dimen>
     <dimen name="grid_margin">20dp</dimen>
 
+    //SE1740NJ
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="textview_padding">8dp</dimen>
 </resources>
