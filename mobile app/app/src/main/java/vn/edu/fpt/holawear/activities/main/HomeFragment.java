@@ -69,6 +69,10 @@ public class HomeFragment extends Fragment {
         rvListTypes.setLayoutManager(layoutManager);
         rvListTypes.setAdapter(typeAdapter);
 
+        // ===================== Fetch all brands from the API =====================
+        getAllBrands();
+
+
         // ===================== Set up the search layout =====================
         searchLayout.setOnClickListener(v -> {
             // Navigate to the SearchActivity
@@ -108,6 +112,27 @@ public class HomeFragment extends Fragment {
                         typeList.addAll(typesFromApi);
                         typeAdapter.notifyDataSetChanged();  // Notify the adapter of data change
                     });
+                }
+            }
+        });
+    }
+
+    // Fetch API for all brands
+    public void getAllBrands(){
+        String url = "http://192.168.1.159:9999/api/brand/get-all";
+        Request request = new Request.Builder().url(url).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // Handle the failure
+                Log.e("API Error", "Failed to fetch brands", e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+
                 }
             }
         });
