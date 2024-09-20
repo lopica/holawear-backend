@@ -24,16 +24,22 @@ import okhttp3.Request;
 import okhttp3.Response;
 import vn.edu.fpt.holawear.R;
 import vn.edu.fpt.holawear.activities.SearchActivity;
+import vn.edu.fpt.holawear.adapters.BrandAdapter;
 import vn.edu.fpt.holawear.adapters.TypeAdapter;
+import vn.edu.fpt.holawear.models.Brand;
 import vn.edu.fpt.holawear.models.Type;
 
 public class HomeFragment extends Fragment {
 
     private TextView textViewHey;
     private LinearLayout searchLayout;
-    private RecyclerView rvListTypes;
+    private RecyclerView rvListTypes, rvTopBrands;
+
     private TypeAdapter typeAdapter;
+    private BrandAdapter brandAdapter;
+    private ArrayList<Brand> brandList = new ArrayList<>();
     private ArrayList<Type> typeList = new ArrayList<>(); // Initialize list
+
     public OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -49,11 +55,7 @@ public class HomeFragment extends Fragment {
         textViewHey = view.findViewById(R.id.textViewHey);
         searchLayout = view.findViewById(R.id.searchLayout);
         rvListTypes = view.findViewById(R.id.rvListTypes);
-
-        // Set up RecyclerView
-        typeAdapter = new TypeAdapter(typeList, getContext());
-        rvListTypes.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvListTypes.setAdapter(typeAdapter);
+        rvTopBrands = view.findViewById(R.id.rvTopBrands);
 
         // ===================== Set up the welcome message =====================
         // Get the username from SharedPreferences
@@ -62,15 +64,27 @@ public class HomeFragment extends Fragment {
         // Set text to the TextView
         textViewHey.setText("Welcome, " + userName);
 
-        // ===================== Fetch all types from the API =====================
+
+        // Set up RecyclerView
+        typeAdapter = new TypeAdapter(typeList, getContext());
+        brandAdapter = new BrandAdapter(brandList, getContext());
+
+        rvListTypes.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvListTypes.setAdapter(typeAdapter);
+        rvTopBrands.setAdapter(brandAdapter);
+
+
+        // ===================== Fetch API =====================
         // Set up RecyclerView with vertical orientation
         getAllTypes();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        rvListTypes.setLayoutManager(layoutManager);
-        rvListTypes.setAdapter(typeAdapter);
-
-        // ===================== Fetch all brands from the API =====================
         getAllBrands();
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        rvListTypes.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        rvTopBrands.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        rvListTypes.setAdapter(typeAdapter);
+        rvTopBrands.setAdapter(brandAdapter);
+
 
 
         // ===================== Set up the search layout =====================
@@ -121,10 +135,10 @@ public class HomeFragment extends Fragment {
     public void getAllBrands(){
         String url = "http://192.168.1.159:9999/api/brand/get-all";
         Request request = new Request.Builder().url(url).build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                // Handle the failure
                 Log.e("API Error", "Failed to fetch brands", e);
             }
 
@@ -132,9 +146,24 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseData = response.body().string();
+                    Gson gson = new Gson();
+                    java.lang.reflect.Type type = new TypeToken<ArrayList<Brand>>(){}.getType();
+                    ArrayList<Brand> brandsFromApi = gson.fromJson(responseData, type);
 
+                    // Update brand list in UI (if applicable)
+                    getActivity().runOnUiThread(() -> {
+                        brandList.clear();
+                        brandList.addAll(brandsFromApi);
+                        brandAdapter.notifyDataSetChanged();
+                    });
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        client.dispatcher().cancelAll();
     }
 }
