@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -64,7 +66,6 @@ public class HomeFragment extends Fragment {
         // Set text to the TextView
         textViewHey.setText("Welcome, " + userName);
 
-
         // Set up RecyclerView
         typeAdapter = new TypeAdapter(typeList, getContext());
         brandAdapter = new BrandAdapter(brandList, getContext());
@@ -78,13 +79,15 @@ public class HomeFragment extends Fragment {
         // Set up RecyclerView with vertical orientation
         getAllTypes();
         getAllBrands();
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+
         rvListTypes.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
         rvTopBrands.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
 
         rvListTypes.setAdapter(typeAdapter);
         rvTopBrands.setAdapter(brandAdapter);
 
+        // ===================== Call Firebase to get list banner =====================
+//        DatabaseReference myref = database.getReference("Banners");
 
 
         // ===================== Set up the search layout =====================
