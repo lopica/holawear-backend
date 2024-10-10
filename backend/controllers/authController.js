@@ -77,11 +77,13 @@ async function signup(req, res, next) {
       });
 
       if (req.body.role) {
+        console.log('vo day')
         const roleFound = req.body.role;
         const roleFoundInDB = await Role.findOne({ name: roleFound }).exec();
         newUser.role = roleFoundInDB._id;
       } else {
         const defaultRole = await Role.findOne({ name: "user" }).exec();
+        console.log(defaultRole)
         newUser.role = defaultRole._id;
       }
 
