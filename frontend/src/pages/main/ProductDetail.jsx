@@ -7,6 +7,8 @@ import Slider from "react-slick";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Tabs } from "../../components/TabUnderLine";
+import { Button } from "@/components/ui/button";
+import TryOn from "@/components/TryOn";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -196,23 +198,28 @@ const ProductDetail = () => {
       <div className="container mx-auto p-6 bg-white rounded mt-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* ======================================= product image ======================================= */}
-          <div className="flex justify-center items-center">
-            <div className="w-2/3">
-              {showSlider ? (
-                <Slider {...settings}>
-                  {product.images.map((image, index) => (
-                    <div key={index}>
-                      <div className="m-5 flex justify-center">
-                        <img src={image} alt={`${product.title} - Image ${index + 1}`} className="h-auto rounded-lg" />
+          <div>
+            <div className="flex justify-center items-center">
+              <div className="w-2/3">
+                {showSlider ? (
+                  <Slider {...settings}>
+                    {product.images.map((image, index) => (
+                      <div key={index}>
+                        <div className="m-5 flex justify-center">
+                          <img src={image} alt={`${product.title} - Image ${index + 1}`} className="h-auto rounded-lg" />
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </Slider>
-              ) : (
-                <div className="m-5 flex justify-center items-center">
-                  <img src={currentImage} alt={product.title} className="w-full h-full rounded-lg" />
-                </div>
-              )}
+                    ))}
+                  </Slider>
+                ) : (
+                  <div className="m-5 flex justify-center items-center">
+                    <img src={currentImage} alt={product.title} className="w-full h-full rounded-lg" />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="pt-10">
+              <TryOn />
             </div>
           </div>
           <div className="flex-1">

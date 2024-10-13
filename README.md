@@ -1,6 +1,6 @@
 # HolaWear
 
-## SDN301m Project - SE1740-NJ
+## WDP301 Project - SE1740-NJ
 
 ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white) ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 
@@ -13,13 +13,13 @@
 
 ### Roles
 
-- **Admin**: Manages the entire system, oversees users and sellers, and handles high-level administration tasks.
+<!-- - **Admin**: Manages the entire system, oversees users and sellers, and handles high-level administration tasks.
 - **Seller**: Manages their own products, sales, and related operations.
-- **User**: Regular customers who browse, purchase products, and manage their personal account.
+- **User**: Regular customers who browse, purchase products, and manage their personal account. -->
 
 ### Database Setup
 
-- Use the JSON files located in the `db` folder to import data into your local database.
+<!-- - Use the JSON files located in the `db` folder to import data into your local database. -->
 
 <!-- ====================================== BACK END =============================== -->
 
