@@ -55,11 +55,11 @@ export default function TryOn() {
 
   const initThree = () => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, 640 / 480, 0.1, 1000);
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(640, 480);
 
     // Lighting for the model
     const light = new THREE.AmbientLight(0xffffff);
