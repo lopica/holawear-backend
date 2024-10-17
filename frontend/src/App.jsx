@@ -42,11 +42,10 @@ import ManageUserDetail from "./pages/admin/ManageUserDetail";
 export const UserContext = createContext({});
 
 function App() {
-  const isAdminRoute = location.pathname.includes("/admin");
-  const isUserRoute = location.pathname.includes("/user");
   const location = useLocation();
   const [userAuth, setUserAuth] = useState({});
- 
+  const isAdminRoute = location.pathname.includes("/admin");
+  const isUserRoute = location.pathname.includes("/user");
 
   useEffect(() => {
     const user = sessionStorage.getItem("user");

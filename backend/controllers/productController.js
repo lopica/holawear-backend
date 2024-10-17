@@ -235,7 +235,7 @@ const importProducts = async (req, res) => {
       const savedProduct = await newProduct.save();
       importedProducts.push(savedProduct);
     }
-
+    
     res.status(201).json({ message: "Products imported successfully", products: importedProducts });
   } catch (error) {
     return res.status(500).json({ message: error.message });
